@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: sintonya-postgres
+    environment:
+      POSTGRES_DB: sintonya_db
+      POSTGRES_USER: sintonya_user
+      POSTGRES_PASSWORD: sintonya_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - sintonya-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: sintonya-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+    networks:
+      - sintonya-network
+
+  java-backend:
+    build: .
+    container_name: sintonya-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sintonya_db
+      SPRING_DATASOURCE_USERNAME: sintonya_user
+      SPRING_DATASOURCE_PASSWORD: sintonya_pass
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - sintonya-network
+
+volumes:
+  pgdata:
+
+
+networks:
+  sintonya-network:
+    external: true
