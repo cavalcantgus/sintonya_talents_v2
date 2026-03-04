@@ -155,12 +155,12 @@
         }
       }
     },
-    "/candidates/upadate/add-habilities/candidate/{id}": {
+    "/candidates/upadate/add-skills/candidate/{id}": {
       "put": {
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "addHabilities",
+        "operationId": "addSkills",
         "parameters": [
           {
             "name": "id",
@@ -172,6 +172,19 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SkillCandidateCreateDto"
+                }
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -351,6 +364,47 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/SelectionProcessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/certificates/{candidateId}/add-certificate": {
+      "post": {
+        "tags": [
+          "certificate-controller"
+        ],
+        "operationId": "insert_1",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateCreateDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateResponse"
                 }
               }
             }
@@ -638,12 +692,66 @@
         }
       }
     },
+    "/certificates": {
+      "get": {
+        "tags": [
+          "certificate-controller"
+        ],
+        "operationId": "findAll_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CertificateResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/certificates/{id}": {
+      "get": {
+        "tags": [
+          "certificate-controller"
+        ],
+        "operationId": "findById_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/candidates": {
       "get": {
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findAll_4",
+        "operationId": "findAll_5",
         "responses": {
           "200": {
             "description": "OK",
@@ -666,7 +774,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findById_4",
+        "operationId": "findById_5",
         "parameters": [
           {
             "name": "id",
@@ -943,6 +1051,40 @@
           },
           "profileResponse": {
             "$ref": "#/components/schemas/ProfileResponse"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillCandidateResponse"
+            }
+          },
+          "certificates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CertificateResponse"
+            }
+          }
+        }
+      },
+      "CertificateResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "issuingOrganization": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "hours": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -965,6 +1107,28 @@
             "type": "string"
           },
           "locality": {
+            "type": "string"
+          }
+        }
+      },
+      "SkillCandidateResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "skillId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "skillTitle": {
+            "type": "string"
+          },
+          "skillType": {
+            "type": "string"
+          },
+          "skillLevel": {
             "type": "string"
           }
         }
@@ -994,6 +1158,18 @@
             "type": "string"
           },
           "contact": {
+            "type": "string"
+          }
+        }
+      },
+      "SkillCandidateCreateDto": {
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "level": {
             "type": "string"
           }
         }
@@ -1077,12 +1253,166 @@
           }
         }
       },
+      "Candidate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "candidateSkills": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillCandidate"
+            }
+          },
+          "certificates": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Certificates"
+            }
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "raceEthnicity": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "availability": {
+            "type": "string",
+            "enum": [
+              "FULL_TIME",
+              "PART_TIME",
+              "INTERSHIP",
+              "TRAINEE",
+              "TEMPORARY",
+              "CONTRACT",
+              "FREELANCE",
+              "SELF_EMPLOYED",
+              "VOLUNTEER",
+              "APPRENTICESHIP"
+            ]
+          },
+          "sector": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Certificates": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/Candidate"
+          },
+          "certificateSkills": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillCertificates"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "issuingOrganization": {
+            "type": "string"
+          },
+          "issueDate": {
+            "type": "string"
+          },
+          "expirationDate": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "hours": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "banner": {
+            "type": "string"
+          },
+          "headLine": {
+            "type": "string"
+          },
+          "personalSummary": {
+            "type": "string"
+          },
+          "socialLinks": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "SkillBase": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64"
+          },
+          "certificateSkills": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillCertificates"
+            }
           },
           "title": {
             "type": "string"
@@ -1101,6 +1431,53 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "SkillCandidate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "skillBase": {
+            "$ref": "#/components/schemas/SkillBase"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/Candidate"
+          },
+          "skillLevel": {
+            "type": "string",
+            "enum": [
+              "BASIC",
+              "INTERMEDIATE",
+              "ADVANCED",
+              "NON_SPECIFIED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SkillCertificates": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "skill": {
+            "$ref": "#/components/schemas/SkillBase"
+          },
+          "certificate": {
+            "$ref": "#/components/schemas/Certificates"
           }
         }
       },
@@ -1174,6 +1551,44 @@
           }
         }
       },
+      "CertificateCreateDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "issuingOrganization": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "hours": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "issueMonth": {
+            "type": "string"
+          },
+          "issueYear": {
+            "type": "string"
+          },
+          "expirationMonth": {
+            "type": "string"
+          },
+          "expirationYear": {
+            "type": "string"
+          },
+          "skillsId": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -1211,101 +1626,6 @@
           },
           "active": {
             "type": "boolean"
-          }
-        }
-      },
-      "Candidate": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "profile": {
-            "$ref": "#/components/schemas/Profile"
-          },
-          "fullName": {
-            "type": "string"
-          },
-          "gender": {
-            "type": "string"
-          },
-          "raceEthnicity": {
-            "type": "string"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date"
-          },
-          "cpf": {
-            "type": "string"
-          },
-          "contact": {
-            "type": "string"
-          },
-          "availability": {
-            "type": "string",
-            "enum": [
-              "FULL_TIME",
-              "PART_TIME",
-              "INTERSHIP",
-              "TRAINEE",
-              "TEMPORARY",
-              "CONTRACT",
-              "FREELANCE",
-              "SELF_EMPLOYED",
-              "VOLUNTEER",
-              "APPRENTICESHIP"
-            ]
-          },
-          "sector": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "Profile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "photo": {
-            "type": "string"
-          },
-          "banner": {
-            "type": "string"
-          },
-          "headLine": {
-            "type": "string"
-          },
-          "personalSummary": {
-            "type": "string"
-          },
-          "socialLinks": {
-            "type": "string"
-          },
-          "locality": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
           }
         }
       }
