@@ -12,6 +12,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity()
 @Table(name = "candidates")
@@ -30,6 +32,12 @@ public class Candidate {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Profile profile;
+
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SkillCandidate> candidateSkills = new HashSet<>();
+
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Certificates> certificates = new HashSet<>();
 
     @Column(nullable = false)
     private String fullName;

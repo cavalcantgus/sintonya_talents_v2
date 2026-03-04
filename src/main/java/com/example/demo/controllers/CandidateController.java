@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.CandidateResponse;
 import com.example.demo.dto.CandidateUpdateDTO;
+import com.example.demo.dto.SkillCandidateCreateDto;
 import com.example.demo.entities.Candidate;
 import com.example.demo.services.CandidateService;
 import org.apache.coyote.Response;
@@ -50,11 +51,10 @@ public class CandidateController {
         return ResponseEntity.ok().body(candidateResponse);
     }
 
-    @PutMapping("/upadate/add-habilities/candidate/{id}")
-    public ResponseEntity<CandidateResponse> addHabilities(@PathVariable Long id) {
-        return null;
+    @PutMapping("/upadate/add-skills/candidate/{id}")
+    public ResponseEntity<CandidateResponse> addSkills(@PathVariable Long id, @RequestBody List<SkillCandidateCreateDto> objDto) {
+        CandidateResponse candidate = candidateService.addSkills(id, objDto);
+        return ResponseEntity.ok().body(candidate);
     }
-
-
 }
 

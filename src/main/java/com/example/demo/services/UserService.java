@@ -6,6 +6,7 @@ import com.example.demo.dto.UserCreateEnterpriseDTO;
 import com.example.demo.dto.UserResponse;
 import com.example.demo.entities.*;
 import com.example.demo.enums.RoleName;
+import com.example.demo.exception.EmailAlreadyExistsException;
 import com.example.demo.repositories.*;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
@@ -54,6 +55,9 @@ public class UserService {
 
     @Transactional
     public UserResponse insertCandidate(UserCreateDTO objDto) {
+        if(userRepository.existsByEmail(objDto.getEmail())) {
+            throw new EmailAlreadyExistsException("E-mail já cadastrado");
+        }
         User user = new User();
 
         Role role = roleService.insert("CANDIDATO");

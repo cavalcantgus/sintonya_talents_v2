@@ -24,6 +24,8 @@ public class Profile {
     private String photo;
     private String banner;
     private String headLine;
+
+    @Column(length = 1000)
     private String personalSummary;
     private String socialLinks;
     private String locality;
