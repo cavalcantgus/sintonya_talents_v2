@@ -50,18 +50,10 @@
 
             User user = userService.findByEmail(userDetails.getUsername());
 
-            String token = jwtService.generateToken(userDetails);
+            String token = jwtService.generateToken(user);
 
             return ResponseEntity.ok(Map.of(
-                    "token", token,
-                    "user", Map.of(
-                            "id", user.getId(),
-                            "email", user.getEmail(),
-                            "roles", user.getRoles()
-                                    .stream()
-                                    .map(Role::getRoleName)
-                                    .toList()
-                    )
+                    "token", token
             ));
         }
     }
