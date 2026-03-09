@@ -22,11 +22,11 @@ public class Certificates {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "candidate_id")
+    @JoinColumn(name = "candidate_id", nullable = false)
     private Candidate candidate;
 
     @OneToMany(mappedBy = "certificate", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<SkillCertificates> certificateSkills = new HashSet<>();
+    private Set<SkillCandidate> certificateSkills = new HashSet<>();
 
     private String title;
     private String issuingOrganization;

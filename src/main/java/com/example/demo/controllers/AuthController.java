@@ -1,6 +1,7 @@
     package com.example.demo.controllers;
 
     import com.example.demo.dto.LoginRequest;
+    import com.example.demo.entities.Role;
     import com.example.demo.entities.User;
     import com.example.demo.jwt.JwtService;
     import com.example.demo.services.UserService;
@@ -56,7 +57,10 @@
                     "user", Map.of(
                             "id", user.getId(),
                             "email", user.getEmail(),
-                            "role", user.getRole().getRoleName()
+                            "roles", user.getRoles()
+                                    .stream()
+                                    .map(Role::getRoleName)
+                                    .toList()
                     )
             ));
         }

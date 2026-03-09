@@ -1,11 +1,14 @@
 package com.example.demo.dto;
 
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
 
 @Getter
+@Setter
 public class CertificateCreateDTO {
     private String title;
     private String issuingOrganization;
@@ -15,5 +18,6 @@ public class CertificateCreateDTO {
     private String issueYear;
     private String expirationMonth;
     private String expirationYear;
-    private Set<Long> skillsId;
+    private List<Long> skillsId;
+    private MultipartFile file;
 }

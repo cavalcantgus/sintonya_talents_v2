@@ -7,6 +7,7 @@ import com.example.demo.entities.Candidate;
 import com.example.demo.services.CandidateService;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +23,9 @@ public class CandidateController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Candidate>> findAll() {
-        List<Candidate> candidates = candidateService.findAll();
+    @PreAuthorize("hasAuthority('CANDIDATE_VIEW')")
+    public ResponseEntity<List<CandidateResponse>> findAll() {
+        List<CandidateResponse> candidates = candidateService.findAll();
         return ResponseEntity.ok().body(candidates);
     }
 
@@ -34,24 +36,28 @@ public class CandidateController {
     }
 
     @GetMapping("/findCandidateByUser/{userId}")
+    @PreAuthorize("hasRole('CANDIDATO')")
     public ResponseEntity<CandidateResponse> findByUserId(@PathVariable Long userId) {
         CandidateResponse candidate = candidateService.findById(userId);
         return ResponseEntity.ok().body(candidate);
     }
 
     @PutMapping("/update-personal-infos/candidate/{id}")
+    @PreAuthorize("hasAuthority('PROFILE_UPDATE')")
     public ResponseEntity<CandidateResponse> updatePersonalInfos(@PathVariable Long id, @RequestBody CandidateUpdateDTO objDto) {
         CandidateResponse candidate = candidateService.update(id, objDto);
         return ResponseEntity.ok().body(candidate);
     }
 
     @PutMapping("/update-personal-summary/candidate/{id}")
+    @PreAuthorize("hasAuthority('PROFILE_UPDATE')")
     public ResponseEntity<CandidateResponse> updatePersonalSummary(@PathVariable Long id, @RequestBody String personalSummary) {
         CandidateResponse candidateResponse = candidateService.update(id, personalSummary);
         return ResponseEntity.ok().body(candidateResponse);
     }
 
     @PutMapping("/upadate/add-skills/candidate/{id}")
+    @PreAuthorize("hasAuthority('SKILL_ADD')")
     public ResponseEntity<CandidateResponse> addSkills(@PathVariable Long id, @RequestBody List<SkillCandidateCreateDto> objDto) {
         CandidateResponse candidate = candidateService.addSkills(id, objDto);
         return ResponseEntity.ok().body(candidate);

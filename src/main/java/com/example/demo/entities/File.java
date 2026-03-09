@@ -7,22 +7,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "skill_certificate")
+@Table(name = "files")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SkillCertificates {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "skill_base_id", nullable = false)
-    private SkillBase skill;
-
-    @ManyToOne
-    @JoinColumn(name = "certiticate_id", nullable = false)
-    private Certificates certificate;
+    private String fileName;
+    private String path;
+    private String contentType;
+    private Long size;
 }

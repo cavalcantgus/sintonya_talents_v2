@@ -5,15 +5,15 @@ import com.example.demo.dto.CertificateCreateDTO;
 import com.example.demo.dto.CertificateResponse;
 import com.example.demo.dto.VacancyResponse;
 import com.example.demo.entities.*;
+import com.example.demo.enums.AttachmentType;
 import com.example.demo.enums.SkillLevel;
-import com.example.demo.repositories.CandidateRepository;
-import com.example.demo.repositories.CertificatesRepository;
-import com.example.demo.repositories.SkillBaseRepository;
-import com.example.demo.repositories.SkillCandidateRepository;
+import com.example.demo.enums.SkillSource;
+import com.example.demo.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.hibernate.engine.spi.EntityUniqueKey;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.List;
@@ -27,15 +27,21 @@ public class CertificatesService {
     private final CandidateRepository candidateRepository;
     private final SkillBaseRepository skillBaseRepository;
     private final SkillCandidateRepository skillCandidateRepository;
+    private final AttachmentService attachmentService;
+    private final FileRepository fileRepository;
 
     public CertificatesService(CertificatesRepository certificatesRepository,
                                CandidateRepository candidateRepository,
                                SkillBaseRepository skillBaseRepository,
-                               SkillCandidateRepository skillCandidateRepository) {
+                               SkillCandidateRepository skillCandidateRepository,
+                               AttachmentService attachmentService,
+                               FileRepository fileRepository) {
         this.certificatesRepository = certificatesRepository;
         this.candidateRepository = candidateRepository;
         this.skillBaseRepository = skillBaseRepository;
         this.skillCandidateRepository = skillCandidateRepository;
+        this.attachmentService = attachmentService;
+        this.fileRepository = fileRepository;
     }
 
     public List<CertificateResponse> findAll() {
@@ -67,31 +73,40 @@ public class CertificatesService {
 
         candidate.getCertificates().add(certificate);
 
-        Set<SkillBase> skills = new HashSet<>(
-                skillBaseRepository.findAllById(objDto.getSkillsId())
-        );
+        Set<SkillBase> skills = new HashSet<>();
 
-        Set<Long> existingSkillIds = candidate.getCandidateSkills()
-                .stream()
-                .map(sc -> sc.getSkillBase().getId())
-                .collect(Collectors.toSet());
+        if (objDto.getSkillsId() != null && !objDto.getSkillsId().isEmpty()) {
+            skills.addAll(skillBaseRepository.findAllById(objDto.getSkillsId()));
+        }
 
         for (SkillBase skill : skills) {
 
-            if (!existingSkillIds.contains(skill.getId())) {
-                SkillCandidate skillCandidate = new SkillCandidate();
-                skillCandidate.setCandidate(candidate);
-                skillCandidate.setSkillBase(skill);
-                skillCandidate.setSkillLevel(SkillLevel.NON_SPECIFIED);
+            SkillCandidate skillCandidate = new SkillCandidate();
+            skillCandidate.setCandidate(candidate);
+            skillCandidate.setSkillBase(skill);
+            skillCandidate.setSource(SkillSource.CERTIFICATE);
+            skillCandidate.setCertificate(certificate);
+            skillCandidate.setSkillLevel(SkillLevel.NON_SPECIFIED);
 
-                candidate.getCandidateSkills().add(skillCandidate);
-            }
+            candidate.getCandidateSkills().add(skillCandidate);
 
-            SkillCertificates skillCertificates = new SkillCertificates();
-            skillCertificates.setCertificate(certificate);
-            skillCertificates.setSkill(skill);
+            certificate.getCertificateSkills().add(skillCandidate);
+        }
 
-            certificate.getCertificateSkills().add(skillCertificates);
+        if (objDto.getFile() != null && !objDto.getFile().isEmpty()) {
+
+            MultipartFile multipartFile = objDto.getFile();
+
+            File file = new File();
+            file.setFileName(multipartFile.getOriginalFilename());
+            file.setContentType(multipartFile.getContentType());
+            file.setSize(multipartFile.getSize());
+
+            fileRepository.save(file);
+
+            Attachment attachment = attachmentService.insert(candidate, file, AttachmentType.CERTIFICATE);
+
+            candidate.getAttachments().add(attachment);
         }
 
         candidateRepository.save(candidate);

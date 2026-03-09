@@ -25,9 +25,6 @@ public class SkillBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "skill")
-    private Set<SkillCertificates> certificateSkills = new HashSet<>();
-
     private String title;
 
     @Enumerated(EnumType.STRING)

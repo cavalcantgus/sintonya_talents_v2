@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import com.example.demo.enums.SkillLevel;
+import com.example.demo.enums.SkillSource;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,8 +28,19 @@ public class SkillCandidate {
     @JoinColumn(name = "candidate_id", nullable = false)
     private Candidate candidate;
 
+    @ManyToOne
+    @JoinColumn(name = "certificate_id")
+    private Certificates certificate;
+
+    @ManyToOne
+    @JoinColumn(name = "experience_id")
+    private Experience experience;
+
     @Enumerated(EnumType.STRING)
     private SkillLevel skillLevel;
+
+    @Enumerated(EnumType.STRING)
+    private SkillSource source;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

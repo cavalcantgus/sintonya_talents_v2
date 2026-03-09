@@ -22,4 +22,17 @@
 //
 //        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
 //    }
+//
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public ResponseEntity<ProblemDetail> accessDenied(
+//            AccessDeniedException ex,
+//            HttpServletRequest request) {
+//
+//        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+//        problem.setTitle("Access Denied");
+//        problem.setDetail("Você não tem permisssão para acessar esse recurso");
+//        problem.setProperty("path", request.getRequestURI());
+//
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(problem);
+//    }
 //}

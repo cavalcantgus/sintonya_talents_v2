@@ -3,11 +3,13 @@ package com.example.demo.controllers;
 import com.example.demo.dto.UserCreateDTO;
 import com.example.demo.dto.UserCreateEnterpriseDTO;
 import com.example.demo.dto.UserResponse;
+import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,12 +39,14 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok().body(users);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> findById(@PathVariable Long id) {
         User user = userService.findyById(id);
         return ResponseEntity.ok().body(user);
@@ -72,7 +76,10 @@ public class UserController {
                 "user", Map.of(
                         "id", user.getId(),
                         "email", user.getEmail(),
-                        "role", user.getRole().getRoleName()
+                        "roles", user.getRoles()
+                                .stream()
+                                .map(Role::getRoleName)
+                                .toList()
                 )
         ));
     }

@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "vacancys")
@@ -26,6 +28,13 @@ public class Vacancy {
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;
+
+    @OneToMany(
+            mappedBy = "vacancy",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<SelectionStage> selectionStages = new HashSet<>();
 
     private String title;
     private String description;

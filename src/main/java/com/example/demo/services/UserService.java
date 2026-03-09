@@ -62,7 +62,7 @@ public class UserService {
 
         Role role = roleService.insert("CANDIDATO");
 
-        user.setRole(role);
+
         user.setEmail(objDto.getEmail());
         user.setPassword(passwordEncoder.encode(objDto.getPassword()));
 
@@ -78,10 +78,10 @@ public class UserService {
 
         Role role = roleService.insert("EMPRESA");
 
-        user.setRole(role);
         user.setEmail(objDto.getEmail());
-
+        user.getRoles().add(role);
         userRepository.save(user);
+
         createEnterprise(user, objDto.getEnterpriseName(), objDto.getCnpj(), objDto.getContact());
 
         return UserResponse.fromEntity(user);

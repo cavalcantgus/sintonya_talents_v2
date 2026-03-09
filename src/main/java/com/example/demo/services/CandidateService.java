@@ -8,6 +8,7 @@ import com.example.demo.entities.Profile;
 import com.example.demo.entities.SkillBase;
 import com.example.demo.entities.SkillCandidate;
 import com.example.demo.enums.SkillLevel;
+import com.example.demo.enums.SkillSource;
 import com.example.demo.repositories.CandidateRepository;
 import com.example.demo.repositories.ProfileRepository;
 import com.example.demo.repositories.SkillBaseRepository;
@@ -25,17 +26,23 @@ public class CandidateService {
     private final CandidateRepository candidateRepository;
     private final ProfileRepository profileRepository;
     private final SkillBaseRepository skillBaseRepository;
+    private final SkillCandidateRepository skillCandidateRepository;
 
     public CandidateService(CandidateRepository candidateRepository,
                             ProfileRepository profileRepository,
-                            SkillBaseRepository skillBaseRepository) {
+                            SkillBaseRepository skillBaseRepository,
+                            SkillCandidateRepository skillCandidateRepository) {
         this.candidateRepository = candidateRepository;
         this.profileRepository = profileRepository;
         this.skillBaseRepository = skillBaseRepository;
+        this.skillCandidateRepository = skillCandidateRepository;
     }
 
-    public List<Candidate> findAll() {
-        return candidateRepository.findAll();
+    public List<CandidateResponse> findAll() {
+        return candidateRepository.findAll()
+                .stream()
+                .map(CandidateResponse::fromEntity)
+                .toList();
     }
 
     public CandidateResponse findById(Long id) {
@@ -105,17 +112,17 @@ public class CandidateService {
                 skillBaseRepository.findAllById(skillLevelMap.keySet())
         );
 
-        Set<Long> existingSkillsIds = candidate.getCandidateSkills()
-                .stream()
-                .map(sc -> sc.getSkillBase().getId())
-                .collect(Collectors.toSet());
+        Set<Long> existingSkillsIds = skillCandidateRepository.findSkillIdsByCandidateIdAndSource(
+                id, SkillSource.MANUAL);
 
         for (SkillBase skill : skills) {
             if (!existingSkillsIds.contains(skill.getId())) {
 
                 SkillCandidate skillCandidate = new SkillCandidate();
+
                 skillCandidate.setCandidate(candidate);
                 skillCandidate.setSkillBase(skill);
+                skillCandidate.setSource(SkillSource.MANUAL);
 
                 String levelStr = skillLevelMap.get(skill.getId());
                 skillCandidate.setSkillLevel(SkillLevel.valueOf(levelStr));
