@@ -12,17 +12,17 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/seed.sql
     networks:
       - sintonya-network
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: sintonya-pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+  dbeaver:
+    image: dbeaver/cloudbeaver
+    container_name: sintonya-dbeaver
     ports:
-      - "8081:80"
+      - "8978:8978"
+    volumes:
+      - dbeaver-data:/opt/cloudbeaver/workspace
     depends_on:
       - postgres
     networks:
@@ -44,7 +44,7 @@ services:
 
 volumes:
   pgdata:
-
+  dbeaver-data:
 
 networks:
   sintonya-network:
