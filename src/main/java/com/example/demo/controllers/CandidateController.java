@@ -38,7 +38,7 @@ public class CandidateController {
     @GetMapping("/findCandidateByUser/{userId}")
     @PreAuthorize("hasRole('CANDIDATO')")
     public ResponseEntity<CandidateResponse> findByUserId(@PathVariable Long userId) {
-        CandidateResponse candidate = candidateService.findById(userId);
+        CandidateResponse candidate = candidateService.findByUserId(userId);
         return ResponseEntity.ok().body(candidate);
     }
 

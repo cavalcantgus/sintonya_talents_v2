@@ -42,9 +42,24 @@ services:
     networks:
       - sintonya-network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: sintonya-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: sintonya_user
+      RABBITMQ_DEFAULT_PASS: sintonya_pass
+    ports:
+      - "5672:5672"   # porta usada pelas aplicações (Spring, etc)
+      - "15672:15672" # painel web do RabbitMQ
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - sintonya-network
+
 volumes:
   pgdata:
   dbeaver-data:
+  rabbitmq-data:
 
 networks:
   sintonya-network:

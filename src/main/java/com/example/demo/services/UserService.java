@@ -64,6 +64,7 @@ public class UserService {
 
 
         user.setEmail(objDto.getEmail());
+        user.getRoles().add(role);
         user.setPassword(passwordEncoder.encode(objDto.getPassword()));
 
         userRepository.save(user);
