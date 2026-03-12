@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.dto.JobApplicationResponse;
 import com.example.demo.entities.JobApplication;
 import com.example.demo.services.JobApplicationService;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/job-application")
+@RequestMapping("/job-applications")
 public class JobApplicationController {
 
     private final JobApplicationService jobApplicationService;
@@ -24,6 +25,13 @@ public class JobApplicationController {
         List<JobApplicationResponse> jobApplicationResponses = jobApplicationService.findAll();
         return ResponseEntity.ok().body(jobApplicationResponses);
     }
+
+    @GetMapping("/by-candidate/{candidateId}")
+    public ResponseEntity<List<JobApplicationResponse>> findAllByCandidateId(@PathVariable Long candidateId) {
+        List<JobApplicationResponse> jobApplicationResponses = jobApplicationService.findAllByCandidateId(candidateId);
+        return ResponseEntity.ok().body(jobApplicationResponses);
+    }
+
     @PostMapping("/{candidateId}/apply/{vacancyId}")
     public ResponseEntity<?> apply(@PathVariable Long candidateId, @PathVariable Long vacancyId) {
         jobApplicationService.apply(candidateId, vacancyId);

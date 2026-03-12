@@ -31,6 +31,13 @@ public class JobApplicationService {
         this.selectionStageRepository = selectionStageRepository;
     }
 
+    public List<JobApplicationResponse> findAllByCandidateId(Long candidateId) {
+        return jobApplicationRepository.findAllByCandidateId(candidateId)
+                .stream()
+                .map(JobApplicationResponse::fromEntity)
+                .toList();
+    }
+
     public List<JobApplicationResponse> findAll() {
         return jobApplicationRepository.findAll()
                 .stream()

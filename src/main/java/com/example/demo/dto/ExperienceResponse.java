@@ -15,8 +15,7 @@ public record ExperienceResponse(
         LocalDate endDate,
         boolean isCurrent,
         String workModality,
-        String description,
-        CandidateResponse candidate
+        String description
 ) {
     public static ExperienceResponse fromEntity(Experience experience) {
         return new ExperienceResponse(
@@ -29,8 +28,7 @@ public record ExperienceResponse(
                 experience.getEndDate(),
                 experience.isCurrent(),
                 experience.getWorkModality().toString(),
-                experience.getDescription(),
-                CandidateResponse.fromEntity(experience.getCandidate())
+                experience.getDescription()
         );
     }
 }
