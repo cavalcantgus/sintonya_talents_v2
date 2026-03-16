@@ -1,17 +1,18 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.FinishTest;
 import com.example.demo.dto.JobApplicationResponse;
 import com.example.demo.entities.*;
 import com.example.demo.enums.ApplicationStatus;
 import com.example.demo.enums.StageStatus;
-import com.example.demo.repositories.CandidateRepository;
-import com.example.demo.repositories.JobApplicationRepository;
-import com.example.demo.repositories.SelectionStageRepository;
-import com.example.demo.repositories.VacancyRepository;
+import com.example.demo.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class JobApplicationService {
@@ -20,15 +21,18 @@ public class JobApplicationService {
     private final CandidateRepository candidateRepository;
     private final VacancyRepository vacancyRepository;
     private final SelectionStageRepository selectionStageRepository;
+    private final ApplicationStageResultRepository applicationStageResultRepository;
 
     public JobApplicationService(JobApplicationRepository jobApplicationRepository,
                                  CandidateRepository candidateRepository,
                                  VacancyRepository vacancyRepository,
-                                 SelectionStageRepository selectionStageRepository) {
+                                 SelectionStageRepository selectionStageRepository,
+                                 ApplicationStageResultRepository applicationStageResultRepository) {
         this.jobApplicationRepository = jobApplicationRepository;
         this.candidateRepository = candidateRepository;
         this.vacancyRepository = vacancyRepository;
         this.selectionStageRepository = selectionStageRepository;
+        this.applicationStageResultRepository = applicationStageResultRepository;
     }
 
     public List<JobApplicationResponse> findAllByCandidateId(Long candidateId) {
@@ -45,6 +49,7 @@ public class JobApplicationService {
                 .toList();
     }
 
+    @Transactional
     public void apply(Long candidateId, Long vacancyId) {
         Candidate candidate = candidateRepository.findById(candidateId)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
@@ -74,4 +79,23 @@ public class JobApplicationService {
 
         jobApplicationRepository.save(jobApplication);
     }
+
+    @Transactional
+    public void startTest(Long jobApplicationId, Long applicationStageResultId) {
+        applicationStageResultRepository.lockOtherStages(jobApplicationId, applicationStageResultId);
+        applicationStageResultRepository.startStage(applicationStageResultId);
+    }
+
+    @Transactional
+    public String finishTest(FinishTest dto) {
+        ApplicationStageResult result =
+                applicationStageResultRepository.findStageResult(dto.getCpf(), dto.getUrl())
+                        .orElseThrow(() -> new EntityNotFoundException("Resultado não encontrado"));
+
+        result.setStageStatus(StageStatus.COMPLETED);
+        result.setLocked(true);
+        result.setScore(dto.getScore());
+        return result.toString();
+    }
+
 }

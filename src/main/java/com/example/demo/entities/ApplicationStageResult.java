@@ -2,10 +2,7 @@ package com.example.demo.entities;
 
 import com.example.demo.enums.StageStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "application_stage_result")
@@ -13,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ApplicationStageResult {
 
     @Id
@@ -31,6 +29,5 @@ public class ApplicationStageResult {
     private StageStatus stageStatus;
 
     private Double score;
-    private Long externalTestId;
     private boolean locked = true;
 }

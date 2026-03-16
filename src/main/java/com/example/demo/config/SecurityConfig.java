@@ -42,14 +42,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(false);
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+        config.setAllowedOriginPatterns(List.of("*")); // permite qualquer origem
+        config.setAllowedMethods(List.of("*"));        // permite qualquer método (GET, POST, PUT...)
+        config.setAllowedHeaders(List.of("*"));        // permite qualquer header
+        config.setExposedHeaders(List.of("*"));        // expõe todos os headers
+        config.setAllowCredentials(false);             // obrigatório quando origem é *
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 
@@ -103,7 +105,7 @@ public class SecurityConfig {
                                 "/users/register/**",
                                 "/auth/login"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable()
