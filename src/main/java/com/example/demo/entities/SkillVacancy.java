@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.enums.AnalysisDimension;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,9 @@ public class SkillVacancy {
     private SkillBase skillBase;
 
     private boolean isRequired = false;
-    private Integer weight = 1;
+
+    @Enumerated(EnumType.STRING)
+    private AnalysisDimension weight;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

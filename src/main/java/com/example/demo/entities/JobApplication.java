@@ -26,6 +26,9 @@ public class JobApplication {
     @JoinColumn(name = "candidate_id", nullable = false)
     private Candidate candidate;
 
+    @OneToOne(mappedBy = "jobApplication")
+    private ApplicationAnalysis applicationAnalysis;
+
     @OneToMany(
             mappedBy = "jobApplication",
             cascade = CascadeType.ALL,

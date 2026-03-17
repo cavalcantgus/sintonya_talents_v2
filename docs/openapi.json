@@ -1198,8 +1198,15 @@
             "type": "string",
             "enum": [
               "BEHAVIORAL_TEST",
-              "TECHNICAL_TEST"
+              "TECHNICAL_TEST",
+              "SKILL_TEST",
+              "CERTIFICATE_TEST",
+              "EXPERIENCE_TEST"
             ]
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
           },
           "url": {
             "type": "string"
@@ -1207,6 +1214,9 @@
           "stageOrder": {
             "type": "integer",
             "format": "int32"
+          },
+          "visible": {
+            "type": "boolean"
           }
         }
       },
@@ -1869,8 +1879,22 @@
             "type": "integer",
             "format": "int64"
           },
+          "selectionStageId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "stageName": {
+            "type": "string"
+          },
           "stageStatus": {
             "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "stageOrder": {
+            "type": "integer",
+            "format": "int32"
           },
           "locked": {
             "type": "boolean"
@@ -1887,12 +1911,14 @@
           "vacancyResponse": {
             "$ref": "#/components/schemas/VacancyResponse"
           },
-          "applicationStageResultResponse": {
-            "uniqueItems": true,
+          "stages": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ApplicationStageResultResponse"
             }
+          },
+          "currentStage": {
+            "$ref": "#/components/schemas/ApplicationStageResultResponse"
           }
         }
       }

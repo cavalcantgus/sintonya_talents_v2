@@ -28,6 +28,8 @@ public class SelectionStage {
     @Enumerated(EnumType.STRING)
     private StageType stageType;
 
+    private Double score;
     private String url;
     private Integer stageOrder;
+    private boolean visible;
 }

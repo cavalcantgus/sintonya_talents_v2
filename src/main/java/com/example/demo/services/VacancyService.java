@@ -86,7 +86,7 @@ public class VacancyService {
             skillVacancyRepository.save(skillVacancy);
 
         }
-        publisher.publishVacancyCreated(vacancy);
+//        publisher.publishVacancyCreated(vacancy);
         return vacancy;
     }
 
