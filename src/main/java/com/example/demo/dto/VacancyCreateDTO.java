@@ -13,7 +13,12 @@ public class VacancyCreateDTO {
     private String description;
     private String position;
     private String vacancyType;
+    private Long sectorId;
+    private boolean hasATechnicalTest;
+    private boolean hasABehavioralTest;
+    private boolean requiredCertificate;
+    private String experienceRange;
     private String locality;
     private String modalityType;
-    private List<Long> skillsIds;
+    private List<SkillVacancyDTO> skills;
 }

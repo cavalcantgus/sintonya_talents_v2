@@ -52,4 +52,10 @@ public class JobApplicationController {
         String fullName = jobApplicationService.finishTest(dto);
         return ResponseEntity.ok(Map.of("fullName", fullName));
     }
+
+    @PostMapping("/generate-analysis/{jobApplicationId}")
+    public ResponseEntity<Void> generateAnalysis(@PathVariable Long jobApplicationId) {
+        jobApplicationService.generateAnalysis(jobApplicationId);
+        return ResponseEntity.ok().build();
+    }
 }

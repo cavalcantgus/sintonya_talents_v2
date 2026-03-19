@@ -19,5 +19,6 @@ public class CertificateCreateDTO {
     private String expirationMonth;
     private String expirationYear;
     private List<Long> skillsId;
+    private List<Long> sectorIds;
     private MultipartFile file;
 }

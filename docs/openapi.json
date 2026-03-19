@@ -454,6 +454,30 @@
         }
       }
     },
+    "/job-applications/generate-analysis/{jobApplicationId}": {
+      "post": {
+        "tags": [
+          "job-application-controller"
+        ],
+        "operationId": "generateAnalysis",
+        "parameters": [
+          {
+            "name": "jobApplicationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/job-applications/finish-test": {
       "post": {
         "tags": [
@@ -624,7 +648,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Vacancy"
+                    "$ref": "#/components/schemas/VacancyResponse"
                   }
                 }
               }
@@ -806,12 +830,35 @@
         }
       }
     },
+    "/sectors": {
+      "get": {
+        "tags": [
+          "sector-controller"
+        ],
+        "operationId": "findAll_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Sector"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/job-applications": {
       "get": {
         "tags": [
           "job-application-controller"
         ],
-        "operationId": "findAll_3",
+        "operationId": "findAll_4",
         "responses": {
           "200": {
             "description": "OK",
@@ -868,7 +915,7 @@
         "tags": [
           "experience-controller"
         ],
-        "operationId": "findAll_4",
+        "operationId": "findAll_5",
         "responses": {
           "200": {
             "description": "OK",
@@ -922,7 +969,7 @@
         "tags": [
           "certificate-controller"
         ],
-        "operationId": "findAll_5",
+        "operationId": "findAll_6",
         "responses": {
           "200": {
             "description": "OK",
@@ -976,7 +1023,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findAll_6",
+        "operationId": "findAll_7",
         "responses": {
           "200": {
             "description": "OK",
@@ -1181,6 +1228,26 @@
           }
         }
       },
+      "Sector": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "SelectionStage": {
         "type": "object",
         "properties": {
@@ -1197,14 +1264,30 @@
           "stageType": {
             "type": "string",
             "enum": [
-              "BEHAVIORAL_TEST",
               "TECHNICAL_TEST",
-              "SKILL_TEST",
-              "CERTIFICATE_TEST",
-              "EXPERIENCE_TEST"
+              "BEHAVIORAL_TEST",
+              "SKILL_REQUIRED",
+              "SKILL_OPTIONAL",
+              "CERTIFICATE",
+              "EXPERIENCE"
             ]
           },
-          "score": {
+          "analysisDimension": {
+            "type": "string",
+            "enum": [
+              "REQUIRED_SKILL",
+              "OPTIONAL_SKILL",
+              "TECHNICAL",
+              "BEHAVIORAL",
+              "CERTIFICATES",
+              "EXPERIENCES"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxScore": {
             "type": "number",
             "format": "double"
           },
@@ -1216,6 +1299,9 @@
             "format": "int32"
           },
           "visible": {
+            "type": "boolean"
+          },
+          "required": {
             "type": "boolean"
           }
         }
@@ -1259,6 +1345,9 @@
           },
           "enterprise": {
             "$ref": "#/components/schemas/Enterprise"
+          },
+          "sector": {
+            "$ref": "#/components/schemas/Sector"
           },
           "selectionStages": {
             "uniqueItems": true,
@@ -1313,6 +1402,32 @@
           "closedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "technicalTest": {
+            "type": "boolean"
+          },
+          "behavioralTest": {
+            "type": "boolean"
+          },
+          "certificateRequired": {
+            "type": "boolean"
+          },
+          "experienceRange": {
+            "type": "string",
+            "enum": [
+              "ZERO_TO_SIX_MONTHS",
+              "ONE_TO_TWO_YEARS",
+              "TWO_TO_FOUR_YEARS",
+              "FOUR_PLUS_YEARS"
+            ]
+          },
+          "minExperienceRange": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "maxExperienceRange": {
+            "type": "integer",
+            "format": "int64"
           },
           "vacancyStatus": {
             "type": "string",
@@ -1548,6 +1663,18 @@
           }
         }
       },
+      "SkillVacancyDTO": {
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
       "VacancyCreateDTO": {
         "type": "object",
         "properties": {
@@ -1563,17 +1690,32 @@
           "vacancyType": {
             "type": "string"
           },
+          "sectorId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "hasATechnicalTest": {
+            "type": "boolean"
+          },
+          "hasABehavioralTest": {
+            "type": "boolean"
+          },
+          "requiredCertificate": {
+            "type": "boolean"
+          },
+          "experienceRange": {
+            "type": "string"
+          },
           "locality": {
             "type": "string"
           },
           "modalityType": {
             "type": "string"
           },
-          "skillsIds": {
+          "skills": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int64"
+              "$ref": "#/components/schemas/SkillVacancyDTO"
             }
           }
         }
@@ -1740,6 +1882,13 @@
             "type": "string"
           },
           "skillsId": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "sectorIds": {
             "type": "array",
             "items": {
               "type": "integer",

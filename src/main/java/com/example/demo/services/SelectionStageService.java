@@ -55,7 +55,7 @@ public class SelectionStageService {
         SelectionStage selectionStage = new SelectionStage();
         selectionStage.setName("Teste de Habilidade");
         selectionStage.setVacancy(vacancy);
-        selectionStage.setStageType(StageType.SKILL_TEST);
+        selectionStage.setStageType(StageType.SKILL_OPTIONAL);
         selectionStage.setVisible(false);
         vacancy.getSelectionStages().add(selectionStage);
     }
@@ -64,7 +64,7 @@ public class SelectionStageService {
         SelectionStage selectionStage = new SelectionStage();
         selectionStage.setName("Teste de Certificado");
         selectionStage.setVacancy(vacancy);
-        selectionStage.setStageType(StageType.SKILL_TEST);
+        selectionStage.setStageType(StageType.CERTIFICATE);
         selectionStage.setVisible(false);
         vacancy.getSelectionStages().add(selectionStage);
 
@@ -74,7 +74,7 @@ public class SelectionStageService {
         SelectionStage selectionStage = new SelectionStage();
         selectionStage.setName("Teste de Experiência");
         selectionStage.setVacancy(vacancy);
-        selectionStage.setStageType(StageType.SKILL_TEST);
+        selectionStage.setStageType(StageType.EXPERIENCE);
         selectionStage.setVisible(false);
         vacancy.getSelectionStages().add(selectionStage);
 

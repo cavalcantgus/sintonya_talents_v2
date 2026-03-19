@@ -19,7 +19,7 @@ public record ApplicationStageResultResponse(
              app.getSelectionStage().getName(),
              app.getStageStatus().toString(),
                 app.getSelectionStage().getUrl(),
-                app.getSelectionStage().getStageOrder(),
+                app.getSelectionStage().getStageOrder() != null ? app.getSelectionStage().getStageOrder() : null,
                 app.isLocked()
         );
     }

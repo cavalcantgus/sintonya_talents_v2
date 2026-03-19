@@ -29,19 +29,22 @@ public class CertificatesService {
     private final SkillCandidateRepository skillCandidateRepository;
     private final AttachmentService attachmentService;
     private final FileRepository fileRepository;
+    private final SectorRepository sectorRepository;
 
     public CertificatesService(CertificatesRepository certificatesRepository,
                                CandidateRepository candidateRepository,
                                SkillBaseRepository skillBaseRepository,
                                SkillCandidateRepository skillCandidateRepository,
                                AttachmentService attachmentService,
-                               FileRepository fileRepository) {
+                               FileRepository fileRepository,
+                               SectorRepository sectorRepository) {
         this.certificatesRepository = certificatesRepository;
         this.candidateRepository = candidateRepository;
         this.skillBaseRepository = skillBaseRepository;
         this.skillCandidateRepository = skillCandidateRepository;
         this.attachmentService = attachmentService;
         this.fileRepository = fileRepository;
+        this.sectorRepository = sectorRepository;
     }
 
     public List<CertificateResponse> findAll() {
@@ -70,6 +73,14 @@ public class CertificatesService {
         certificate.setUrl(objDto.getUrl());
         certificate.setHours(objDto.getHours());
         certificate.setCandidate(candidate);
+
+        Set<Sector> sectors = new HashSet<>();
+
+        if (objDto.getSectorIds() != null && !objDto.getSectorIds().isEmpty()) {
+            sectors.addAll(sectorRepository.findAllById(objDto.getSectorIds()));
+        }
+
+        certificate.setSectors(sectors);
 
         candidate.getCertificates().add(certificate);
 

@@ -28,6 +28,14 @@ public class Certificates {
     @OneToMany(mappedBy = "certificate", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SkillCandidate> certificateSkills = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "certificate_sectors",
+            joinColumns = @JoinColumn(name = "certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "sector_id")
+    )
+    private Set<Sector> sectors = new HashSet<>();
+
     private String title;
     private String issuingOrganization;
     private String issueDate;

@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.enums.ExperienceRange;
 import com.example.demo.enums.VacancyStatus;
 import com.example.demo.enums.VacancyType;
 import com.example.demo.enums.WorkModality;
@@ -29,6 +30,10 @@ public class Vacancy {
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;
 
+    @ManyToOne
+    @JoinColumn(name = "sector_id")
+    private Sector sector;
+
     @OneToMany(
             mappedBy = "vacancy",
             cascade = CascadeType.ALL,
@@ -51,6 +56,20 @@ public class Vacancy {
     private LocalDate publicationDate;
     private LocalDate expirationDate;
     private LocalDateTime closedAt;
+    @Column(name = "has_a_technical_test")
+    private boolean technicalTest;
+
+    @Column(name = "has_a_behavioral_test")
+    private boolean behavioralTest;
+
+    @Column(name = "required_certificate")
+    private boolean certificateRequired;
+
+    @Enumerated(EnumType.STRING)
+    private ExperienceRange experienceRange;
+
+    private Long minExperienceRange;
+    private Long maxExperienceRange;
 
     @Enumerated(EnumType.STRING)
     private VacancyStatus vacancyStatus;

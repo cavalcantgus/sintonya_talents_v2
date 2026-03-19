@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.enums.AnalysisDimension;
 import com.example.demo.enums.StageType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,8 +29,16 @@ public class SelectionStage {
     @Enumerated(EnumType.STRING)
     private StageType stageType;
 
-    private Double score;
+    @Enumerated(EnumType.STRING)
+    private AnalysisDimension analysisDimension;
+
+    private Double weight;
+    private Double maxScore;
+
     private String url;
     private Integer stageOrder;
     private boolean visible;
+
+    @Column(name = "is_required")
+    private boolean required;
 }

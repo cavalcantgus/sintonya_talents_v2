@@ -24,8 +24,9 @@ public class ApplicationAnalysisDimension {
     @JoinColumn(name = "analysis_id")
     private ApplicationAnalysis analysis;
 
-    @Enumerated(EnumType.STRING)
-    private AnalysisDimension dimension;
+    @OneToOne
+    @JoinColumn(name = "selection_stage_id")
+    private SelectionStage selectionStage;
 
     private Double score;
     private Double weight;

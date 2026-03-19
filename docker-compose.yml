@@ -12,7 +12,6 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./database/seed.sql:/docker-entrypoint-initdb.d/seed.sql
     networks:
       - sintonya-network
 

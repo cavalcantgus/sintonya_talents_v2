@@ -24,8 +24,8 @@ public class VacancyController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('VACANCY_VIEW')")
-    public ResponseEntity<List<Vacancy>>  findAll() {
-        List<Vacancy> vacancys = vacancyService.findAll();
+    public ResponseEntity<List<VacancyResponse>>  findAll() {
+        List<VacancyResponse> vacancys = vacancyService.findAll();
         return ResponseEntity.ok().body(vacancys);
     }
 
@@ -44,7 +44,7 @@ public class VacancyController {
     }
 
     @PostMapping("/{empresaId}/create-vacancy")
-    @PreAuthorize("hasAuthority('VACANCY_CREATE')")
+//    @PreAuthorize("hasAuthority('VACANCY_CREATE')")
     public ResponseEntity<Vacancy> createVacancy(@RequestBody VacancyCreateDTO objDto, @PathVariable Long empresaId) {
         Vacancy vacancy = vacancyService.createVacany(empresaId, objDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(vacancy.getId()).toUri();

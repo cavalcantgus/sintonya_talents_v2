@@ -1,34 +1,25 @@
 package com.example.demo.entities;
 
-import com.example.demo.enums.AnalysisDimension;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "skill_vacancy")
+@Table(name = "sector")
 @Getter
 @Setter
-public class SkillVacancy {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Sector {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "vacancy_id")
-    private Vacancy vacancy;
-
-    @ManyToOne
-    @JoinColumn(name = "skill_base_id")
-    private SkillBase skillBase;
-
-    @Column(name = "required")
-    private boolean required;
+    private String title;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
