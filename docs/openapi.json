@@ -117,6 +117,47 @@
         }
       }
     },
+    "/enterprises/update-personal-infos/enterprise/{id}": {
+      "put": {
+        "tags": [
+          "enterprise-controller"
+        ],
+        "operationId": "updatePersonalInfos",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseUpdateDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/candidates/update-personal-summary/candidate/{id}": {
       "put": {
         "tags": [
@@ -163,7 +204,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "updatePersonalInfos",
+        "operationId": "updatePersonalInfos_1",
         "parameters": [
           {
             "name": "id",
@@ -337,6 +378,36 @@
               "*/*": {
                 "schema": {
                   "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/register/admin": {
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "insertAdministrator",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreateDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
@@ -964,12 +1035,97 @@
         }
       }
     },
+    "/enterprises": {
+      "get": {
+        "tags": [
+          "enterprise-controller"
+        ],
+        "operationId": "findAll_6",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnterpriseResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enterprises/{id}": {
+      "get": {
+        "tags": [
+          "enterprise-controller"
+        ],
+        "operationId": "findById_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enterprises/find-enterprise-by-usar/{userId}": {
+      "get": {
+        "tags": [
+          "enterprise-controller"
+        ],
+        "operationId": "findByUserId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/certificates": {
       "get": {
         "tags": [
           "certificate-controller"
         ],
-        "operationId": "findAll_6",
+        "operationId": "findAll_7",
         "responses": {
           "200": {
             "description": "OK",
@@ -992,7 +1148,7 @@
         "tags": [
           "certificate-controller"
         ],
-        "operationId": "findById_4",
+        "operationId": "findById_5",
         "parameters": [
           {
             "name": "id",
@@ -1023,7 +1179,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findAll_7",
+        "operationId": "findAll_8",
         "responses": {
           "200": {
             "description": "OK",
@@ -1046,7 +1202,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findById_5",
+        "operationId": "findById_6",
         "parameters": [
           {
             "name": "id",
@@ -1077,7 +1233,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findByUserId",
+        "operationId": "findByUserId_1",
         "parameters": [
           {
             "name": "userId",
@@ -1128,10 +1284,10 @@
           "contact": {
             "type": "string"
           },
-          "socialReason": {
-            "type": "string"
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
           },
-          "locality": {
+          "socialReason": {
             "type": "string"
           },
           "sizeEnterprise": {
@@ -1196,6 +1352,41 @@
           }
         }
       },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "banner": {
+            "type": "string"
+          },
+          "headLine": {
+            "type": "string"
+          },
+          "personalSummary": {
+            "type": "string"
+          },
+          "socialLinks": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "Role": {
         "type": "object",
         "properties": {
@@ -1213,9 +1404,9 @@
           "roleName": {
             "type": "string",
             "enum": [
-              "ADMINISTRADOR",
-              "CANDIDATO",
-              "EMPRESA"
+              "ADMINISTRATOR",
+              "CANDIDATE",
+              "ENTERPRISE"
             ]
           },
           "createdAt": {
@@ -1462,6 +1653,116 @@
           }
         }
       },
+      "EnterpriseUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "enterpriseName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "socialReason": {
+            "type": "string"
+          },
+          "numberOfEmployees": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "headLine": {
+            "type": "string"
+          },
+          "sector": {
+            "type": "string"
+          },
+          "sizeEnterprise": {
+            "type": "string",
+            "enum": [
+              "SMALL",
+              "MEDIUM",
+              "BIG"
+            ]
+          },
+          "socialLinks": {
+            "type": "string"
+          },
+          "siteUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "EnterpriseResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "enterpriseName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "socialReason": {
+            "type": "string"
+          },
+          "sizeEnterprise": {
+            "type": "string"
+          },
+          "numberOfEmployees": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sector": {
+            "type": "string"
+          },
+          "siteUrl": {
+            "type": "string"
+          },
+          "profileResponse": {
+            "$ref": "#/components/schemas/ProfileResponse"
+          },
+          "isApproved": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProfileResponse": {
+        "type": "object",
+        "properties": {
+          "photo": {
+            "type": "string"
+          },
+          "bannerm": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "personalSummary": {
+            "type": "string"
+          },
+          "socialLinks": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          }
+        }
+      },
       "CandidateResponse": {
         "type": "object",
         "properties": {
@@ -1570,29 +1871,6 @@
             "type": "string"
           },
           "description": {
-            "type": "string"
-          }
-        }
-      },
-      "ProfileResponse": {
-        "type": "object",
-        "properties": {
-          "photo": {
-            "type": "string"
-          },
-          "bannerm": {
-            "type": "string"
-          },
-          "headline": {
-            "type": "string"
-          },
-          "personalSummary": {
-            "type": "string"
-          },
-          "socialLinks": {
-            "type": "string"
-          },
-          "locality": {
             "type": "string"
           }
         }
@@ -1909,49 +2187,6 @@
           },
           "password": {
             "type": "string"
-          }
-        }
-      },
-      "EnterpriseResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "enterpriseName": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "cnpj": {
-            "type": "string"
-          },
-          "contact": {
-            "type": "string"
-          },
-          "socialReason": {
-            "type": "string"
-          },
-          "locality": {
-            "type": "string"
-          },
-          "sizeEnterprise": {
-            "type": "string"
-          },
-          "numberOfEmployees": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "sector": {
-            "type": "string"
-          },
-          "siteUrl": {
-            "type": "string"
-          },
-          "isApproved": {
-            "type": "boolean"
           }
         }
       },

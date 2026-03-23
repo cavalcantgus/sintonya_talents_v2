@@ -38,13 +38,16 @@ public class Enterprise {
     @Column(nullable = false)
     private String contact;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Profile profile;
+
     private String socialReason;
-    private String locality;
     private SizeEnterprise sizeEnterprise;
     private Long numberOfEmployees;
     private String sector;
     private String siteUrl;
     private boolean isApproved = false;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

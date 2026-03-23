@@ -53,6 +53,24 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
 
+    public UserResponse insertAdmin(UserCreateDTO objDto) {
+        if(userRepository.existsByEmail(objDto.getEmail())) {
+            throw new EmailAlreadyExistsException("E-mal já cadastrado");
+        }
+
+        User user = new User();
+
+        Role role = roleService.insert("ADMINISTRATOR");
+
+        user.setEmail(objDto.getEmail());
+        user.setPassword(passwordEncoder.encode(objDto.getPassword()));
+        user.getRoles().add(role);
+
+        userRepository.save(user);
+
+        return UserResponse.fromEntity(user);
+    }
+
     @Transactional
     public UserResponse insertCandidate(UserCreateDTO objDto) {
         if(userRepository.existsByEmail(objDto.getEmail())) {
@@ -60,7 +78,7 @@ public class UserService {
         }
         User user = new User();
 
-        Role role = roleService.insert("CANDIDATO");
+        Role role = roleService.insert("CANDIDATE");
 
 
         user.setEmail(objDto.getEmail());
@@ -77,7 +95,7 @@ public class UserService {
     public UserResponse insertEnterprise(UserCreateEnterpriseDTO objDto) {
         User user = new User();
 
-        Role role = roleService.insert("EMPRESA");
+        Role role = roleService.insert("ENTERPRISE");
 
         user.setEmail(objDto.getEmail());
         user.getRoles().add(role);
@@ -102,7 +120,7 @@ public class UserService {
 
     }
 
-    private Profile createProfile(Candidate candidate) {
+    private Profile createProfile(Object object) {
         Profile profile = new Profile();
         return profileRepository.save(profile);
     }
@@ -113,6 +131,10 @@ public class UserService {
         enterprise.setEnterpriseName(enterpriseName);
         enterprise.setCnpj(cnpj);
         enterprise.setContact(contact);
+
+        Profile profile = createProfile(enterprise);
+
+        enterprise.setProfile(profile);
         enterpriseRepository.save(enterprise);
     }
 }

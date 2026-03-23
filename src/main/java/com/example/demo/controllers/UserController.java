@@ -82,4 +82,11 @@ public class UserController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.id()).toUri();
         return ResponseEntity.created(uri).body(user);
     }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<UserResponse> insertAdministrator(@RequestBody UserCreateDTO objDto) {
+        UserResponse user = userService.insertAdmin(objDto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.id()).toUri();
+        return ResponseEntity.created(uri).body(user);
+    }
 }
