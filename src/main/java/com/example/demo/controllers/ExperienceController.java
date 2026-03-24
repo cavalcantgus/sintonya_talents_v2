@@ -36,7 +36,7 @@ public class ExperienceController {
     }
 
     @PostMapping("/{candidateId}/add-experience")
-    @PreAuthorize("hasAuthority('EXPERIENCE_CREATE')")
+    @PreAuthorize("hasAuthority('EXPERIENCE_CREATE') || hasRole('ADMINISTRATOR')")
     public ResponseEntity<ExperienceResponse> insert(@PathVariable Long candidateId, @RequestBody ExperienceCreateDTO objDto) {
         ExperienceResponse experience = experienceService.insert(candidateId, objDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(experience.id()).toUri();

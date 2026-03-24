@@ -3,10 +3,7 @@ package com.example.demo.services;
 import com.example.demo.dto.CandidateResponse;
 import com.example.demo.dto.CandidateUpdateDTO;
 import com.example.demo.dto.SkillCandidateCreateDto;
-import com.example.demo.entities.Candidate;
-import com.example.demo.entities.Profile;
-import com.example.demo.entities.SkillBase;
-import com.example.demo.entities.SkillCandidate;
+import com.example.demo.entities.*;
 import com.example.demo.enums.SkillLevel;
 import com.example.demo.enums.SkillSource;
 import com.example.demo.repositories.CandidateRepository;
@@ -45,6 +42,10 @@ public class CandidateService {
                 .toList();
     }
 
+    public Candidate findByUserEmail(String email) {
+        return candidateRepository.findByUserEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
+    }
     public CandidateResponse findById(Long id) {
        Candidate candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
@@ -66,7 +67,6 @@ public class CandidateService {
         candidate.setFullName(objDto.getFullName());
         candidate.setGender(objDto.getGender());
         candidate.setRaceEthnicity(objDto.getRaceEthnicity());
-        candidate.setSector(objDto.getSector());
         candidate.setContact(objDto.getContact());
 
         Profile profile = profileRepository.findById(candidate.getProfile().getId())

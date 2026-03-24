@@ -10,7 +10,6 @@ public class CandidateUpdateDTO {
     private String gender;
     private String raceEthnicity;
     private String headLine;
-    private String sector;
     private String locality;
     private String socialLinks;
     private String contact;

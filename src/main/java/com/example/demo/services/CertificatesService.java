@@ -15,6 +15,7 @@ import org.hibernate.engine.spi.EntityUniqueKey;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,7 +74,8 @@ public class CertificatesService {
         certificate.setUrl(objDto.getUrl());
         certificate.setHours(objDto.getHours());
         certificate.setCandidate(candidate);
-
+        certificate.setIssueDate(buildDate(objDto.getIssueMonth(), objDto.getIssueYear()));
+        certificate.setExpirationDate(buildDate(objDto.getExpirationMonth(), objDto.getExpirationYear()));
         Set<Sector> sectors = new HashSet<>();
 
         if (objDto.getSectorIds() != null && !objDto.getSectorIds().isEmpty()) {
@@ -123,5 +125,12 @@ public class CertificatesService {
         candidateRepository.save(candidate);
 
         return CertificateResponse.fromEntity(certificate);
+    }
+
+    private LocalDate buildDate(String month, String year) {
+        if (month == null || year == null || month.isBlank() || year.isBlank()) {
+            return null;
+        }
+        return LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
     }
 }

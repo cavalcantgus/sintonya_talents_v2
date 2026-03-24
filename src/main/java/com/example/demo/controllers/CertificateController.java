@@ -42,7 +42,7 @@ public class CertificateController {
     }
 
     @PostMapping(value = "/{candidateId}/add-certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('CERTIFICATE_CREATE')")
+    @PreAuthorize("hasAuthority('CERTIFICATE_CREATE') || hasRole('ADMINISTRATOR')")
     public ResponseEntity<CertificateResponse> insert(@PathVariable Long candidateId,
                                                       @RequestPart("data") CertificateCreateDTO objDto,
                                                       @RequestPart(value = "file", required = false) MultipartFile file) {

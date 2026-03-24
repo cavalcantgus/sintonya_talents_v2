@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,8 +39,8 @@ public class Certificates {
 
     private String title;
     private String issuingOrganization;
-    private String issueDate;
-    private String expirationDate;
+    private LocalDate issueDate;
+    private LocalDate expirationDate;
     private String url;
     private Long hours;
 }

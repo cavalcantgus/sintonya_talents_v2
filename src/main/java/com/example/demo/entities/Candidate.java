@@ -41,6 +41,10 @@ public class Candidate {
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Experience> experiences = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "sector_id")
+    private Sector sector;
+
     @OneToMany(
             mappedBy = "candidate",
             cascade = CascadeType.ALL,
@@ -62,8 +66,6 @@ public class Candidate {
 
     @Enumerated(EnumType.STRING)
     private VacancyType availability;
-
-    private String sector;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -9,10 +9,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public record VacancyResponse(
+        Long vacancyId,
       String title,
       String description,
       String position,
       String locality,
+      Long sectorId,
       LocalDate publicationDate,
       String modalityType,
       String vacancyStatus,
@@ -24,10 +26,12 @@ public record VacancyResponse(
 ) {
    public static VacancyResponse fromEntity(Vacancy vacancy) {
        return new VacancyResponse(
+               vacancy.getId(),
                vacancy.getTitle(),
                vacancy.getDescription(),
                vacancy.getPosition(),
                vacancy.getLocality(),
+               vacancy.getSector().getId(),
                vacancy.getPublicationDate(),
                vacancy.getModalityType().toString(),
                vacancy.getVacancyStatus().toString(),
