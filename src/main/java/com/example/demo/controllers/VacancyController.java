@@ -52,14 +52,14 @@ public class VacancyController {
     }
 
     @PutMapping("/{id}/rejected")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<Vacancy> rejectVacancy(@PathVariable Long id) {
         Vacancy vacancy = vacancyService.updateIfRejected(id);
         return ResponseEntity.ok().body(vacancy);
     }
 
     @PutMapping("/{id}/approved")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<Vacancy> approveVacancy(@PathVariable Long id) {
         Vacancy vacancy = vacancyService.updateIfApproved(id);
         return ResponseEntity.ok().body(vacancy);

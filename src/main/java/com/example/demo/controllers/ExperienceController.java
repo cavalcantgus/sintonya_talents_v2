@@ -23,7 +23,7 @@ public class ExperienceController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<List<ExperienceResponse>> findAll() {
         List<ExperienceResponse> experiences = experienceService.findAll();
         return ResponseEntity.ok().body(experiences);

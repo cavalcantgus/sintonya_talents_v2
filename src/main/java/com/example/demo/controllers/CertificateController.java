@@ -27,7 +27,7 @@ public class CertificateController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<List<CertificateResponse>> findAll() {
         List<CertificateResponse> certificates = certificatesService.findAll();
         return ResponseEntity.ok().body(certificates);
@@ -35,7 +35,7 @@ public class CertificateController {
 
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<CertificateResponse> findById(@PathVariable Long id) {
         CertificateResponse certificate = certificatesService.findById(id);
         return ResponseEntity.ok().body(certificate);
