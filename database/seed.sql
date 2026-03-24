@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict et7rNyG56WOXTrdsxdw7sOcz6HvbbKM62WDAa4TXN8rTtILm2aE8XG3oAnytdaI
+\restrict PhKwaWTKoeSuuLfQRgpc7SGsl799TH1qDZfmk97LfhVXwX2JVjudVTMNI3kGGyE
 
 -- Dumped from database version 15.17 (Debian 15.17-1.pgdg13+1)
 -- Dumped by pg_dump version 15.17 (Debian 15.17-1.pgdg13+1)
@@ -291,6 +291,7 @@ CREATE TABLE public.candidates (
     gender character varying(255),
     race_ethnicity character varying(255),
     sector character varying(255),
+    sector_id bigint,
     CONSTRAINT candidates_availability_check CHECK (((availability)::text = ANY ((ARRAY['FULL_TIME'::character varying, 'PART_TIME'::character varying, 'INTERSHIP'::character varying, 'TRAINEE'::character varying, 'TEMPORARY'::character varying, 'CONTRACT'::character varying, 'FREELANCE'::character varying, 'SELF_EMPLOYED'::character varying, 'VOLUNTEER'::character varying, 'APPRENTICESHIP'::character varying])::text[])))
 );
 
@@ -2203,6 +2204,7 @@ COPY public.application_stage_result (locked, score, id, job_application_id, sel
 --
 
 COPY public.attachments (candidate_id, file_id, id, type) FROM stdin;
+1	1	1	CERTIFICATE
 \.
 
 
@@ -2234,8 +2236,8 @@ COPY public.binary_data ("fileId", "sourceType", "sourceId", data, "mimeType", "
 -- Data for Name: candidates; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.candidates (date_of_birth, created_at, id, profile_id, updated_at, user_id, availability, contact, cpf, full_name, gender, race_ethnicity, sector) FROM stdin;
-\N	2026-03-24 16:49:02.472738	1	1	2026-03-24 16:49:02.472762	1	\N	98999998888	12345678901	Candidato de teste	\N	\N	\N
+COPY public.candidates (date_of_birth, created_at, id, profile_id, updated_at, user_id, availability, contact, cpf, full_name, gender, race_ethnicity, sector, sector_id) FROM stdin;
+\N	2026-03-24 16:49:02.472738	1	1	2026-03-24 16:49:02.472762	1	\N	98999998888	12345678901	Candidato de teste	\N	\N	2	\N
 \.
 
 
@@ -2244,6 +2246,7 @@ COPY public.candidates (date_of_birth, created_at, id, profile_id, updated_at, u
 --
 
 COPY public.certificate_sectors (certificate_id, sector_id) FROM stdin;
+1	2
 \.
 
 
@@ -2252,6 +2255,7 @@ COPY public.certificate_sectors (certificate_id, sector_id) FROM stdin;
 --
 
 COPY public.certificates (candidate_id, hours, id, expiration_date, issue_date, issuing_organization, title, url) FROM stdin;
+1	50	1	2026-12-01 +00	2026-02-01 +00	AMBINMA	C-PRO-R	https://www.credly.com/badges/exemplo
 \.
 
 
@@ -2445,6 +2449,7 @@ COPY public.experiences (end_date, is_current, start_date, candidate_id, id, des
 --
 
 COPY public.files (id, size, content_type, file_name, path) FROM stdin;
+1	1043690	image/png	aistudio.google.com_apps_72147936-4ed6-4673-afca-39c1bc7c4fbc_showPreview=true&showAssistant=true&fullscreenApplet=true (2).png	\N
 \.
 
 
@@ -2807,6 +2812,23 @@ workflow:editor	Workflow Editor	Workflow Editor	workflow	t	2026-03-13 16:22:11.6
 --
 
 COPY public.role_permissions (permission_id, role_id) FROM stdin;
+1	3
+2	3
+3	3
+4	3
+5	3
+6	3
+7	3
+8	3
+9	3
+10	3
+11	3
+12	3
+13	3
+14	3
+15	3
+16	3
+17	3
 \.
 
 
@@ -3482,6 +3504,74 @@ COPY public.selection_process (is_active, created_at, id, updated_at, vacancy_id
 --
 
 COPY public.selection_stage (is_required, max_score, stage_order, visible, weight, id, vacancy_id, analysis_dimension, name, stage_type, url) FROM stdin;
+t	\N	2	t	0.35	1	2	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+f	\N	\N	f	0.02	2	2	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	1	t	0.25	3	2	TECHNICAL	\N	TECHNICAL_TEST	\N
+f	\N	\N	f	0.1	4	2	OPTIONAL_SKILL	\N	SKILL_OPTIONAL	\N
+t	\N	\N	f	0.2	5	2	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	6	3	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	7	3	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	2	t	0.35	8	3	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	\N	f	0.2	9	4	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	10	4	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	2	t	0.35	11	4	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	1	t	0.25	12	4	TECHNICAL	\N	TECHNICAL_TEST	\N
+t	\N	\N	f	0.2	13	5	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	2	t	0.35	14	5	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	\N	f	0.1	15	5	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	1	t	0.25	16	6	TECHNICAL	\N	TECHNICAL_TEST	\N
+t	\N	\N	f	0.2	17	6	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	18	6	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	19	7	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	20	7	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	2	t	0.35	21	7	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	\N	f	0.2	22	8	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	2	t	0.35	23	8	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	\N	f	0.1	24	8	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	1	t	0.25	25	9	TECHNICAL	\N	TECHNICAL_TEST	\N
+t	\N	\N	f	0.2	26	9	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	27	9	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	28	10	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	2	t	0.35	29	10	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	\N	f	0.1	30	10	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	31	11	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	32	11	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	1	t	0.25	33	11	TECHNICAL	\N	TECHNICAL_TEST	\N
+t	\N	2	t	0.35	34	12	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	1	t	0.25	35	12	TECHNICAL	\N	TECHNICAL_TEST	\N
+f	\N	\N	f	0.02	36	12	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	37	12	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	38	13	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	39	13	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	1	t	0.25	40	13	TECHNICAL	\N	TECHNICAL_TEST	\N
+t	\N	\N	f	0.1	41	14	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	2	t	0.35	42	14	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	\N	f	0.2	43	14	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	1	t	0.25	44	15	TECHNICAL	\N	TECHNICAL_TEST	\N
+t	\N	\N	f	0.2	45	15	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	46	15	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	47	16	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	2	t	0.35	48	16	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+f	\N	\N	f	0.02	49	16	CERTIFICATES	\N	CERTIFICATE	\N
+f	\N	\N	f	0.02	50	17	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	51	17	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	2	t	0.35	52	17	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	1	t	0.25	53	18	TECHNICAL	\N	TECHNICAL_TEST	\N
+f	\N	\N	f	0.02	54	18	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	55	18	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	\N	f	0.1	56	19	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	2	t	0.35	57	19	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	\N	f	0.2	58	19	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	1	t	0.25	59	20	TECHNICAL	\N	TECHNICAL_TEST	\N
+t	\N	\N	f	0.2	60	20	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+f	\N	\N	f	0.02	61	20	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.1	62	21	CERTIFICATES	\N	CERTIFICATE	\N
+t	\N	\N	f	0.2	63	21	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	1	t	0.25	64	21	TECHNICAL	\N	TECHNICAL_TEST	\N
+t	\N	2	t	0.35	65	21	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+t	\N	\N	f	0.2	66	22	REQUIRED_SKILL	\N	SKILL_REQUIRED	\N
+t	\N	2	t	0.35	67	22	BEHAVIORAL	\N	BEHAVIORAL_TEST	\N
+f	\N	\N	f	0.02	68	22	CERTIFICATES	\N	CERTIFICATE	\N
 \.
 
 
@@ -3576,6 +3666,8 @@ COPY public.skill_base (created_at, id, updated_at, skill_type, title) FROM stdi
 --
 
 COPY public.skill_candidate (candidate_id, certificate_id, created_at, experience_id, id, skill_base_id, updated_at, skill_level, source) FROM stdin;
+1	1	2026-03-24 18:40:35.288454	\N	1	2	2026-03-24 18:40:35.288494	NON_SPECIFIED	CERTIFICATE
+1	1	2026-03-24 18:40:35.292848	\N	2	3	2026-03-24 18:40:35.292865	NON_SPECIFIED	CERTIFICATE
 \.
 
 
@@ -3584,6 +3676,33 @@ COPY public.skill_candidate (candidate_id, certificate_id, created_at, experienc
 --
 
 COPY public.skill_vacancy (required, created_at, id, skill_base_id, updated_at, vacancy_id) FROM stdin;
+t	2026-03-24 19:45:31.304155	1	2	2026-03-24 19:45:31.30418	2
+t	2026-03-24 19:45:31.310784	2	3	2026-03-24 19:45:31.310807	2
+f	2026-03-24 19:45:31.313105	3	20	2026-03-24 19:45:31.313129	2
+t	2026-03-24 20:23:37.807174	4	5	2026-03-24 20:23:37.807328	3
+t	2026-03-24 20:23:37.817039	5	8	2026-03-24 20:23:37.817098	3
+t	2026-03-24 20:24:36.695287	6	2	2026-03-24 20:24:36.69538	4
+t	2026-03-24 20:24:36.703379	7	3	2026-03-24 20:24:36.70342	4
+t	2026-03-24 20:24:45.210153	8	9	2026-03-24 20:24:45.210202	5
+t	2026-03-24 20:24:45.218043	9	11	2026-03-24 20:24:45.218125	5
+t	2026-03-24 20:25:00.883838	10	12	2026-03-24 20:25:00.883865	6
+t	2026-03-24 20:25:00.892943	11	13	2026-03-24 20:25:00.892963	6
+t	2026-03-24 20:25:14.475721	12	6	2026-03-24 20:25:14.475778	7
+t	2026-03-24 20:25:35.352835	13	14	2026-03-24 20:25:35.352859	8
+t	2026-03-24 20:25:51.184849	14	15	2026-03-24 20:25:51.184952	9
+t	2026-03-24 20:26:13.204368	15	16	2026-03-24 20:26:13.204485	10
+t	2026-03-24 20:26:26.983281	16	17	2026-03-24 20:26:26.983315	11
+t	2026-03-24 20:26:41.183321	17	18	2026-03-24 20:26:41.183404	12
+t	2026-03-24 20:26:55.414787	18	19	2026-03-24 20:26:55.414964	13
+t	2026-03-24 20:27:05.465366	19	21	2026-03-24 20:27:05.465426	14
+t	2026-03-24 20:27:16.683582	20	22	2026-03-24 20:27:16.683733	15
+t	2026-03-24 20:27:32.392817	21	23	2026-03-24 20:27:32.39287	16
+t	2026-03-24 20:27:43.939547	22	24	2026-03-24 20:27:43.939568	17
+t	2026-03-24 20:27:58.071729	23	25	2026-03-24 20:27:58.071753	18
+t	2026-03-24 20:28:09.977546	24	26	2026-03-24 20:28:09.977715	19
+t	2026-03-24 20:28:21.953341	25	27	2026-03-24 20:28:21.953378	20
+t	2026-03-24 20:28:33.819327	26	28	2026-03-24 20:28:33.819517	21
+t	2026-03-24 20:28:43.192802	27	29	2026-03-24 20:28:43.19288	22
 \.
 
 
@@ -3655,6 +3774,27 @@ COPY public.users (created_at, id, updated_at, email, password) FROM stdin;
 --
 
 COPY public.vacancys (expiration_date, has_a_behavioral_test, has_a_technical_test, publication_date, required_certificate, closed_at, created_at, enterprise_id, id, max_experience_range, min_experience_range, sector_id, updated_at, description, experience_range, locality, modality_type, "position", title, vacancy_status, vacancy_type) FROM stdin;
+\N	t	t	\N	f	\N	2026-03-24 19:45:31.270701	1	2	6	0	1	2026-03-24 19:45:31.270746	Estamos em busca de um desenvolvedor backend com experiência em Java e Spring Boot para atuar em sistemas escaláveis no setor financeiro.	ZERO_TO_SIX_MONTHS	São Luís - MA	HYBRID	BACKEND_DEVELOPER	Desenvolvedor Backend Java Pleno	OPEN	FULL_TIME
+\N	t	f	\N	f	\N	2026-03-24 20:23:37.70344	1	3	6	0	2	2026-03-24 20:23:37.703622	Atuação na análise de crédito para clientes do setor bancário, avaliando risco e capacidade de pagamento.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	CREDIT_ANALYST	Analista de Crédito Júnior	OPEN	FULL_TIME
+\N	t	t	\N	f	\N	2026-03-24 20:24:36.63676	1	4	6	0	3	2026-03-24 20:24:36.636821	Desenvolvimento de APIs bancárias com foco em segurança e alta disponibilidade.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	BACKEND_DEVELOPER	Desenvolvedor Backend Java Pleno	OPEN	FULL_TIME
+\N	t	f	\N	t	\N	2026-03-24 20:24:45.178996	1	5	6	0	2	2026-03-24 20:24:45.179034	Responsável por gerenciar carteira de clientes e oferecer soluções financeiras personalizadas.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	ACCOUNT_MANAGER	Gerente de Relacionamento Bancário	OPEN	FULL_TIME
+\N	f	t	\N	f	\N	2026-03-24 20:25:00.863051	1	6	6	0	4	2026-03-24 20:25:00.863069	Construção de pipelines de dados para análise de grandes volumes de transações bancárias.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	DATA_ENGINEER	Engenheiro de Dados Financeiros	OPEN	FULL_TIME
+\N	t	f	\N	f	\N	2026-03-24 20:25:14.428208	1	7	6	0	2	2026-03-24 20:25:14.428273	Monitoramento de riscos operacionais em processos financeiros e bancários.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	RISK_ANALYST	Analista de Risco Operacional	OPEN	FULL_TIME
+\N	t	f	\N	t	\N	2026-03-24 20:25:35.338066	1	8	6	0	5	2026-03-24 20:25:35.338088	Garantir conformidade com normas regulatórias do sistema financeiro.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	COMPLIANCE_SPECIALIST	Especialista em Compliance Bancário	OPEN	FULL_TIME
+\N	f	t	\N	f	\N	2026-03-24 20:25:51.122608	1	9	6	0	6	2026-03-24 20:25:51.122667	Desenvolvimento de interfaces para plataformas digitais bancárias.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	FRONTEND_DEVELOPER	Desenvolvedor Frontend React	OPEN	FULL_TIME
+\N	t	f	\N	t	\N	2026-03-24 20:26:13.147237	1	10	6	0	7	2026-03-24 20:26:13.147281	Análise de produtos financeiros e apoio a decisões de investimento.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	INVESTMENT_ANALYST	Analista de Investimentos	OPEN	FULL_TIME
+\N	f	t	\N	f	\N	2026-03-24 20:26:26.963043	1	11	6	0	8	2026-03-24 20:26:26.963064	Testes automatizados em sistemas financeiros críticos.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	QA_ENGINEER	QA Engineer Bancário	OPEN	FULL_TIME
+\N	t	t	\N	f	\N	2026-03-24 20:26:41.146788	1	12	6	0	9	2026-03-24 20:26:41.146926	Definição de arquitetura para sistemas bancários escaláveis.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	SOFTWARE_ARCHITECT	Arquiteto de Software Financeiro	OPEN	FULL_TIME
+\N	f	t	\N	f	\N	2026-03-24 20:26:55.365781	1	13	6	0	10	2026-03-24 20:26:55.365893	Análise de dados de clientes e transações financeiras.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	DATA_ANALYST	Analista de Dados Bancários	OPEN	FULL_TIME
+\N	t	f	\N	t	\N	2026-03-24 20:27:05.419181	1	14	6	0	2	2026-03-24 20:27:05.419339	Facilitação de squads ágeis em projetos bancários.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	SCRUM_MASTER	Scrum Master Fintech	OPEN	FULL_TIME
+\N	f	t	\N	f	\N	2026-03-24 20:27:16.636499	1	15	6	0	3	2026-03-24 20:27:16.636577	Automação e infraestrutura para sistemas financeiros.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	DEVOPS_ENGINEER	DevOps Engineer Bancário	OPEN	FULL_TIME
+\N	t	f	\N	f	\N	2026-03-24 20:27:32.374338	1	16	6	0	4	2026-03-24 20:27:32.374357	Identificação e prevenção de fraudes em transações bancárias.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	FRAUD_ANALYST	Analista de Fraudes	OPEN	FULL_TIME
+\N	t	f	\N	f	\N	2026-03-24 20:27:43.924462	1	17	6	0	5	2026-03-24 20:27:43.924491	Gestão de produtos digitais no setor bancário.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	PRODUCT_OWNER	Product Owner Fintech	OPEN	FULL_TIME
+\N	f	t	\N	f	\N	2026-03-24 20:27:58.055352	1	18	6	0	6	2026-03-24 20:27:58.055375	Criação de experiências digitais para aplicativos financeiros.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	UX_DESIGNER	UX Designer Bancário	OPEN	FULL_TIME
+\N	t	f	\N	t	\N	2026-03-24 20:28:09.934128	1	19	6	0	7	2026-03-24 20:28:09.934188	Gestão de fluxo de caixa e operações financeiras.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	TREASURY_ANALYST	Analista de Tesouraria	OPEN	FULL_TIME
+\N	f	t	\N	f	\N	2026-03-24 20:28:21.931133	1	20	6	0	8	2026-03-24 20:28:21.931213	Desenvolvimento de microserviços financeiros com Kotlin.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	BACKEND_DEVELOPER	Backend Kotlin Engineer	OPEN	FULL_TIME
+\N	t	t	\N	t	\N	2026-03-24 20:28:33.74453	1	21	6	0	9	2026-03-24 20:28:33.744626	Atuação na proteção de dados e sistemas financeiros.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	SECURITY_SPECIALIST	Especialista em Segurança Bancária	OPEN	FULL_TIME
+\N	t	f	\N	f	\N	2026-03-24 20:28:43.146456	1	22	6	0	10	2026-03-24 20:28:43.146511	Execução e controle de operações internas do banco.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	OPERATIONS_ANALYST	Analista de Operações Bancárias	OPEN	FULL_TIME
 \.
 
 
@@ -3762,7 +3902,7 @@ SELECT pg_catalog.setval('public.application_stage_result_id_seq', 1, false);
 -- Name: attachments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.attachments_id_seq', 1, false);
+SELECT pg_catalog.setval('public.attachments_id_seq', 1, true);
 
 
 --
@@ -3783,7 +3923,7 @@ SELECT pg_catalog.setval('public.candidates_id_seq', 1, true);
 -- Name: certificates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.certificates_id_seq', 1, false);
+SELECT pg_catalog.setval('public.certificates_id_seq', 1, true);
 
 
 --
@@ -3825,7 +3965,7 @@ SELECT pg_catalog.setval('public.experiences_id_seq', 1, false);
 -- Name: files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.files_id_seq', 1, false);
+SELECT pg_catalog.setval('public.files_id_seq', 1, true);
 
 
 --
@@ -3916,7 +4056,7 @@ SELECT pg_catalog.setval('public.selection_process_id_seq', 1, false);
 -- Name: selection_stage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.selection_stage_id_seq', 1, false);
+SELECT pg_catalog.setval('public.selection_stage_id_seq', 68, true);
 
 
 --
@@ -3930,14 +4070,14 @@ SELECT pg_catalog.setval('public.skill_base_id_seq', 51, true);
 -- Name: skill_candidate_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.skill_candidate_id_seq', 1, false);
+SELECT pg_catalog.setval('public.skill_candidate_id_seq', 2, true);
 
 
 --
 -- Name: skill_vacancy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.skill_vacancy_id_seq', 1, false);
+SELECT pg_catalog.setval('public.skill_vacancy_id_seq', 27, true);
 
 
 --
@@ -3951,7 +4091,7 @@ SELECT pg_catalog.setval('public.users_id_seq', 3, true);
 -- Name: vacancys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.vacancys_id_seq', 1, true);
+SELECT pg_catalog.setval('public.vacancys_id_seq', 22, true);
 
 
 --
@@ -5965,6 +6105,14 @@ ALTER TABLE ONLY public.application_stage_result
 
 
 --
+-- Name: candidates fkr5qvor849ych7eow0th4mq5u6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidates
+    ADD CONSTRAINT fkr5qvor849ych7eow0th4mq5u6 FOREIGN KEY (sector_id) REFERENCES public.sector(id);
+
+
+--
 -- Name: vacancys fkrx14df5m2mq33fydxjojg85b8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6008,5 +6156,5 @@ ALTER TABLE ONLY public.project
 -- PostgreSQL database dump complete
 --
 
-\unrestrict et7rNyG56WOXTrdsxdw7sOcz6HvbbKM62WDAa4TXN8rTtILm2aE8XG3oAnytdaI
+\unrestrict PhKwaWTKoeSuuLfQRgpc7SGsl799TH1qDZfmk97LfhVXwX2JVjudVTMNI3kGGyE
 
