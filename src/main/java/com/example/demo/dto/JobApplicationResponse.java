@@ -19,6 +19,8 @@ public record JobApplicationResponse(
         List<ApplicationStageResultResponse> stages =
                 jobApplication.getApplicationStageResults()
                         .stream()
+                        .filter(a -> a.getSelectionStage() != null
+                                && a.getSelectionStage().getStageOrder() != null)
                         .sorted(Comparator.comparing(a -> a.getSelectionStage().getStageOrder()))
                         .map(ApplicationStageResultResponse::fromEntity)
                         .toList();
