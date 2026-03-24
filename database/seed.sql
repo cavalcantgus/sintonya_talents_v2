@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict PhKwaWTKoeSuuLfQRgpc7SGsl799TH1qDZfmk97LfhVXwX2JVjudVTMNI3kGGyE
+\restrict xL19m68xp0mAXggvtiw3aKATwamjK5prPuHlv4AtQ8p4TUSl9WEEqHmMFgYNKsh
 
 -- Dumped from database version 15.17 (Debian 15.17-1.pgdg13+1)
 -- Dumped by pg_dump version 15.17 (Debian 15.17-1.pgdg13+1)
@@ -2237,7 +2237,7 @@ COPY public.binary_data ("fileId", "sourceType", "sourceId", data, "mimeType", "
 --
 
 COPY public.candidates (date_of_birth, created_at, id, profile_id, updated_at, user_id, availability, contact, cpf, full_name, gender, race_ethnicity, sector, sector_id) FROM stdin;
-\N	2026-03-24 16:49:02.472738	1	1	2026-03-24 16:49:02.472762	1	\N	98999998888	12345678901	Candidato de teste	\N	\N	2	\N
+\N	2026-03-24 16:49:02.472738	1	1	2026-03-24 16:49:02.472762	1	\N	98999998888	12345678901	Candidato de teste	\N	\N	2	2
 \.
 
 
@@ -2755,8 +2755,8 @@ COPY public.processed_data ("workflowId", context, "createdAt", "updatedAt", val
 --
 
 COPY public.profile (created_at, id, updated_at, personal_summary, banner, head_line, locality, photo, social_links) FROM stdin;
-2026-03-24 16:49:02.46595	1	2026-03-24 16:49:02.465981	\N	\N	\N	\N	\N	\N
 2026-03-24 16:49:14.646147	2	2026-03-24 16:49:14.646167	\N	\N	\N	\N	\N	\N
+2026-03-24 16:49:02.46595	1	2026-03-24 16:49:02.465981	\N	\N	\N	São Luis, Maranhão, Brazil	\N	\N
 \.
 
 
@@ -3774,27 +3774,27 @@ COPY public.users (created_at, id, updated_at, email, password) FROM stdin;
 --
 
 COPY public.vacancys (expiration_date, has_a_behavioral_test, has_a_technical_test, publication_date, required_certificate, closed_at, created_at, enterprise_id, id, max_experience_range, min_experience_range, sector_id, updated_at, description, experience_range, locality, modality_type, "position", title, vacancy_status, vacancy_type) FROM stdin;
-\N	t	t	\N	f	\N	2026-03-24 19:45:31.270701	1	2	6	0	1	2026-03-24 19:45:31.270746	Estamos em busca de um desenvolvedor backend com experiência em Java e Spring Boot para atuar em sistemas escaláveis no setor financeiro.	ZERO_TO_SIX_MONTHS	São Luís - MA	HYBRID	BACKEND_DEVELOPER	Desenvolvedor Backend Java Pleno	OPEN	FULL_TIME
-\N	t	f	\N	f	\N	2026-03-24 20:23:37.70344	1	3	6	0	2	2026-03-24 20:23:37.703622	Atuação na análise de crédito para clientes do setor bancário, avaliando risco e capacidade de pagamento.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	CREDIT_ANALYST	Analista de Crédito Júnior	OPEN	FULL_TIME
-\N	t	t	\N	f	\N	2026-03-24 20:24:36.63676	1	4	6	0	3	2026-03-24 20:24:36.636821	Desenvolvimento de APIs bancárias com foco em segurança e alta disponibilidade.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	BACKEND_DEVELOPER	Desenvolvedor Backend Java Pleno	OPEN	FULL_TIME
-\N	t	f	\N	t	\N	2026-03-24 20:24:45.178996	1	5	6	0	2	2026-03-24 20:24:45.179034	Responsável por gerenciar carteira de clientes e oferecer soluções financeiras personalizadas.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	ACCOUNT_MANAGER	Gerente de Relacionamento Bancário	OPEN	FULL_TIME
-\N	f	t	\N	f	\N	2026-03-24 20:25:00.863051	1	6	6	0	4	2026-03-24 20:25:00.863069	Construção de pipelines de dados para análise de grandes volumes de transações bancárias.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	DATA_ENGINEER	Engenheiro de Dados Financeiros	OPEN	FULL_TIME
-\N	t	f	\N	f	\N	2026-03-24 20:25:14.428208	1	7	6	0	2	2026-03-24 20:25:14.428273	Monitoramento de riscos operacionais em processos financeiros e bancários.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	RISK_ANALYST	Analista de Risco Operacional	OPEN	FULL_TIME
-\N	t	f	\N	t	\N	2026-03-24 20:25:35.338066	1	8	6	0	5	2026-03-24 20:25:35.338088	Garantir conformidade com normas regulatórias do sistema financeiro.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	COMPLIANCE_SPECIALIST	Especialista em Compliance Bancário	OPEN	FULL_TIME
-\N	f	t	\N	f	\N	2026-03-24 20:25:51.122608	1	9	6	0	6	2026-03-24 20:25:51.122667	Desenvolvimento de interfaces para plataformas digitais bancárias.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	FRONTEND_DEVELOPER	Desenvolvedor Frontend React	OPEN	FULL_TIME
-\N	t	f	\N	t	\N	2026-03-24 20:26:13.147237	1	10	6	0	7	2026-03-24 20:26:13.147281	Análise de produtos financeiros e apoio a decisões de investimento.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	INVESTMENT_ANALYST	Analista de Investimentos	OPEN	FULL_TIME
-\N	f	t	\N	f	\N	2026-03-24 20:26:26.963043	1	11	6	0	8	2026-03-24 20:26:26.963064	Testes automatizados em sistemas financeiros críticos.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	QA_ENGINEER	QA Engineer Bancário	OPEN	FULL_TIME
-\N	t	t	\N	f	\N	2026-03-24 20:26:41.146788	1	12	6	0	9	2026-03-24 20:26:41.146926	Definição de arquitetura para sistemas bancários escaláveis.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	SOFTWARE_ARCHITECT	Arquiteto de Software Financeiro	OPEN	FULL_TIME
-\N	f	t	\N	f	\N	2026-03-24 20:26:55.365781	1	13	6	0	10	2026-03-24 20:26:55.365893	Análise de dados de clientes e transações financeiras.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	DATA_ANALYST	Analista de Dados Bancários	OPEN	FULL_TIME
-\N	t	f	\N	t	\N	2026-03-24 20:27:05.419181	1	14	6	0	2	2026-03-24 20:27:05.419339	Facilitação de squads ágeis em projetos bancários.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	SCRUM_MASTER	Scrum Master Fintech	OPEN	FULL_TIME
-\N	f	t	\N	f	\N	2026-03-24 20:27:16.636499	1	15	6	0	3	2026-03-24 20:27:16.636577	Automação e infraestrutura para sistemas financeiros.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	DEVOPS_ENGINEER	DevOps Engineer Bancário	OPEN	FULL_TIME
-\N	t	f	\N	f	\N	2026-03-24 20:27:32.374338	1	16	6	0	4	2026-03-24 20:27:32.374357	Identificação e prevenção de fraudes em transações bancárias.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	FRAUD_ANALYST	Analista de Fraudes	OPEN	FULL_TIME
-\N	t	f	\N	f	\N	2026-03-24 20:27:43.924462	1	17	6	0	5	2026-03-24 20:27:43.924491	Gestão de produtos digitais no setor bancário.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	PRODUCT_OWNER	Product Owner Fintech	OPEN	FULL_TIME
-\N	f	t	\N	f	\N	2026-03-24 20:27:58.055352	1	18	6	0	6	2026-03-24 20:27:58.055375	Criação de experiências digitais para aplicativos financeiros.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	UX_DESIGNER	UX Designer Bancário	OPEN	FULL_TIME
-\N	t	f	\N	t	\N	2026-03-24 20:28:09.934128	1	19	6	0	7	2026-03-24 20:28:09.934188	Gestão de fluxo de caixa e operações financeiras.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	TREASURY_ANALYST	Analista de Tesouraria	OPEN	FULL_TIME
-\N	f	t	\N	f	\N	2026-03-24 20:28:21.931133	1	20	6	0	8	2026-03-24 20:28:21.931213	Desenvolvimento de microserviços financeiros com Kotlin.	ZERO_TO_SIX_MONTHS	REMOTE	REMOTE	BACKEND_DEVELOPER	Backend Kotlin Engineer	OPEN	FULL_TIME
-\N	t	t	\N	t	\N	2026-03-24 20:28:33.74453	1	21	6	0	9	2026-03-24 20:28:33.744626	Atuação na proteção de dados e sistemas financeiros.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	SECURITY_SPECIALIST	Especialista em Segurança Bancária	OPEN	FULL_TIME
-\N	t	f	\N	f	\N	2026-03-24 20:28:43.146456	1	22	6	0	10	2026-03-24 20:28:43.146511	Execução e controle de operações internas do banco.	ZERO_TO_SIX_MONTHS	São Luís - MA	ON_SITE	OPERATIONS_ANALYST	Analista de Operações Bancárias	OPEN	FULL_TIME
+\N	t	t	2026-03-24	f	\N	2026-03-24 19:45:31.270701	1	2	6	0	1	2026-03-24 19:45:31.270746	Estamos em busca de um desenvolvedor backend com experiência em Java e Spring Boot para atuar em sistemas escaláveis no setor financeiro.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	HYBRID	BACKEND_DEVELOPER	Desenvolvedor Backend Java Pleno	OPEN	FULL_TIME
+\N	t	f	2026-03-24	f	\N	2026-03-24 20:23:37.70344	1	3	6	0	2	2026-03-24 20:23:37.703622	Atuação na análise de crédito para clientes do setor bancário, avaliando risco e capacidade de pagamento.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	ON_SITE	CREDIT_ANALYST	Analista de Crédito Júnior	OPEN	FULL_TIME
+\N	t	t	2026-03-24	f	\N	2026-03-24 20:24:36.63676	1	4	6	0	3	2026-03-24 20:24:36.636821	Desenvolvimento de APIs bancárias com foco em segurança e alta disponibilidade.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	REMOTE	BACKEND_DEVELOPER	Desenvolvedor Backend Java Pleno	OPEN	FULL_TIME
+\N	t	f	2026-03-24	t	\N	2026-03-24 20:24:45.178996	1	5	6	0	2	2026-03-24 20:24:45.179034	Responsável por gerenciar carteira de clientes e oferecer soluções financeiras personalizadas.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	REMOTE	ACCOUNT_MANAGER	Gerente de Relacionamento Bancário	OPEN	FULL_TIME
+\N	f	t	2026-03-28	f	\N	2026-03-24 20:25:00.863051	1	6	6	0	4	2026-03-24 20:25:00.863069	Construção de pipelines de dados para análise de grandes volumes de transações bancárias.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	ON_SITE	DATA_ENGINEER	Engenheiro de Dados Financeiros	OPEN	FULL_TIME
+\N	t	f	2026-03-28	f	\N	2026-03-24 20:25:14.428208	1	7	6	0	2	2026-03-24 20:25:14.428273	Monitoramento de riscos operacionais em processos financeiros e bancários.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	REMOTE	RISK_ANALYST	Analista de Risco Operacional	OPEN	FULL_TIME
+\N	t	f	2026-03-28	t	\N	2026-03-24 20:25:35.338066	1	8	6	0	5	2026-03-24 20:25:35.338088	Garantir conformidade com normas regulatórias do sistema financeiro.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	REMOTE	COMPLIANCE_SPECIALIST	Especialista em Compliance Bancário	OPEN	FULL_TIME
+\N	f	t	2026-04-02	f	\N	2026-03-24 20:25:51.122608	1	9	6	0	6	2026-03-24 20:25:51.122667	Desenvolvimento de interfaces para plataformas digitais bancárias.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	ON_SITE	FRONTEND_DEVELOPER	Desenvolvedor Frontend React	OPEN	FULL_TIME
+\N	t	f	2026-04-02	t	\N	2026-03-24 20:26:13.147237	1	10	6	0	7	2026-03-24 20:26:13.147281	Análise de produtos financeiros e apoio a decisões de investimento.	ZERO_TO_SIX_MONTHS	São Luis, Maranhão, Brazil	REMOTE	INVESTMENT_ANALYST	Analista de Investimentos	OPEN	FULL_TIME
+\N	f	t	2026-04-02	f	\N	2026-03-24 20:26:26.963043	1	11	6	0	8	2026-03-24 20:26:26.963064	Testes automatizados em sistemas financeiros críticos.	ZERO_TO_SIX_MONTHS	Colinas, Maranhão, Brazil	REMOTE	QA_ENGINEER	QA Engineer Bancário	OPEN	FULL_TIME
+\N	t	t	2026-04-02	f	\N	2026-03-24 20:26:41.146788	1	12	6	0	9	2026-03-24 20:26:41.146926	Definição de arquitetura para sistemas bancários escaláveis.	ZERO_TO_SIX_MONTHS	Colinas, Maranhão, Brazil	ON_SITE	SOFTWARE_ARCHITECT	Arquiteto de Software Financeiro	OPEN	FULL_TIME
+\N	f	t	2026-03-25	f	\N	2026-03-24 20:26:55.365781	1	13	6	0	10	2026-03-24 20:26:55.365893	Análise de dados de clientes e transações financeiras.	ZERO_TO_SIX_MONTHS	Colinas, Maranhão, Brazil	REMOTE	DATA_ANALYST	Analista de Dados Bancários	OPEN	FULL_TIME
+\N	t	f	2026-03-25	t	\N	2026-03-24 20:27:05.419181	1	14	6	0	2	2026-03-24 20:27:05.419339	Facilitação de squads ágeis em projetos bancários.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	ON_SITE	SCRUM_MASTER	Scrum Master Fintech	OPEN	FULL_TIME
+\N	f	t	2026-03-26	f	\N	2026-03-24 20:27:16.636499	1	15	6	0	3	2026-03-24 20:27:16.636577	Automação e infraestrutura para sistemas financeiros.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	REMOTE	DEVOPS_ENGINEER	DevOps Engineer Bancário	OPEN	FULL_TIME
+\N	t	f	2026-03-29	f	\N	2026-03-24 20:27:32.374338	1	16	6	0	4	2026-03-24 20:27:32.374357	Identificação e prevenção de fraudes em transações bancárias.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	ON_SITE	FRAUD_ANALYST	Analista de Fraudes	OPEN	FULL_TIME
+\N	t	f	2026-03-28	f	\N	2026-03-24 20:27:43.924462	1	17	6	0	5	2026-03-24 20:27:43.924491	Gestão de produtos digitais no setor bancário.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	REMOTE	PRODUCT_OWNER	Product Owner Fintech	OPEN	FULL_TIME
+\N	f	t	2026-03-28	f	\N	2026-03-24 20:27:58.055352	1	18	6	0	6	2026-03-24 20:27:58.055375	Criação de experiências digitais para aplicativos financeiros.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	ON_SITE	UX_DESIGNER	UX Designer Bancário	OPEN	FULL_TIME
+\N	t	f	2026-03-21	t	\N	2026-03-24 20:28:09.934128	1	19	6	0	7	2026-03-24 20:28:09.934188	Gestão de fluxo de caixa e operações financeiras.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	REMOTE	TREASURY_ANALYST	Analista de Tesouraria	OPEN	FULL_TIME
+\N	f	t	2026-03-21	f	\N	2026-03-24 20:28:21.931133	1	20	6	0	8	2026-03-24 20:28:21.931213	Desenvolvimento de microserviços financeiros com Kotlin.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	REMOTE	BACKEND_DEVELOPER	Backend Kotlin Engineer	OPEN	FULL_TIME
+\N	t	t	2026-03-21	t	\N	2026-03-24 20:28:33.74453	1	21	6	0	9	2026-03-24 20:28:33.744626	Atuação na proteção de dados e sistemas financeiros.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	ON_SITE	SECURITY_SPECIALIST	Especialista em Segurança Bancária	OPEN	FULL_TIME
+\N	t	f	2026-03-21	f	\N	2026-03-24 20:28:43.146456	1	22	6	0	10	2026-03-24 20:28:43.146511	Execução e controle de operações internas do banco.	ZERO_TO_SIX_MONTHS	São Paulo, São Paulo, Brazil	ON_SITE	OPERATIONS_ANALYST	Analista de Operações Bancárias	OPEN	FULL_TIME
 \.
 
 
@@ -6156,5 +6156,5 @@ ALTER TABLE ONLY public.project
 -- PostgreSQL database dump complete
 --
 
-\unrestrict PhKwaWTKoeSuuLfQRgpc7SGsl799TH1qDZfmk97LfhVXwX2JVjudVTMNI3kGGyE
+\unrestrict xL19m68xp0mAXggvtiw3aKATwamjK5prPuHlv4AtQ8p4TUSl9WEEqHmMFgYNKsh
 
