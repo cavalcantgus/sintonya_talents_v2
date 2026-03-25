@@ -51,6 +51,13 @@ public class JobApplicationService {
                 .toList();
     }
 
+    public List<JobApplicationResponse> findAllByVacancyId(Long vacancyId) {
+        return jobApplicationRepository.findAllByVacancyId(vacancyId)
+                .stream()
+                .map(JobApplicationResponse::fromEntity)
+                .toList();
+    }
+
     public List<JobApplicationResponse> findAll() {
         return jobApplicationRepository.findAll()
                 .stream()

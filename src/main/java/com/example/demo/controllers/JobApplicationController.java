@@ -35,6 +35,12 @@ public class JobApplicationController {
         return ResponseEntity.ok().body(jobApplicationResponses);
     }
 
+    @GetMapping("/by-vacancy/{vacancyId}")
+    public ResponseEntity<List<JobApplicationResponse>> findAllByVacancyId(@PathVariable Long vacancyId) {
+        List<JobApplicationResponse> jobApplicationResponses = jobApplicationService.findAllByVacancyId(vacancyId);
+        return ResponseEntity.ok().body(jobApplicationResponses);
+    }
+
     @PostMapping("/{candidateId}/apply/{vacancyId}")
     public ResponseEntity<?> apply(@PathVariable Long candidateId, @PathVariable Long vacancyId) {
         jobApplicationService.apply(candidateId, vacancyId);
