@@ -3,10 +3,7 @@ package com.example.demo.services;
 import com.example.demo.dto.ExperienceCreateDTO;
 import com.example.demo.dto.ExperienceResponse;
 import com.example.demo.dto.VacancyResponse;
-import com.example.demo.entities.Candidate;
-import com.example.demo.entities.Experience;
-import com.example.demo.entities.SkillBase;
-import com.example.demo.entities.SkillCandidate;
+import com.example.demo.entities.*;
 import com.example.demo.enums.SkillLevel;
 import com.example.demo.enums.SkillSource;
 import com.example.demo.enums.VacancyType;
@@ -15,8 +12,11 @@ import com.example.demo.repositories.CandidateRepository;
 import com.example.demo.repositories.ExperienceRepository;
 import com.example.demo.repositories.SkillBaseRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,9 +47,11 @@ public class ExperienceService {
         return ExperienceResponse.fromEntity(experience);
     }
 
+    @Transactional
     public ExperienceResponse insert(Long candidateId, ExperienceCreateDTO objDto) {
         Candidate candidate = candidateRepository.findById(candidateId)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
+        CandidatePreferences candidatePreferences = candidate.getPreferences();
 
         Experience experience = new Experience();
         experience.setTitle(objDto.getTitle());
@@ -62,8 +64,14 @@ public class ExperienceService {
         experience.setDescription(objDto.getDescription());
         experience.setCandidate(candidate);
 
-        candidate.getExperiences().add(experience);
+        long months = ChronoUnit.MONTHS.between(
+                objDto.getStartDate(),
+                objDto.isCurrent() ? LocalDate.now() : objDto.getEndDate()
+        );
 
+        candidatePreferences.setTotalExperience(candidatePreferences.getTotalExperience() + months);
+        candidate.getExperiences().add(experience);
+        candidate.setPreferences(candidatePreferences);
         Set<SkillBase> skills = new HashSet<>(
                 skillBaseRepository.findAllById(objDto.getSkillsId())
         );

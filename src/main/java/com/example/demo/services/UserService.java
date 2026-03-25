@@ -25,18 +25,21 @@ public class UserService {
     private final CandidateRepository candidateRepository;
     private final PasswordEncoder passwordEncoder;
     private final ProfileRepository profileRepository;
+    private final CandidatePreferencesRepository candidatePreferencesRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, RoleService roleService, EnterpriseRepository enterpriseRepository,
                        CandidateRepository candidateRepository,
                        PasswordEncoder passwordEncoder,
-                       ProfileRepository profileRepository) {
+                       ProfileRepository profileRepository,
+                       CandidatePreferencesRepository candidatePreferencesRepository) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.enterpriseRepository = enterpriseRepository;
         this.candidateRepository = candidateRepository;
         this.passwordEncoder = passwordEncoder;
         this.profileRepository = profileRepository;
+        this.candidatePreferencesRepository = candidatePreferencesRepository;
     }
 
     public List<User> findAll() {
@@ -114,10 +117,17 @@ public class UserService {
         candidate.setCpf(cpf);
 
         Profile profile = createProfile(candidate);
-
+        createCandidatePreferences(candidate);
         candidate.setProfile(profile);
         candidateRepository.save(candidate);
 
+    }
+
+    private void createCandidatePreferences(Candidate candidate) {
+        CandidatePreferences candidatePreferences = new CandidatePreferences();
+        candidatePreferences.setCandidate(candidate);
+        candidatePreferences.setTotalExperience(0L);
+        candidatePreferencesRepository.save(candidatePreferences);
     }
 
     private Profile createProfile(Object object) {

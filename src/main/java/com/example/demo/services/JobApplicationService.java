@@ -176,7 +176,7 @@ public class JobApplicationService {
 
 //            case EXPERIENCES -> calculateExperienceScore(candidate, stage);
 
-            default -> 0.0; // TECHNICAL / BEHAVIORAL vem do StageResult
+            default -> 0.0;
         };
     }
 
@@ -239,6 +239,7 @@ public class JobApplicationService {
     }
 
 //    private double calculateExperienceScore(Candidate candidate, SelectionStage stage) {
+//        // Cálculo de cada experiência do usuário
 //        return null;
 //    }
 }

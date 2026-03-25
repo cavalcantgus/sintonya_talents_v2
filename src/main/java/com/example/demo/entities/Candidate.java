@@ -52,6 +52,9 @@ public class Candidate {
     )
     private Set<Attachment> attachments = new HashSet<>();
 
+    @OneToOne(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CandidatePreferences preferences;
+
     @Column(nullable = false)
     private String fullName;
     private String gender;

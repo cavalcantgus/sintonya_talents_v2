@@ -16,6 +16,16 @@ services:
     networks:
       - monitoring
 
+  adminer:
+    image: adminer
+    container_name: sintonya-adminer
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    networks:
+      - monitoring
+
   dbeaver:
     image: dbeaver/cloudbeaver
     container_name: sintonya-dbeaver
