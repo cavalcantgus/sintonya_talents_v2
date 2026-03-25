@@ -751,7 +751,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacancy"
+                  "$ref": "#/components/schemas/VacancyResponse"
                 }
               }
             }
@@ -773,6 +773,41 @@
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VacancyResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vacancys/recommended": {
+      "get": {
+        "tags": [
+          "vacancy-controller"
+        ],
+        "operationId": "getRecommendations",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
             }
           }
         ],
@@ -930,6 +965,40 @@
           "job-application-controller"
         ],
         "operationId": "findAll_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JobApplicationResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/job-applications/by-vacancy/{vacancyId}": {
+      "get": {
+        "tags": [
+          "job-application-controller"
+        ],
+        "operationId": "findAllByVacancyId",
+        "parameters": [
+          {
+            "name": "vacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1789,9 +1858,6 @@
           "contact": {
             "type": "string"
           },
-          "sector": {
-            "type": "string"
-          },
           "profileResponse": {
             "$ref": "#/components/schemas/ProfileResponse"
           },
@@ -1913,9 +1979,6 @@
             "type": "string"
           },
           "headLine": {
-            "type": "string"
-          },
-          "sector": {
             "type": "string"
           },
           "locality": {
@@ -2211,6 +2274,10 @@
       "VacancyResponse": {
         "type": "object",
         "properties": {
+          "vacancyId": {
+            "type": "integer",
+            "format": "int64"
+          },
           "title": {
             "type": "string"
           },
@@ -2222,6 +2289,10 @@
           },
           "locality": {
             "type": "string"
+          },
+          "sectorId": {
+            "type": "integer",
+            "format": "int64"
           },
           "publicationDate": {
             "type": "string",
