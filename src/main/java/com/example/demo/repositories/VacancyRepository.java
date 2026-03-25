@@ -27,11 +27,11 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     SELECT v FROM Vacancy v
     WHERE v.vacancyStatus = 'OPEN'
     AND (v.expirationDate IS NULL OR v.expirationDate >= CURRENT_DATE)
-    AND v.closeAt IS NULL
+    AND v.closedAt IS NULL
     AND (v.sector = :sector
     OR v.modalityType = :modality
     OR v.locality = :locality)
-    ORDER BY v.publicactionDate DESC
+    ORDER BY v.publicationDate DESC
 """
     )
     List<Vacancy> findCandidatesForScoring(
