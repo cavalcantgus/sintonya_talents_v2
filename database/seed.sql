@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict xL19m68xp0mAXggvtiw3aKATwamjK5prPuHlv4AtQ8p4TUSl9WEEqHmMFgYNKsh
+\restrict XfoReUbS3SqfSLcfIbwv6cb232f2NX5F9d8GFgmdhPNkgjgdvlHdaRzuLfJQnJd
 
 -- Dumped from database version 15.17 (Debian 15.17-1.pgdg13+1)
 -- Dumped by pg_dump version 15.17 (Debian 15.17-1.pgdg13+1)
@@ -2829,6 +2829,23 @@ COPY public.role_permissions (permission_id, role_id) FROM stdin;
 15	3
 16	3
 17	3
+1	1
+2	1
+3	1
+4	1
+5	1
+6	1
+7	1
+8	1
+9	1
+10	1
+11	1
+1	2
+10	2
+12	2
+13	2
+14	2
+15	2
 \.
 
 
@@ -6156,5 +6173,5 @@ ALTER TABLE ONLY public.project
 -- PostgreSQL database dump complete
 --
 
-\unrestrict xL19m68xp0mAXggvtiw3aKATwamjK5prPuHlv4AtQ8p4TUSl9WEEqHmMFgYNKsh
+\unrestrict XfoReUbS3SqfSLcfIbwv6cb232f2NX5F9d8GFgmdhPNkgjgdvlHdaRzuLfJQnJd
 
