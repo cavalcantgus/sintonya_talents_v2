@@ -38,32 +38,11 @@ public class VacancyRecommendationService {
                 .limit(limit)
                 .toList();
 
-        printRecommendations(scored);
 
         return scored.stream()
                 .map(Map.Entry::getKey)
                 .map(VacancyResponse::fromEntity)
                 .toList();
-    }
-
-    private void printRecommendations(List<Map.Entry<Vacancy, Integer>> scored) {
-        int maxScore = 60;
-        System.out.println("\n╔══════════════════════════════════════════╗");
-        System.out.println("║        VAGAS RECOMENDADAS — DEBUG        ║");
-        System.out.println("╠══════════════════════════════════════════╣");
-
-        for (int i = 0; i < scored.size(); i++) {
-            Vacancy v = scored.get(i).getKey();
-            int score = scored.get(i).getValue();
-            int barFilled = (int) ((score / (double) maxScore) * 20);
-            String bar = "█".repeat(barFilled) + "░".repeat(20 - barFilled);
-
-            System.out.printf("║  #%-2d  ID: %-6d  %-20s  ║%n", i + 1, v.getId(), "");
-            System.out.printf("║        Score: %-3d  [%s]  ║%n", score, bar);
-            System.out.println("╠══════════════════════════════════════════╣");
-        }
-
-        System.out.println("╚══════════════════════════════════════════╝\n");
     }
 
     private int score(Vacancy vacancy, Candidate candidate) {

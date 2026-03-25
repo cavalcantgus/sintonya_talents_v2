@@ -56,9 +56,10 @@ public class VacancyService {
                 .toList();
     }
 
-    public Vacancy findById(Long id) {
-        return vacancyRepository.findById(id)
+    public VacancyResponse findById(Long id) {
+        Vacancy vacancy = vacancyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+        return VacancyResponse.fromEntity(vacancy);
     }
 
     @Transactional

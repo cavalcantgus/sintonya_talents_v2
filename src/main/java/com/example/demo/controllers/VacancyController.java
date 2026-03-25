@@ -49,8 +49,8 @@ public class VacancyController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('VACANCY_VIEW') || hasRole('ADMINISTRATOR')")
-    public ResponseEntity<Vacancy> findById(@PathVariable Long id) {
-        Vacancy vacancy = vacancyService.findById(id);
+    public ResponseEntity<VacancyResponse> findById(@PathVariable Long id) {
+        VacancyResponse vacancy = vacancyService.findById(id);
         return ResponseEntity.ok().body(vacancy);
     }
 
