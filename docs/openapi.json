@@ -42,6 +42,99 @@
         }
       }
     },
+    "/vacancys/{id}/paused": {
+      "put": {
+        "tags": [
+          "vacancy-controller"
+        ],
+        "operationId": "pausedVacancy",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vacancy"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vacancys/{id}/closed": {
+      "put": {
+        "tags": [
+          "vacancy-controller"
+        ],
+        "operationId": "closeVacancy",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vacancy"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vacancys/{id}/archived": {
+      "put": {
+        "tags": [
+          "vacancy-controller"
+        ],
+        "operationId": "archivedVacancy",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vacancy"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/vacancys/{id}/approved": {
       "put": {
         "tags": [
@@ -333,13 +426,25 @@
         "operationId": "insertEnterprise",
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UserCreateEnterpriseDTO"
+                "required": [
+                  "data",
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/UserCreateEnterpriseDTO"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1007,7 +1112,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/JobApplicationResponse"
+                    "$ref": "#/components/schemas/JobApplicationResponseByVacancy"
                   }
                 }
               }
@@ -2067,10 +2172,16 @@
           "enterpriseName": {
             "type": "string"
           },
+          "owner": {
+            "type": "string"
+          },
           "email": {
             "type": "string"
           },
           "cnpj": {
+            "type": "string"
+          },
+          "socialReason": {
             "type": "string"
           },
           "contact": {
@@ -2374,6 +2485,30 @@
           },
           "currentStage": {
             "$ref": "#/components/schemas/ApplicationStageResultResponse"
+          }
+        }
+      },
+      "JobApplicationResponseByVacancy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vacancyResponse": {
+            "$ref": "#/components/schemas/VacancyResponse"
+          },
+          "stages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationStageResultResponse"
+            }
+          },
+          "currentStage": {
+            "$ref": "#/components/schemas/ApplicationStageResultResponse"
+          },
+          "candidate": {
+            "$ref": "#/components/schemas/CandidateResponse"
           }
         }
       }

@@ -8,6 +8,7 @@ import com.example.demo.entities.User;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -76,9 +78,10 @@ public class UserController {
         ));
     }
 
-    @PostMapping("/register/enterprise")
-    public ResponseEntity<UserResponse> insertEnterprise(@RequestBody UserCreateEnterpriseDTO objDto) {
-        UserResponse user = userService.insertEnterprise(objDto);
+    @PostMapping(value = "/register/enterprise", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserResponse> insertEnterprise(@RequestPart("data") UserCreateEnterpriseDTO objDto,
+                                                         @RequestPart(value = "file", required = true)MultipartFile file) {
+        UserResponse user = userService.insertEnterprise(objDto, file);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.id()).toUri();
         return ResponseEntity.created(uri).body(user);
     }

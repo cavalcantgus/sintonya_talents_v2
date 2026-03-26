@@ -7,7 +7,9 @@ import lombok.Setter;
 @Setter
 public class UserCreateEnterpriseDTO {
     private String enterpriseName;
+    private String owner;
     private String email;
     private String cnpj;
+    private String socialReason;
     private String contact;
 }
