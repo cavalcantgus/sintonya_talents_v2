@@ -7,6 +7,7 @@ import com.example.demo.entities.Vacancy;
 import com.example.demo.enums.ExperienceRange;
 import com.example.demo.enums.WorkModality;
 import com.example.demo.repositories.VacancyRepository;
+import org.hibernate.jdbc.Work;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class VacancyRecommendationService {
 
     private final VacancyRepository vacancyRepository;
 
-//    private static final int SCORE_EXPERIENCE    = 40;
+    private static final int SCORE_EXPERIENCE    = 40;
     private static final int SCORE_SECTOR        = 25;
     private static final int SCORE_MODALITY      = 20;
     private static final int SCORE_LOCALITY      = 10;
@@ -77,23 +78,47 @@ public class VacancyRecommendationService {
         return score;
     }
 
-//    private boolean isExperienceCompatible(Vacancy vacancy, Candidate candidate) {
-//        Long candidateMonths = candidate.getExperienceMonths(); // renomear o campo
-//        if (candidateMonths == null) return false;
-//
-//        // Range numérico tem prioridade (mais preciso)
-//        if (vacancy.getMinExperienceRange() != null && vacancy.getMaxExperienceRange() != null) {
-//            return candidateMonths >= vacancy.getMinExperienceRange()
-//                    && candidateMonths <= vacancy.getMaxExperienceRange();
-//        }
-//
-//        // Fallback para o enum
-//        if (vacancy.getExperienceRange() != null) {
-//            return isCompatibleWithEnum(vacancy.getExperienceRange(), candidateMonths);
-//        }
-//
-//        return false;
-//    }
+    private int scoreModality(Vacancy vacancy, Candidate candidate) {
+        WorkModality vacancyModality = vacancy.getModalityType();
+        WorkModality candidatePreference = candidate.getPreferences().getModality();
+
+        if(vacancyModality == null) return 0;
+
+        if(candidatePreference == null) return 0;
+
+        if(vacancyModality.equals(candidatePreference)) {
+            return SCORE_MODALITY;
+        }
+
+        if(vacancyModality.equals(WorkModality.HYBRID) || candidatePreference.equals(WorkModality.HYBRID)) {
+            return SCORE_MODALITY / 2;
+        }
+
+        return 0;
+    }
+
+    private double isExperienceCompatible(Vacancy vacancy, Candidate candidate) {
+        Long minExp = vacancy.getMinExperienceRange();
+        Long maxExp = vacancy.getMaxExperienceRange();
+        Long candidateExp = candidate.getPreferences().getTotalExperience();
+        double kUnder = 0.4;
+        double kOver = 0.2;
+        double k = 0.2;
+
+        if(candidateExp < minExp) {
+            double decay = Math.exp(-kUnder * (minExp - candidateExp));
+            return k + (0.5 - k) * decay;
+
+        } else if (candidateExp <= maxExp) {
+            double ratio = (double) (candidateExp - minExp) / (maxExp - minExp);
+            return 0.5 + 0.5 * ratio;
+        }
+
+        else {
+            double decay = Math.exp(-kOver * (candidateExp - maxExp));
+            return 0.5 + 0.5 * decay;
+        }
+    }
 //
 //    private boolean isCompatibleWithEnum(ExperienceRange range, Long candidateMonths) {
 //        return candidateMonths >= range.getMinMonths()

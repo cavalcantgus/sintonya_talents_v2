@@ -215,6 +215,37 @@ public class VacancyService {
     }
 
     @Transactional
+    public Vacancy updateIfClosed(Long id) {
+        Vacancy vacancy = vacancyRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+
+        vacancy.setVacancyStatus(VacancyStatus.CLOSED);
+        vacancy.setClosedAt(LocalDateTime.now());
+
+        return vacancyRepository.save(vacancy);
+    }
+
+    @Transactional
+    public Vacancy updateIfPaused(Long id) {
+        Vacancy vacancy = vacancyRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+
+        vacancy.setVacancyStatus(VacancyStatus.PAUSED);
+
+        return vacancyRepository.save(vacancy);
+    }
+
+    @Transactional
+    public Vacancy updateIfArchived(Long id) {
+        Vacancy vacancy = vacancyRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+
+        vacancy.setVacancyStatus(VacancyStatus.ARCHIVED);
+
+        return vacancyRepository.save(vacancy);
+    }
+
+    @Transactional
     public Vacancy updateIfApproved(Long id) {
         Vacancy vacancy = vacancyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));

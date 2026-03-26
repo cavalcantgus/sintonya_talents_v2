@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.FinishTest;
 import com.example.demo.dto.JobApplicationResponse;
+import com.example.demo.dto.JobApplicationResponseByVacancy;
 import com.example.demo.entities.JobApplication;
 import com.example.demo.services.JobApplicationService;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
@@ -36,8 +37,8 @@ public class JobApplicationController {
     }
 
     @GetMapping("/by-vacancy/{vacancyId}")
-    public ResponseEntity<List<JobApplicationResponse>> findAllByVacancyId(@PathVariable Long vacancyId) {
-        List<JobApplicationResponse> jobApplicationResponses = jobApplicationService.findAllByVacancyId(vacancyId);
+    public ResponseEntity<List<JobApplicationResponseByVacancy>> findAllByVacancyId(@PathVariable Long vacancyId) {
+        List<JobApplicationResponseByVacancy> jobApplicationResponses = jobApplicationService.findAllByVacancyId(vacancyId);
         return ResponseEntity.ok().body(jobApplicationResponses);
     }
 

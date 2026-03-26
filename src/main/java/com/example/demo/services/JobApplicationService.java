@@ -2,9 +2,11 @@ package com.example.demo.services;
 
 import com.example.demo.dto.FinishTest;
 import com.example.demo.dto.JobApplicationResponse;
+import com.example.demo.dto.JobApplicationResponseByVacancy;
 import com.example.demo.entities.*;
 import com.example.demo.enums.AnalysisDimension;
 import com.example.demo.enums.ApplicationStatus;
+import com.example.demo.enums.ExperienceRange;
 import com.example.demo.enums.StageStatus;
 import com.example.demo.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -51,10 +53,10 @@ public class JobApplicationService {
                 .toList();
     }
 
-    public List<JobApplicationResponse> findAllByVacancyId(Long vacancyId) {
+    public List<JobApplicationResponseByVacancy> findAllByVacancyId(Long vacancyId) {
         return jobApplicationRepository.findAllByVacancyId(vacancyId)
                 .stream()
-                .map(JobApplicationResponse::fromEntity)
+                .map(JobApplicationResponseByVacancy::fromEntity)
                 .toList();
     }
 
@@ -174,7 +176,7 @@ public class JobApplicationService {
 
             case CERTIFICATES -> calculateCertificateScore(candidate, stage);
 
-//            case EXPERIENCES -> calculateExperienceScore(candidate, stage);
+            case EXPERIENCES -> calculateExperienceScore(candidate, stage);
 
             default -> 0.0;
         };
@@ -238,8 +240,17 @@ public class JobApplicationService {
         return (double) match / total;
     }
 
-//    private double calculateExperienceScore(Candidate candidate, SelectionStage stage) {
-//        // Cálculo de cada experiência do usuário
-//        return null;
-//    }
+    private double calculateExperienceScore(Candidate candidate, SelectionStage stage) {
+        ExperienceRange experienceRange = stage.getVacancy().getExperienceRange();
+        Long totalMonths = candidate.getPreferences().getTotalExperience();
+
+        long minMonths = experienceRange.getMinMonths();
+        long maxMonths = experienceRange.getMaxMonths();
+
+        if(totalMonths >= minMonths) return 1.0;
+
+        if(totalMonths == 0) return 0.0;
+
+        return (double) totalMonths / minMonths;
+    }
 }
