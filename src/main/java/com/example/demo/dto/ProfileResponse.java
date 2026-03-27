@@ -4,7 +4,6 @@ import com.example.demo.entities.Profile;
 
 public record ProfileResponse(
         String photo,
-        String bannerm,
         String headline,
         String personalSummary,
         String socialLinks,
@@ -12,13 +11,18 @@ public record ProfileResponse(
 ) {
 
     public static ProfileResponse fromEntity(Profile profile) {
+        if (profile == null) return null;
+
+        String photo = profile.getPhoto() != null
+                ? "/uploads/" + profile.getPhoto().replace("/var/uploads/", "")
+                : null;
+
         return new ProfileResponse(
-                profile.getPhoto(),
-                profile.getBanner(),
+                photo,
                 profile.getHeadLine(),
+                profile.getLocality(),
                 profile.getPersonalSummary(),
-                profile.getSocialLinks(),
-                profile.getLocality()
+                profile.getSocialLinks()
         );
     }
 }

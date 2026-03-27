@@ -10,12 +10,19 @@ import com.example.demo.repositories.EnterpriseRepository;
 import com.example.demo.repositories.ProfileRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -23,6 +30,9 @@ public class EnterpriseService {
 
     private final EnterpriseRepository enterpriseRepository;
     private final ProfileRepository profileRepository;
+
+    @Value("${app.upload.dir:/var/uploads}")
+    private String uploadDir;
 
     public EnterpriseService(EnterpriseRepository enterpriseRepository,
                              ProfileRepository profileRepository) {
@@ -92,4 +102,42 @@ public class EnterpriseService {
 //        return CandidateResponse.fromEntity(candidate);
 //    }
 
+
+    public void updateProfilePhoto(MultipartFile file, Long id) throws IOException {
+        System.out.println(">>> Iniciando upload para empresa id: " + id);
+        System.out.println(">>> Arquivo recebido: " + file.getOriginalFilename() + " | Tamanho: " + file.getSize());
+
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Arquivo vazio");
+        }
+
+        Enterprise enterprise = enterpriseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
+        System.out.println(">>> Empresa encontrada: " + enterprise.getId());
+
+        Path dirPath = Paths.get(uploadDir, "enterprises", String.valueOf(enterprise.getId()));
+        System.out.println(">>> Diretório alvo (absoluto): " + dirPath.toAbsolutePath());
+        Files.createDirectories(dirPath);
+        System.out.println(">>> Diretório criado/confirmado");
+
+        Profile profile = enterprise.getProfile();
+        System.out.println(">>> Profile atual: " + profile);
+
+//        if (profile == null) {
+//            profile = new Profile();
+//            profile.setEnterprise(enterprise);
+//            System.out.println(">>> Novo profile criado");
+//        } else if (profile.getPhoto() != null) {
+//            Files.deleteIfExists(Paths.get(profile.getPhoto()));
+//        }
+
+        String fileName = "photo_" + System.currentTimeMillis() + ".jpg";
+        Path photoPath = dirPath.resolve(fileName);
+        Files.write(photoPath, file.getBytes());
+        System.out.println(">>> Arquivo salvo em: " + photoPath.toAbsolutePath());
+
+        profile.setPhoto(photoPath.toString());
+        profileRepository.save(profile);
+        System.out.println(">>> Profile salvo no banco com foto: " + profile.getPhoto());
+    }
 }

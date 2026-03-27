@@ -61,13 +61,13 @@ public class VacancyController {
         return ResponseEntity.ok().body(vacancyResponse);
     }
 
-    @PostMapping("/{empresaId}/create-vacancy")
-//    @PreAuthorize("hasAuthority('VACANCY_CREATE')")
-    public ResponseEntity<Vacancy> createVacancy(@RequestBody VacancyCreateDTO objDto, @PathVariable Long empresaId) {
-        Vacancy vacancy = vacancyService.createVacany(empresaId, objDto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(vacancy.getId()).toUri();
-        return ResponseEntity.created(uri).build();
-    }
+//    @PostMapping("/{empresaId}/create-vacancy")
+////    @PreAuthorize("hasAuthority('VACANCY_CREATE')")
+//    public ResponseEntity<Vacancy> createVacancy(@RequestBody VacancyCreateDTO objDto, @PathVariable Long empresaId) {
+//        Vacancy vacancy = vacancyService.createVacany(empresaId, objDto);
+//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(vacancy.getId()).toUri();
+//        return ResponseEntity.created(uri).build();
+//    }
 
     @PutMapping("/{id}/rejected")
     @PreAuthorize("hasRole('ADMINISTRATOR')")

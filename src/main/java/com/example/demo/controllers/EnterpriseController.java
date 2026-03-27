@@ -6,7 +6,9 @@ import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -51,4 +53,15 @@ public class EnterpriseController {
 //        EnterpriseResponse enterprise = enterpriseService.update(id, personalSummary);
 //        return ResponseEntity.ok().body(enterprise);
 //    }
+
+
+    @PostMapping("/{id}/profile/upload-photo")
+    public ResponseEntity<?> uploadProfile(
+            @RequestParam("photo") MultipartFile photo,
+            @PathVariable Long id
+    ) throws IOException {
+
+        enterpriseService.updateProfilePhoto(photo, id);
+        return ResponseEntity.ok().build();
+    }
 }

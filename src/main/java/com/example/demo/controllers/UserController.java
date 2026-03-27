@@ -50,7 +50,7 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<User> findById(@PathVariable Long id) {
-        User user = userService.findyById(id);
+        User user = userService.findById(id);
         return ResponseEntity.ok().body(user);
     }
 
@@ -58,7 +58,7 @@ public class UserController {
     public ResponseEntity<?> insertCandidate(@RequestBody UserCreateDTO objDto) {
         UserResponse userResponse = userService.insertCandidate(objDto);
 
-        User user = userService.findyById(userResponse.id());
+        User user = userService.findById(userResponse.id());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userResponse.id()).toUri();
 
         Authentication authentication =

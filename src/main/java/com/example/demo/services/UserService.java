@@ -63,10 +63,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findyById(Long id) {
+    public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
+
+
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)

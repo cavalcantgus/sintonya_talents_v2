@@ -34,6 +34,10 @@ public class Vacancy {
     @JoinColumn(name = "sector_id")
     private Sector sector;
 
+    @OneToOne
+    @JoinColumn(name = "post_id", nullable = false, unique = true)
+    private Post post;
+
     @OneToMany(
             mappedBy = "vacancy",
             cascade = CascadeType.ALL,

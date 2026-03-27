@@ -1,6 +1,10 @@
 package com.example.demo.dto;
 
 import com.example.demo.entities.Enterprise;
+import com.example.demo.entities.Role;
+import lombok.Getter;
+
+import java.util.Set;
 
 public record EnterpriseResponse(
         Long id,
