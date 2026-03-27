@@ -6,10 +6,7 @@ import com.example.demo.dto.SkillCandidateCreateDto;
 import com.example.demo.entities.*;
 import com.example.demo.enums.SkillLevel;
 import com.example.demo.enums.SkillSource;
-import com.example.demo.repositories.CandidateRepository;
-import com.example.demo.repositories.ProfileRepository;
-import com.example.demo.repositories.SkillBaseRepository;
-import com.example.demo.repositories.SkillCandidateRepository;
+import com.example.demo.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -24,15 +21,18 @@ public class CandidateService {
     private final ProfileRepository profileRepository;
     private final SkillBaseRepository skillBaseRepository;
     private final SkillCandidateRepository skillCandidateRepository;
+    private final SectorRepository sectorRepository;
 
     public CandidateService(CandidateRepository candidateRepository,
                             ProfileRepository profileRepository,
                             SkillBaseRepository skillBaseRepository,
-                            SkillCandidateRepository skillCandidateRepository) {
+                            SkillCandidateRepository skillCandidateRepository,
+                            SectorRepository sectorRepository) {
         this.candidateRepository = candidateRepository;
         this.profileRepository = profileRepository;
         this.skillBaseRepository = skillBaseRepository;
         this.skillCandidateRepository = skillCandidateRepository;
+        this.sectorRepository = sectorRepository;
     }
 
     public List<CandidateResponse> findAll() {
@@ -64,11 +64,13 @@ public class CandidateService {
         Candidate candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
 
+        Sector sector = sectorRepository.findById(objDto.getSector())
+                        .orElseThrow(() -> new EntityNotFoundException("Setor não encontrado"));
         candidate.setFullName(objDto.getFullName());
         candidate.setGender(objDto.getGender());
         candidate.setRaceEthnicity(objDto.getRaceEthnicity());
         candidate.setContact(objDto.getContact());
-
+        candidate.setSector(sector);
         Profile profile = profileRepository.findById(candidate.getProfile().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Perfil não encontrado"));
 
