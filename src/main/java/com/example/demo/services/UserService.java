@@ -113,12 +113,11 @@ public class UserService {
 
     @Transactional
     public UserResponse insertEnterprise(
-            UserCreateEnterpriseDTO objDto,
-            MultipartFile file
+            UserCreateEnterpriseDTO objDto
     ) {
         Role role = roleService.insert("ENTERPRISE");
 
-        validateCertificate(file, objDto);
+        validateEnterprise(objDto);
 
         User user = new User();
         user.setEmail(objDto.getEmail());
@@ -140,7 +139,7 @@ public class UserService {
                 throw new CertificateValidationException(CertificateError.INACTIVE_CNJP);
             }
 
-            if (!objDto.getSocialReason().equalsIgnoreCase(api.getRazao_social())) {
+            if (!objDto.getSocialReason().equalsIgnoreCase(api.getDescricao_motivo_situacao_cadastral())) {
                 throw new CertificateValidationException(CertificateError.INVALID_SOCIAL_REASON);
             }
 

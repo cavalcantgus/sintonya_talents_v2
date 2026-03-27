@@ -78,10 +78,9 @@ public class UserController {
         ));
     }
 
-    @PostMapping(value = "/register/enterprise", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserResponse> insertEnterprise(@RequestPart("data") UserCreateEnterpriseDTO objDto,
-                                                         @RequestPart(value = "file", required = true)MultipartFile file) {
-        UserResponse user = userService.insertEnterprise(objDto, file);
+    @PostMapping("/register/enterprise")
+    public ResponseEntity<UserResponse> insertEnterprise(@RequestBody UserCreateEnterpriseDTO objDto) {
+        UserResponse user = userService.insertEnterprise(objDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.id()).toUri();
         return ResponseEntity.created(uri).body(user);
     }
