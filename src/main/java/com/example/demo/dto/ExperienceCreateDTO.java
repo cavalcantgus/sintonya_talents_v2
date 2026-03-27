@@ -14,7 +14,7 @@ public class ExperienceCreateDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private String locality;
-    private boolean isCurrent;
+    private boolean current;
     private String workModality;
     private String description;
     private Set<Long> skillsId;

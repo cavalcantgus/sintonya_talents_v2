@@ -2286,6 +2286,9 @@
           "locality": {
             "type": "string"
           },
+          "current": {
+            "type": "boolean"
+          },
           "workModality": {
             "type": "string"
           },
@@ -2299,9 +2302,6 @@
               "type": "integer",
               "format": "int64"
             }
-          },
-          "current": {
-            "type": "boolean"
           }
         }
       },

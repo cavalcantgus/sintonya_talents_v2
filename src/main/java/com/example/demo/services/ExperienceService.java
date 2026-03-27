@@ -53,6 +53,15 @@ public class ExperienceService {
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
         CandidatePreferences candidatePreferences = candidate.getPreferences();
 
+        System.out.println("IS CURRENT? " + objDto.isCurrent());
+        if (objDto.isCurrent() && objDto.getEndDate() != null) {
+            throw new IllegalArgumentException("Experiência atual não deve possuir data de fim");
+        }
+
+        if (!objDto.isCurrent() && objDto.getEndDate() == null) {
+            throw new IllegalArgumentException("Experiência não atual deve possuir data de fim");
+        }
+
         Experience experience = new Experience();
         experience.setTitle(objDto.getTitle());
         experience.setWorkType(VacancyType.valueOf(objDto.getWorkType()));
