@@ -9,7 +9,9 @@ import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -61,6 +63,26 @@ public class CandidateController {
     public ResponseEntity<CandidateResponse> addSkills(@PathVariable Long id, @RequestBody List<SkillCandidateCreateDto> objDto) {
         CandidateResponse candidate = candidateService.addSkills(id, objDto);
         return ResponseEntity.ok().body(candidate);
+    }
+
+    @PostMapping("/{id}/profile/upload-photo")
+    public ResponseEntity<?> uploadProfilePhoto(
+            @RequestParam("photo") MultipartFile photo,
+            @PathVariable Long id
+    ) throws IOException {
+
+        candidateService.updateProfilePhoto(photo, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/profile/upload-banner")
+    public ResponseEntity<?> uploadProfileBanner(
+            @RequestParam("photo") MultipartFile photo,
+            @PathVariable Long id
+    ) throws IOException {
+
+        candidateService.updateProfileBanner(photo, id);
+        return ResponseEntity.ok().build();
     }
 }
 

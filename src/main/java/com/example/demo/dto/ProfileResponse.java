@@ -7,7 +7,8 @@ public record ProfileResponse(
         String headline,
         String personalSummary,
         String socialLinks,
-        String locality
+        String locality,
+        String banner
 ) {
 
     public static ProfileResponse fromEntity(Profile profile) {
@@ -20,9 +21,10 @@ public record ProfileResponse(
         return new ProfileResponse(
                 photo,
                 profile.getHeadLine(),
-                profile.getLocality(),
                 profile.getPersonalSummary(),
-                profile.getSocialLinks()
+                profile.getSocialLinks(),
+                profile.getLocality(),
+                profile.getBanner()
         );
     }
 }

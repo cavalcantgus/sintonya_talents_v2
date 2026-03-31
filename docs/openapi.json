@@ -377,47 +377,6 @@
         }
       }
     },
-    "/vacancys/{empresaId}/create-vacancy": {
-      "post": {
-        "tags": [
-          "vacancy-controller"
-        ],
-        "operationId": "createVacancy",
-        "parameters": [
-          {
-            "name": "empresaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VacancyCreateDTO"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Vacancy"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/users/register/enterprise": {
       "post": {
         "tags": [
@@ -426,25 +385,13 @@
         "operationId": "insertEnterprise",
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "required": [
-                  "data",
-                  "file"
-                ],
-                "type": "object",
-                "properties": {
-                  "data": {
-                    "$ref": "#/components/schemas/UserCreateEnterpriseDTO"
-                  },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
+                "$ref": "#/components/schemas/UserCreateEnterpriseDTO"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -546,6 +493,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/posts/create-post": {
+      "post": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "createPost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -728,6 +698,55 @@
         }
       }
     },
+    "/enterprises/{id}/profile/upload-photo": {
+      "post": {
+        "tags": [
+          "enterprise-controller"
+        ],
+        "operationId": "uploadProfile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "photo"
+                ],
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/certificates/{candidateId}/add-certificate": {
       "post": {
         "tags": [
@@ -773,6 +792,104 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/CertificateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/candidates/{id}/profile/upload-photo": {
+      "post": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "uploadProfilePhoto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "photo"
+                ],
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/candidates/{id}/profile/upload-banner": {
+      "post": {
+        "tags": [
+          "candidate-controller"
+        ],
+        "operationId": "uploadProfileBanner",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "photo"
+                ],
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -1064,12 +1181,35 @@
         }
       }
     },
+    "/posts": {
+      "get": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "findAll_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/job-applications": {
       "get": {
         "tags": [
           "job-application-controller"
         ],
-        "operationId": "findAll_4",
+        "operationId": "findAll_5",
         "responses": {
           "200": {
             "description": "OK",
@@ -1160,7 +1300,7 @@
         "tags": [
           "experience-controller"
         ],
-        "operationId": "findAll_5",
+        "operationId": "findAll_6",
         "responses": {
           "200": {
             "description": "OK",
@@ -1214,7 +1354,7 @@
         "tags": [
           "enterprise-controller"
         ],
-        "operationId": "findAll_6",
+        "operationId": "findAll_7",
         "responses": {
           "200": {
             "description": "OK",
@@ -1299,7 +1439,7 @@
         "tags": [
           "certificate-controller"
         ],
-        "operationId": "findAll_7",
+        "operationId": "findAll_8",
         "responses": {
           "200": {
             "description": "OK",
@@ -1353,7 +1493,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findAll_8",
+        "operationId": "findAll_9",
         "responses": {
           "200": {
             "description": "OK",
@@ -1526,6 +1666,54 @@
           }
         }
       },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "postType": {
+            "type": "string",
+            "enum": [
+              "PUBLICATION",
+              "VACANCY"
+            ]
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "vacancy": {
+            "$ref": "#/components/schemas/Vacancy"
+          },
+          "vacancyStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING_APPROVAL",
+              "APPROVED",
+              "OPEN",
+              "CLOSED",
+              "PAUSED",
+              "ARCHIVED",
+              "REJECTED"
+            ]
+          },
+          "publication": {
+            "$ref": "#/components/schemas/Publication"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "Profile": {
         "type": "object",
         "properties": {
@@ -1558,6 +1746,24 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "Publication": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "post": {
+            "$ref": "#/components/schemas/Post"
           }
         }
       },
@@ -1684,6 +1890,12 @@
           "password": {
             "type": "string"
           },
+          "posts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Post"
+            }
+          },
           "roles": {
             "uniqueItems": true,
             "type": "array",
@@ -1713,6 +1925,9 @@
           },
           "sector": {
             "$ref": "#/components/schemas/Sector"
+          },
+          "post": {
+            "$ref": "#/components/schemas/Post"
           },
           "selectionStages": {
             "uniqueItems": true,
@@ -1920,9 +2135,6 @@
           "photo": {
             "type": "string"
           },
-          "bannerm": {
-            "type": "string"
-          },
           "headline": {
             "type": "string"
           },
@@ -1933,6 +2145,9 @@
             "type": "string"
           },
           "locality": {
+            "type": "string"
+          },
+          "banner": {
             "type": "string"
           }
         }
@@ -2086,6 +2301,10 @@
           "headLine": {
             "type": "string"
           },
+          "sector": {
+            "type": "integer",
+            "format": "int64"
+          },
           "locality": {
             "type": "string"
           },
@@ -2106,63 +2325,6 @@
           },
           "level": {
             "type": "string"
-          }
-        }
-      },
-      "SkillVacancyDTO": {
-        "type": "object",
-        "properties": {
-          "skillId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "required": {
-            "type": "boolean"
-          }
-        }
-      },
-      "VacancyCreateDTO": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "position": {
-            "type": "string"
-          },
-          "vacancyType": {
-            "type": "string"
-          },
-          "sectorId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "hasATechnicalTest": {
-            "type": "boolean"
-          },
-          "hasABehavioralTest": {
-            "type": "boolean"
-          },
-          "requiredCertificate": {
-            "type": "boolean"
-          },
-          "experienceRange": {
-            "type": "string"
-          },
-          "locality": {
-            "type": "string"
-          },
-          "modalityType": {
-            "type": "string"
-          },
-          "skills": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SkillVacancyDTO"
-            }
           }
         }
       },
@@ -2247,6 +2409,134 @@
             "format": "date-time"
           }
         }
+      },
+      "PostCreateRequest": {
+        "required": [
+          "postDataDTO",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "PUBLICATION",
+              "VACANCY"
+            ]
+          },
+          "postDataDTO": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PublicationCreateDTO"
+              },
+              {
+                "$ref": "#/components/schemas/VacancyCreateDTO"
+              }
+            ]
+          }
+        }
+      },
+      "PostDataDTO": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          }
+        },
+        "discriminator": {
+          "propertyName": "type"
+        }
+      },
+      "PublicationCreateDTO": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostDataDTO"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "SkillVacancyDTO": {
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
+      "VacancyCreateDTO": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PostDataDTO"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "enterpriseId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "position": {
+                "type": "string"
+              },
+              "vacancyType": {
+                "type": "string"
+              },
+              "sectorId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "hasATechnicalTest": {
+                "type": "boolean"
+              },
+              "hasABehavioralTest": {
+                "type": "boolean"
+              },
+              "requiredCertificate": {
+                "type": "boolean"
+              },
+              "experienceRange": {
+                "type": "string"
+              },
+              "locality": {
+                "type": "string"
+              },
+              "modalityType": {
+                "type": "string"
+              },
+              "skills": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SkillVacancyDTO"
+                }
+              }
+            }
+          }
+        ]
       },
       "FinishTest": {
         "type": "object",
@@ -2435,6 +2725,61 @@
             "items": {
               "$ref": "#/components/schemas/SelectionStageResponse"
             }
+          }
+        }
+      },
+      "PostResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PUBLICATION",
+              "VACANCY"
+            ]
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          },
+          "vacancyStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING_APPROVAL",
+              "APPROVED",
+              "OPEN",
+              "CLOSED",
+              "PAUSED",
+              "ARCHIVED",
+              "REJECTED"
+            ]
+          },
+          "vacancyResponse": {
+            "$ref": "#/components/schemas/VacancyResponse"
+          },
+          "publicationResponse": {
+            "$ref": "#/components/schemas/PublicationResponse"
+          }
+        }
+      },
+      "PublicationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
           }
         }
       },

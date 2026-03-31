@@ -7,7 +7,9 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity()
@@ -25,6 +27,9 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Post> posts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

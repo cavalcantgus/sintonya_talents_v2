@@ -1,14 +1,17 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dto.PostCreateVacancyDTO;
+import com.example.demo.dto.PostCreateRequest;
 import com.example.demo.dto.PostResponse;
-import com.example.demo.entities.Post;
 import com.example.demo.services.PostService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
@@ -20,13 +23,18 @@ public class PostController {
         this.postService = postService;
     }
 
-
-
-    @PostMapping("/create-vacancy/{userId}")
-    public ResponseEntity<PostResponse> createVacancy(@RequestBody PostCreateVacancyDTO objDto, @PathVariable Long userId) {
-        PostResponse postResponse = postService.insertPostByEnterprise(userId, objDto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(postResponse.id()).toUri();
-        return ResponseEntity.created(uri).body(postResponse);
+    @GetMapping
+    public ResponseEntity<List<PostResponse>> findAll() {
+        List<PostResponse> posts = postService.findAll();
+        return ResponseEntity.ok().body(posts);
     }
 
+    @PostMapping("/create-post")
+    public ResponseEntity<Void> createPost(
+            @Valid @RequestBody PostCreateRequest request,
+            @AuthenticationPrincipal UserDetails user
+    ) {
+        postService.create(request, user);
+        return ResponseEntity.ok().build();
+    }
 }

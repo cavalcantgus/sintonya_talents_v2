@@ -7,8 +7,8 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class VacancyCreateDTO {
-
+public class VacancyCreateDTO extends PostDataDTO{
+    private Long enterpriseId;
     private String title;
     private String description;
     private String position;

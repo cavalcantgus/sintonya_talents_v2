@@ -1,15 +1,16 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.*;
-import com.example.demo.entities.Enterprise;
-import com.example.demo.entities.Post;
-import com.example.demo.entities.User;
-import com.example.demo.entities.Vacancy;
+import com.example.demo.entities.*;
 import com.example.demo.enums.PostType;
 import com.example.demo.enums.RoleName;
 import com.example.demo.enums.VacancyStatus;
 import com.example.demo.repositories.PostRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PostService {
@@ -17,81 +18,53 @@ public class PostService {
     private final PostRepository postRepository;
     private final VacancyService vacancyService;
     private final UserService userService;
-    private final EnterpriseService enterpriseService;
+    private final PublicationService publicationService;
 
     public PostService(PostRepository postRepository, VacancyService vacancyService, UserService userService,
-                       EnterpriseService enterpriseService) {
+                       PublicationService publicationService) {
         this.postRepository = postRepository;
         this.vacancyService = vacancyService;
         this.userService = userService;
-        this.enterpriseService = enterpriseService;
+        this.publicationService = publicationService;
     }
 
-    public PostResponse insertPostByEnterprise(Long userId, PostCreateVacancyDTO objDto) {
-        User user = userService.findById(userId);
+    public List<PostResponse> findAll() {
+        return postRepository.findAll()
+                .stream()
+                .map(PostResponse::fromEntity)
+                .toList();
+    }
 
-        boolean isEnterprise = user.getRoles().stream()
-                .anyMatch(role -> role.getRoleName().equals(RoleName.ENTERPRISE));
+    @Transactional
+    public PostResponse create(PostCreateRequest request, UserDetails user) {
+        User author = userService.findByEmail(user.getUsername());
+        boolean allowed = validateUserPermissions(author);
 
-        if (!isEnterprise) {
-            throw new RuntimeException("Usuário não tem permissão para criar vagas");
-        }
+        if(!allowed) throw new RuntimeException("Você não tem permissão para acessar este recurso");
 
         Post post = new Post();
-        post.setPostType(objDto.getType());
-        post.setUser(user);
+        post.setPostType(request.getType());
+        post.getUsers().add(author);
+        post.setVacancyStatus(VacancyStatus.PENDING_APPROVAL);
+        author.getPosts().add(post);
         postRepository.save(post);
 
-        if(objDto.getType().equals(PostType.VACANCY)) {
-            insertPostVacancy( objDto.getVacancyCreateDTO(), post, userId);
+        if(request.getPostDataDTO() instanceof VacancyCreateDTO vacancyCreateDTO) {
+            vacancyService.createVacany(vacancyCreateDTO, post);
         }
 
-        if(objDto.getType().equals(PostType.PUBLICATION)) {
-//            insertPostVacancy( objDto.getVacancyCreateDTO(), post, userId);
+        if(request.getPostDataDTO() instanceof PublicationCreateDTO publicationCreateDTO) {
+            publicationService.createPublication(publicationCreateDTO, post);
         }
 
         return PostResponse.fromEntity(post);
     }
 
-    private void insertPostVacancy(VacancyCreateDTO objDto, Post post, Long userId) {
-        EnterpriseResponse enterprise = enterpriseService.findByUserId(userId);
+    private boolean validateUserPermissions(User author) {
+        return author.getRoles().stream()
+                .anyMatch(role -> role.getRoleName().equals(RoleName.ADMINISTRATOR)
+                        || role.getRoleName().equals(RoleName.ENTERPRISE));
 
-        Vacancy vacancy = vacancyService.createVacany(enterprise.id(), objDto, post);
-        post.setVacancyStatus(VacancyStatus.APPROVED);
-        post.setVacancy(vacancy);
     }
 
-    public PostResponse insertPostByAdministrator(Long userId, PostCreateVacancyDTO objDto) {
-        User user = userService.findById(userId);
-
-        boolean isEnterprise = user.getRoles().stream()
-                .anyMatch(role -> role.getRoleName().equals(RoleName.ADMINISTRATOR));
-
-        if (!isEnterprise) {
-            throw new RuntimeException("Usuário não tem permissão para criar vagas");
-        }
-
-        Post post = new Post();
-        post.setPostType(objDto.getType());
-        post.setUser(user);
-        postRepository.save(post);
-
-//        if(objDto.getType().equals(PostType.VACANCY)) {
-////            insertPostVacancy( objDto.getVacancyCreateDTO(), post, userId);
-//        }
-
-//        if(objDto.getType().equals(PostType.PUBLICATION)) {
-//            insertPostPublication();
-//        }
-
-        return PostResponse.fromEntity(post);
-    }
-
-//    private void insertPostPublication(PublicationCreateDTO objDto) {
-//        EnterpriseResponse enterprise = enterpriseService.findByUserId(userId);
-//
-//        Vacancy vacancy = vacancyService.createVacany(enterprise.id(), objDto, post);
-//        post.setVacancyStatus(VacancyStatus.APPROVED);
-//        post.setVacancy(vacancy);
-//    }
 }

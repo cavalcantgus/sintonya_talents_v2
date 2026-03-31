@@ -63,9 +63,9 @@ public class VacancyService {
     }
 
     @Transactional
-    public Vacancy createVacany(Long enterpriseId, VacancyCreateDTO dto, Post post) {
+    public Vacancy createVacany(VacancyCreateDTO dto, Post post) {
 
-        Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
+        Enterprise enterprise = enterpriseRepository.findById(dto.getEnterpriseId())
                 .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
 
         Sector sector = sectorRepository.findById(dto.getSectorId())
@@ -73,6 +73,7 @@ public class VacancyService {
 
         Vacancy vacancy = buildVacancy(dto, enterprise, sector);
         vacancy.setPost(post);
+        post.setVacancy(vacancy);
         vacancyRepository.save(vacancy);
 
         createStages(vacancy, dto);
