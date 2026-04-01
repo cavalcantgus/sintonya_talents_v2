@@ -24,8 +24,8 @@ public record PostResponse (
                         .map(UserResponse::fromEntity)
                         .toList(),
                 post.getVacancyStatus(),
-                VacancyResponse.fromEntity(post.getVacancy()) != null ? VacancyResponse.fromEntity(post.getVacancy()) : null,
-                PublicationResponse.fromEntity(post.getPublication()) != null ? PublicationResponse.fromEntity(post.getPublication()) : null
+                post.getVacancy() != null ? VacancyResponse.fromEntity(post.getVacancy()) : null,
+                post.getPublication() != null ? PublicationResponse.fromEntity(post.getPublication()) : null
         );
     }
 }

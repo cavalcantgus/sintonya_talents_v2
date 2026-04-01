@@ -5,6 +5,7 @@ import com.example.demo.entities.*;
 import com.example.demo.enums.PostType;
 import com.example.demo.enums.RoleName;
 import com.example.demo.enums.VacancyStatus;
+import com.example.demo.repositories.FeedItemScoreRepository;
 import com.example.demo.repositories.PostRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,13 +20,16 @@ public class PostService {
     private final VacancyService vacancyService;
     private final UserService userService;
     private final PublicationService publicationService;
+    private final FeedItemScoreRepository feedItemScoreRepository;
 
     public PostService(PostRepository postRepository, VacancyService vacancyService, UserService userService,
-                       PublicationService publicationService) {
+                       PublicationService publicationService,
+                       FeedItemScoreRepository feedItemScoreRepository) {
         this.postRepository = postRepository;
         this.vacancyService = vacancyService;
         this.userService = userService;
         this.publicationService = publicationService;
+        this.feedItemScoreRepository = feedItemScoreRepository;
     }
 
     public List<PostResponse> findAll() {
@@ -47,6 +51,7 @@ public class PostService {
         post.getUsers().add(author);
         post.setVacancyStatus(VacancyStatus.PENDING_APPROVAL);
         author.getPosts().add(post);
+
         postRepository.save(post);
 
         if(request.getPostDataDTO() instanceof VacancyCreateDTO vacancyCreateDTO) {
@@ -56,6 +61,15 @@ public class PostService {
         if(request.getPostDataDTO() instanceof PublicationCreateDTO publicationCreateDTO) {
             publicationService.createPublication(publicationCreateDTO, post);
         }
+
+        FeedItemScore feedItemScore = new FeedItemScore();
+
+        feedItemScore.setScore(0.0);
+        feedItemScore.setPost(post);
+
+        post.setFeedItemScore(feedItemScore);
+
+        feedItemScoreRepository.save(feedItemScore);
 
         return PostResponse.fromEntity(post);
     }

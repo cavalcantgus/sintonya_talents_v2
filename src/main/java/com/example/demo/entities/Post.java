@@ -40,6 +40,9 @@ public class Post {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Vacancy vacancy;
 
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private FeedItemScore feedItemScore;
+
     @Enumerated(EnumType.STRING)
     private VacancyStatus vacancyStatus;
 
