@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.RoleResponse;
 import com.example.demo.entities.Role;
 import com.example.demo.enums.RoleName;
 import com.example.demo.repositories.RoleRepository;
@@ -20,13 +21,17 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public List<Role> findAll() {
-        return roleRepository.findAll();
+    public List<RoleResponse> findAll() {
+        return roleRepository.findAll()
+                .stream()
+                .map(RoleResponse::fromEntity)
+                .toList();
     };
 
-    public Role findById(Long id) {
-        return roleRepository.findById(id)
+    public RoleResponse findById(Long id) {
+        Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Role não encontrada"));
+        return RoleResponse.fromEntity(role);
     }
 
     public Role insert(String roleName) {

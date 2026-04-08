@@ -133,16 +133,16 @@ public class UserService {
 
         Role role = roleService.insert("ENTERPRISE");
 
-        ValidationResult result = validateEnterprise(objDto);
-
-        if (!result.isValid()) {
-            throw new BusinessException(result.getMessage());
-        }
+//        ValidationResult result = validateEnterprise(objDto);
+//
+//        if (!result.isValid()) {
+//            throw new BusinessException(result.getMessage());
+//        }
 
         User user = new User();
         user.setEmail(objDto.getEmail());
         user.getRoles().add(role);
-        user.setPassword(passwordEncoder.encode(PasswordGenerator.generate()));
+//        user.setPassword(passwordEncoder.encode(PasswordGenerator.generate()));
         createEnterprise(user, objDto);
         userRepository.save(user);
 

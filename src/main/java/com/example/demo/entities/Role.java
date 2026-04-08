@@ -35,6 +35,9 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleName roleName;
 
+    private String name;
+    private String description;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

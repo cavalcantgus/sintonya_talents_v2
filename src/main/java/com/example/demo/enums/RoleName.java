@@ -3,5 +3,9 @@ package com.example.demo.enums;
 public enum RoleName {
     ADMINISTRATOR,
     CANDIDATE,
-    ENTERPRISE
+    ENTERPRISE,
+    MODERATOR,
+    RECRUITER,
+    VIEWER,
+    SUPPORT
 }
