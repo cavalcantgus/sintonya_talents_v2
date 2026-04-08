@@ -5,6 +5,7 @@ import com.example.demo.dto.VacancyCreateDTO;
 import com.example.demo.dto.VacancyResponse;
 import com.example.demo.entities.*;
 import com.example.demo.enums.*;
+import com.example.demo.exception.EnterpriseException;
 import com.example.demo.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -68,6 +69,10 @@ public class VacancyService {
         Enterprise enterprise = enterpriseRepository.findById(dto.getEnterpriseId())
                 .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
 
+        if(!enterprise.isApproved()) {
+           throw new EnterpriseException(EnterpriseError.NOT_AUTHORIZED_TO_PUBLISH_VACANCY.getMessage());
+        }
+
         Sector sector = sectorRepository.findById(dto.getSectorId())
                 .orElseThrow(() -> new EntityNotFoundException("Setor não encontrado"));
 
@@ -76,9 +81,13 @@ public class VacancyService {
         post.setVacancy(vacancy);
         vacancyRepository.save(vacancy);
 
-        createStages(vacancy, dto);
+        if (dto.isHasABehavioralTest() || dto.isHasATechnicalTest()) {
+            createStages(vacancy, dto);
+        }
 
-        saveSkills(vacancy, dto.getSkills());
+        if (dto.getSkills() != null && !dto.getSkills().isEmpty()) {
+            saveSkills(vacancy, dto.getSkills());
+        }
 
         return vacancy;
     }

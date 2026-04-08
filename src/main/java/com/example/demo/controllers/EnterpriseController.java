@@ -5,6 +5,8 @@ import com.example.demo.services.EnterpriseService;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,19 +42,19 @@ public class EnterpriseController {
         return ResponseEntity.ok().body(enterprise);
     }
 
-    @PutMapping("/update-personal-infos/enterprise/{id}")
+    @PutMapping("/update-personal-infos/enterprise")
     @PreAuthorize("hasAuthority('PROFILE_UPDATE') or hasRole('ADMINISTRATOR')")
-    public ResponseEntity<EnterpriseResponse> updatePersonalInfos(@PathVariable Long id, @RequestBody EnterpriseUpdateDTO objDto) {
-        EnterpriseResponse enterprise = enterpriseService.update(id, objDto);
+    public ResponseEntity<EnterpriseResponse> updatePersonalInfos(@AuthenticationPrincipal UserDetails userDetails, @RequestBody EnterpriseUpdateDTO objDto) {
+        EnterpriseResponse enterprise = enterpriseService.update(userDetails, objDto);
         return ResponseEntity.ok().body(enterprise);
     }
 
-//    @PutMapping("/update-personal-summary/enterprise/{id}")
-//    @PreAuthorize("hasAuthority('PROFILE_UPDATE') or hasRole('ADMINISTRATOR')")
-//    public ResponseEntity<EnterpriseResponse> updatePersonalSummary(@PathVariable Long id, @RequestBody String personalSummary) {
-//        EnterpriseResponse enterprise = enterpriseService.update(id, personalSummary);
-//        return ResponseEntity.ok().body(enterprise);
-//    }
+    @PutMapping("/update-personal-summary/enterprise")
+    @PreAuthorize("hasAuthority('PROFILE_UPDATE') or hasRole('ADMINISTRATOR')")
+    public ResponseEntity<EnterpriseResponse> updatePersonalSummary(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String personalSummary) {
+        EnterpriseResponse enterprise = enterpriseService.update(userDetails, personalSummary);
+        return ResponseEntity.ok().body(enterprise);
+    }
 
 
     @PostMapping("/{id}/profile/upload-photo")

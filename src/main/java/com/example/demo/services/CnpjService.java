@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.CnpjApiResponse;
+import com.example.demo.enums.BusinessError;
+import com.example.demo.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,7 +26,7 @@ public class CnpjService {
                     .block();
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao consultar CNPJ");
+            throw new BusinessException(BusinessError.INVALID_CNPJ.getMessage());
         }
     }
 }

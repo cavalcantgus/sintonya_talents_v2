@@ -49,4 +49,29 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(problem);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ProblemDetail> handleBusinessException(
+            BusinessException ex,
+            HttpServletRequest request
+    ) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setDetail(ex.getMessage());
+        problem.setProperty("path", request.getRequestURI());
+
+        return ResponseEntity.badRequest().body(problem);
+    }
+
+    @ExceptionHandler(EnterpriseException.class)
+    public ResponseEntity<ProblemDetail> handleEnterpriseException(
+            EnterpriseException ex,
+            HttpServletRequest request
+    ) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Problemas com o cadastro");
+        problem.setDetail(ex.getMessage());
+        problem.setProperty("path", request.getRequestURI());
+
+        return ResponseEntity.badRequest().body(problem);
+    }
 }

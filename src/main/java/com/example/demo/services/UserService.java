@@ -3,17 +3,19 @@ package com.example.demo.services;
 import com.example.demo.config.SecurityConfig;
 import com.example.demo.dto.*;
 import com.example.demo.entities.*;
-import com.example.demo.enums.CertificateError;
-import com.example.demo.enums.RoleName;
+import com.example.demo.enums.*;
+import com.example.demo.exception.BusinessException;
 import com.example.demo.exception.CertificateValidationException;
 import com.example.demo.exception.EmailAlreadyExistsException;
 import com.example.demo.repositories.*;
+import com.example.demo.utils.PasswordGenerator;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +29,7 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +44,7 @@ public class UserService {
     private final ProfileRepository profileRepository;
     private final CandidatePreferencesRepository candidatePreferencesRepository;
     private final CnpjService cnpjService;
+    private final WebClient webClient;
 
     @Autowired
     public UserService(UserRepository userRepository, RoleService roleService, EnterpriseRepository enterpriseRepository,
@@ -48,7 +52,9 @@ public class UserService {
                        PasswordEncoder passwordEncoder,
                        ProfileRepository profileRepository,
                        CandidatePreferencesRepository candidatePreferencesRepository,
-                       CnpjService cnpjService) {
+                       CnpjService cnpjService,
+                       WebClient webClient,
+                       EnterpriseService enterpriseService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.enterpriseRepository = enterpriseRepository;
@@ -57,10 +63,14 @@ public class UserService {
         this.profileRepository = profileRepository;
         this.candidatePreferencesRepository = candidatePreferencesRepository;
         this.cnpjService = cnpjService;
+        this.webClient = webClient;
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserResponse> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserResponse::fromEntity)
+                .toList();
     }
 
     public User findById(Long id) {
@@ -102,7 +112,6 @@ public class UserService {
 
         Role role = roleService.insert("CANDIDATE");
 
-
         user.setEmail(objDto.getEmail());
         user.getRoles().add(role);
         user.setPassword(passwordEncoder.encode(objDto.getPassword()));
@@ -110,46 +119,100 @@ public class UserService {
         userRepository.save(user);
         createCandidate(user, objDto.getCandidateName(), objDto.getCpf(), objDto.getContact());
 
+        UserFeedConfig userFeedConfig = createUserFeedConfig(user);
+        Subscription subscription = createSubscription(user);
+
+        user.setUserFeedConfig(userFeedConfig);
+        user.setSubscription(subscription);
+
         return UserResponse.fromEntity(user);
     }
 
     @Transactional
-    public UserResponse insertEnterprise(
-            UserCreateEnterpriseDTO objDto
-    ) {
+    public UserResponse insertEnterprise(UserCreateEnterpriseDTO objDto) {
+
         Role role = roleService.insert("ENTERPRISE");
 
-        validateEnterprise(objDto);
+        ValidationResult result = validateEnterprise(objDto);
+
+        if (!result.isValid()) {
+            throw new BusinessException(result.getMessage());
+        }
 
         User user = new User();
         user.setEmail(objDto.getEmail());
         user.getRoles().add(role);
-
+        user.setPassword(passwordEncoder.encode(PasswordGenerator.generate()));
         createEnterprise(user, objDto);
         userRepository.save(user);
 
         return UserResponse.fromEntity(user);
     }
 
-    private void validateEnterprise(UserCreateEnterpriseDTO objDto) {
-        try {
-            String cnpj = objDto.getCnpj().replaceAll("\\D", "");
+    private UserFeedConfig createUserFeedConfig(User user) {
+        UserFeedConfig userFeedConfig = new UserFeedConfig();
+        userFeedConfig.setUser(user);
+        return userFeedConfig;
+    }
 
-            CnpjApiResponse api = cnpjService.buscarCnpj(cnpj);
+    private Subscription createSubscription(User user) {
+        Subscription subscription = new Subscription();
+        subscription.setUser(user);
+        subscription.setPlan(Plan.FREE);
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        return subscription;
+    }
 
-            if (!"ATIVA".equalsIgnoreCase(api.getDescricao_situacao_cadastral())) {
-                throw new CertificateValidationException(CertificateError.INACTIVE_CNJP);
-            }
+    private ValidationResult validateEnterprise(UserCreateEnterpriseDTO objDto) {
 
-            if (!objDto.getSocialReason().equalsIgnoreCase(api.getDescricao_motivo_situacao_cadastral())) {
-                throw new CertificateValidationException(CertificateError.INVALID_SOCIAL_REASON);
-            }
+        String cnpj = objDto.getCnpj().replaceAll("\\D", "");
+        CnpjApiResponse api = cnpjService.buscarCnpj(cnpj);
 
-        } catch (CertificateValidationException e) {
-            throw e; // mantém suas exceções de negócio
+        ValidationResult result;
+
+        if (!"ATIVA".equalsIgnoreCase(api.getDescricao_situacao_cadastral())) {
+
+            result = ValidationResult.error(false,
+                    "INACTIVE_CNPJ",
+                    BusinessError.INATIVE_CNPJ.getMessage()
+            );
+
+        } else if (!objDto.getSocialReason().equalsIgnoreCase(api.getDescricao_motivo_situacao_cadastral())) {
+
+            result = ValidationResult.error(false,
+                    "INVALID_SOCIAL_REASON",
+                    BusinessError.INVALID_SOCIAL_REASON.getMessage()
+            );
+
+        } else {
+            result = ValidationResult.success(true, "teste", "teste");
 
         }
+
+        sendToN8n(api, objDto, result);
+
+        return result;
     }
+
+    private void sendToN8n(CnpjApiResponse api, UserCreateEnterpriseDTO dto, ValidationResult result) {
+
+        System.out.println("code: " + result.getCode());
+        System.out.println("message: " + result.getMessage());
+
+        webClient.post()
+                .uri("https://n8n-ho4040ks04wssoockc080gc8.coolify.mmcinfra.com/webhook-test/cd650c75-4485-4994-bfe4-c59d69a01ff2")
+                .bodyValue(Map.of(
+                        "cnpj", dto.getCnpj(),
+                        "valid", result.isValid(),
+                        "code", result.getCode(),
+                        "message", result.getMessage(),
+                        "email", dto.getEmail()
+                ))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+    }
+
 
     private void validateCertificate(
             MultipartFile file,

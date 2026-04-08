@@ -2,8 +2,15 @@ package com.example.demo.services;
 
 import com.example.demo.dto.PostResponse;
 import com.example.demo.entities.Post;
+import com.example.demo.entities.Subscription;
+import com.example.demo.entities.User;
+import com.example.demo.enums.Plan;
 import com.example.demo.enums.PostType;
+import com.example.demo.enums.SubscriptionStatus;
 import com.example.demo.repositories.PostRepository;
+import com.example.demo.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,12 +20,16 @@ import java.util.List;
 public class FeedService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public FeedService(PostRepository postRepository) {
+    public FeedService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<PostResponse> buildFeed() {
+    public List<PostResponse> buildFeed(UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         // Separação dos dois Pools
         List<Post> vacancies = postRepository.findAll()
@@ -31,14 +42,26 @@ public class FeedService {
                 .filter(post -> post.getPostType() != PostType.VACANCY)
                 .toList();
 
-        System.out.println("TAMANHO DO PUBLICATIONS: " + publications.size());
-        System.out.println("TAMANHO DO VACANCIES: " + vacancies.size());
+        Subscription subscription = user.getSubscription();
+        boolean isPremium = subscription.getPlan() == Plan.PREMIUM
+                && subscription.getStatus() == SubscriptionStatus.ACTIVE;
 
-        return injectVacancies(publications, vacancies, 0.15, 5);
-//        return postRepository.findAllActive()
-//                .stream()
-//                .map(PostResponse::fromEntity)
-//                .toList();
+        double lambda = isPremium ? 0.5 : user.getUserFeedConfig().getVacancyLambda();
+        int poolSize = isPremium ? Integer.MAX_VALUE : user.getUserFeedConfig().getPoolSize();
+
+        List<PostResponse> posts = injectVacancies(publications, vacancies, lambda, poolSize);
+        long maxVacancies = posts.stream()
+                .filter(p -> p.type().equals(PostType.VACANCY))
+                .count();
+
+        long maxPublications = posts.stream()
+                .filter(p -> p.type().equals(PostType.PUBLICATION))
+                .count();
+
+        System.out.println("TAMANHO DO PUBLICATIONS: " + maxPublications);
+        System.out.println("TAMANHO DO VACANCIES: " + maxVacancies);
+
+        return posts;
     }
 
     private List<PostResponse> injectVacancies(List<Post> publications, List<Post> vacancies, double lambda, int maxVacancies) {

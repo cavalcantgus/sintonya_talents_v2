@@ -4,12 +4,15 @@ import com.example.demo.dto.PostCreateRequest;
 import com.example.demo.dto.PostResponse;
 import com.example.demo.services.PostService;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -29,12 +32,22 @@ public class PostController {
         return ResponseEntity.ok().body(posts);
     }
 
-    @PostMapping("/create-post")
+//    @PostMapping("/create-post")
+//    public ResponseEntity<Void> createPost(
+//            @Valid @RequestBody PostCreateRequest request,
+//            @AuthenticationPrincipal UserDetails user
+//    ) {
+//        postService.create(request, user);
+//        return ResponseEntity.ok().build();
+//    }
+
+    @PostMapping(value = "/create-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createPost(
-            @Valid @RequestBody PostCreateRequest request,
+            @Valid @RequestPart("data") PostCreateRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file,
             @AuthenticationPrincipal UserDetails user
-    ) {
-        postService.create(request, user);
+    ) throws IOException {
+        postService.create(request, user, file);
         return ResponseEntity.ok().build();
     }
 }

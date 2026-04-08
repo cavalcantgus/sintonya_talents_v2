@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.enums.MediaType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +23,7 @@ public class File {
     private String path;
     private String contentType;
     private Long size;
+
+    @Enumerated(EnumType.STRING)
+    private MediaType mediaType;
 }
