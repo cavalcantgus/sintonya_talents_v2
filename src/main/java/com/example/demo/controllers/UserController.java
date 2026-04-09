@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.GetAllUsersResponse;
 import com.example.demo.dto.UserCreateDTO;
 import com.example.demo.dto.UserCreateEnterpriseDTO;
 import com.example.demo.dto.UserResponse;
@@ -42,8 +43,8 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<List<UserResponse>> findAll() {
-        List<UserResponse> users = userService.findAll();
+    public ResponseEntity<List<GetAllUsersResponse>> findAll() {
+        List<GetAllUsersResponse> users = userService.getAllUsers();
         return ResponseEntity.ok().body(users);
     }
 

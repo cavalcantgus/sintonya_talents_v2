@@ -26,10 +26,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,6 +61,22 @@ public class UserService {
         this.candidatePreferencesRepository = candidatePreferencesRepository;
         this.cnpjService = cnpjService;
         this.webClient = webClient;
+    }
+
+    public List<GetAllUsersResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+
+        Map<Long, String> nameByUserId = new HashMap<>();
+
+        candidateRepository.findAll()
+                .forEach(c -> nameByUserId.put(c.getUser().getId(), c.getFullName()));
+
+        enterpriseRepository.findAll()
+                .forEach(e -> nameByUserId.put(e.getUser().getId(), e.getEnterpriseName()));
+
+        return users.stream()
+                .map(user -> GetAllUsersResponse.fromEntity(user, nameByUserId.get(user.getId())))
+                .toList();
     }
 
     public List<UserResponse> findAll() {
