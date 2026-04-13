@@ -60,7 +60,8 @@ public class PostController {
 
     @PostMapping("/publications-posts/by-author")
     public ResponseEntity<List<PostResponse>> findByPostTypeAndUsersId(@AuthenticationPrincipal UserDetails userDetails) {
-        PostResponse posts = postService.findByPostTypeAndUsersId(PostType.PUBLICATION, userDetails)
+        List<PostResponse> posts = postService.findByPostTypeAndUsersId(PostType.PUBLICATION, userDetails);
+        return ResponseEntity.ok().body(posts);
     }
 
 }
