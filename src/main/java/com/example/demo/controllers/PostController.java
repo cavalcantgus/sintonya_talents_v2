@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.PostCreateRequest;
 import com.example.demo.dto.PostResponse;
+import com.example.demo.enums.PostType;
 import com.example.demo.services.PostService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
@@ -41,6 +42,12 @@ public class PostController {
 //        return ResponseEntity.ok().build();
 //    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponse> findById(@PathVariable Long id) {
+        PostResponse post = postService.findById(id);
+        return ResponseEntity.ok().body(post);
+    }
+
     @PostMapping(value = "/create-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createPost(
             @Valid @RequestPart("data") PostCreateRequest request,
@@ -50,4 +57,10 @@ public class PostController {
         postService.create(request, user, file);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/publications-posts/by-author")
+    public ResponseEntity<List<PostResponse>> findByPostTypeAndUsersId(@AuthenticationPrincipal UserDetails userDetails) {
+        PostResponse posts = postService.findByPostTypeAndUsersId(PostType.PUBLICATION, userDetails)
+    }
+
 }

@@ -11,6 +11,7 @@ import com.example.demo.repositories.FeedItemScoreRepository;
 import com.example.demo.repositories.FileRepository;
 import com.example.demo.repositories.PostFileRepository;
 import com.example.demo.repositories.PostRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,6 +58,21 @@ public class PostService {
                 .stream()
                 .map(PostResponse::fromEntity)
                 .toList();
+    }
+
+    public List<PostResponse> findByPostTypeAndUsersId(PostType postType, UserDetails userDetails) {
+        User user = userService.findByEmail(userDetails.getUsername());
+
+        return postRepository.findByPostTypeAndUsersId(postType, user.getId())
+                .stream()
+                .map(PostResponse::fromEntity)
+                .toList();
+    }
+
+    public PostResponse findById(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Post não encontrado"));
+        return PostResponse.fromEntity(post);
     }
 
     @Transactional
@@ -136,7 +152,6 @@ public class PostService {
         return author.getRoles().stream()
                 .anyMatch(role -> role.getRoleName().equals(RoleName.ADMINISTRATOR)
                         || role.getRoleName().equals(RoleName.ENTERPRISE));
-
     }
 
 }

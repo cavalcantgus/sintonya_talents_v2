@@ -71,36 +71,36 @@ public class VacancyController {
 
     @PutMapping("/{id}/rejected")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<Vacancy> rejectVacancy(@PathVariable Long id) {
-        Vacancy vacancy = vacancyService.updateIfRejected(id);
+    public ResponseEntity<VacancyResponse> rejectVacancy(@PathVariable Long id) {
+        VacancyResponse vacancy = vacancyService.updateIfRejected(id);
         return ResponseEntity.ok().body(vacancy);
     }
 
     @PutMapping("/{id}/approved")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<Vacancy> approveVacancy(@PathVariable Long id) {
-        Vacancy vacancy = vacancyService.updateIfApproved(id);
+    public ResponseEntity<VacancyResponse> approveVacancy(@PathVariable Long id) {
+        VacancyResponse vacancy = vacancyService.updateIfApproved(id);
         return ResponseEntity.ok().body(vacancy);
     }
 
     @PutMapping("/{id}/closed")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<Vacancy> closeVacancy(@PathVariable Long id) {
-        Vacancy vacancy = vacancyService.updateIfClosed(id);
+    public ResponseEntity<VacancyResponse> closeVacancy(@PathVariable Long id) {
+        VacancyResponse vacancy = vacancyService.updateIfClosed(id);
         return ResponseEntity.ok().body(vacancy);
     }
 
     @PutMapping("/{id}/paused")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<Vacancy> pauseVacancy(@PathVariable Long id) {
-        Vacancy vacancy = vacancyService.updateIfPaused(id);
+    public ResponseEntity<VacancyResponse> pauseVacancy(@PathVariable Long id) {
+        VacancyResponse vacancy = vacancyService.updateIfPaused(id);
         return ResponseEntity.ok().body(vacancy);
     }
 
     @PutMapping("/{id}/archived")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<Vacancy> archivedVacancy(@PathVariable Long id) {
-        Vacancy vacancy = vacancyService.updateIfArchived(id);
+    public ResponseEntity<VacancyResponse> archivedVacancy(@PathVariable Long id) {
+        VacancyResponse vacancy = vacancyService.updateIfArchived(id);
         return ResponseEntity.ok().body(vacancy);
     }
 }

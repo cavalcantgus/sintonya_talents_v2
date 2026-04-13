@@ -34,16 +34,19 @@ public class EnterpriseService {
     private final EnterpriseRepository enterpriseRepository;
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
+    private final SupabaseStorageService storageService;
 
     @Value("${app.upload.dir:/var/uploads}")
     private String uploadDir;
 
     public EnterpriseService(EnterpriseRepository enterpriseRepository,
                              ProfileRepository profileRepository,
-                             UserRepository userRepository) {
+                             UserRepository userRepository,
+                             SupabaseStorageService storageService) {
         this.enterpriseRepository = enterpriseRepository;
         this.profileRepository = profileRepository;
         this.userRepository = userRepository;
+        this.storageService = storageService;
     }
 
     public List<EnterpriseResponse> findAll() {
@@ -118,40 +121,52 @@ public class EnterpriseService {
 
 
     public void updateProfilePhoto(MultipartFile file, Long id) throws IOException {
-        System.out.println(">>> Iniciando upload para empresa id: " + id);
-        System.out.println(">>> Arquivo recebido: " + file.getOriginalFilename() + " | Tamanho: " + file.getSize());
-
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("Arquivo vazio");
-        }
+        validateFile(file);
 
         Enterprise enterprise = enterpriseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
-        System.out.println(">>> Empresa encontrada: " + enterprise.getId());
-
-        Path dirPath = Paths.get(uploadDir, "enterprises", String.valueOf(enterprise.getId()));
-        System.out.println(">>> Diretório alvo (absoluto): " + dirPath.toAbsolutePath());
-        Files.createDirectories(dirPath);
-        System.out.println(">>> Diretório criado/confirmado");
 
         Profile profile = enterprise.getProfile();
-        System.out.println(">>> Profile atual: " + profile);
 
-//        if (profile == null) {
-//            profile = new Profile();
-//            profile.setEnterprise(enterprise);
-//            System.out.println(">>> Novo profile criado");
-//        } else if (profile.getPhoto() != null) {
-//            Files.deleteIfExists(Paths.get(profile.getPhoto()));
-//        }
+        if(profile.getPhoto() != null) {
+            String oldPath = extractPath(profile.getPhoto());
+            storageService.delete(oldPath);
+        }
 
-        String fileName = "photo_" + System.currentTimeMillis() + ".jpg";
-        Path photoPath = dirPath.resolve(fileName);
-        Files.write(photoPath, file.getBytes());
-        System.out.println(">>> Arquivo salvo em: " + photoPath.toAbsolutePath());
+        String path = "users/enterprise/" + id + "/photo_" + System.currentTimeMillis() + ".jpg";
+        String publicUrl = storageService.upload(file, path);
 
-        profile.setPhoto(photoPath.toString());
+        profile.setPhoto(publicUrl);
         profileRepository.save(profile);
-        System.out.println(">>> Profile salvo no banco com foto: " + profile.getPhoto());
+    }
+
+    private void validateFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Arquivo vazio");
+        }
+    }
+
+    private String extractPath(String publicUrl) {
+        return publicUrl.replaceAll(".*/public/[^/]+/", "");
+    }
+
+    public void updateProfileBanner(MultipartFile file, Long id) throws IOException {
+        validateFile(file);
+
+        Enterprise enterprise = enterpriseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
+
+        Profile profile = enterprise.getProfile();
+
+        if (profile.getBanner() != null) {
+            String oldPath = extractPath(profile.getBanner());
+            storageService.delete(oldPath);
+        }
+
+        String path = "users/enterprise/" + id + "/banner_" + System.currentTimeMillis() + ".jpg";
+        String publicUrl = storageService.upload(file, path);
+
+        profile.setBanner(publicUrl);
+        profileRepository.save(profile);
     }
 }

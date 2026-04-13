@@ -1,6 +1,7 @@
 package com.example.demo.repositories;
 
 import com.example.demo.entities.Post;
+import com.example.demo.enums.PostType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -24,4 +25,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     ORDER BY COALESCE(p.feedItemScore.score, 0.0) DESC, p.createdAt DESC
 """)
     List<Post> findAllActive();
+
+    List<Post> findByPostTypeAndUsersId(PostType postType, Long userId);
 }
