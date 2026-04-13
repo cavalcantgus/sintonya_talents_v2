@@ -31,7 +31,7 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<Post> posts = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

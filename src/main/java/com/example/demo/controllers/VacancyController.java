@@ -33,7 +33,7 @@ public class VacancyController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('VACANCY_VIEW')")
+    @PreAuthorize("hasAuthority('VACANCY_READ')")
     public ResponseEntity<List<VacancyResponse>>  findAll() {
         List<VacancyResponse> vacancys = vacancyService.findAll();
         return ResponseEntity.ok().body(vacancys);
@@ -48,14 +48,14 @@ public class VacancyController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('VACANCY_VIEW') || hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('VACANCY_READ') || hasRole('ADMINISTRATOR')")
     public ResponseEntity<VacancyResponse> findById(@PathVariable Long id) {
         VacancyResponse vacancy = vacancyService.findById(id);
         return ResponseEntity.ok().body(vacancy);
     }
 
     @GetMapping("/vacancy-by-enterprise/{enterpriseId}")
-    @PreAuthorize("hasAuthority('VACANCY_VIEW') || hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('VACANCY_READ') || hasRole('ADMINISTRATOR')")
     public ResponseEntity<List<VacancyResponse>> findByEnterpiseid(@PathVariable Long enterpriseId) {
         List<VacancyResponse> vacancyResponse = vacancyService.findByEnterpriseId(enterpriseId);
         return ResponseEntity.ok().body(vacancyResponse);
@@ -92,7 +92,7 @@ public class VacancyController {
 
     @PutMapping("/{id}/paused")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<Vacancy> pausedVacancy(@PathVariable Long id) {
+    public ResponseEntity<Vacancy> pauseVacancy(@PathVariable Long id) {
         Vacancy vacancy = vacancyService.updateIfPaused(id);
         return ResponseEntity.ok().body(vacancy);
     }

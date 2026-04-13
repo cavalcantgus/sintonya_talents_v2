@@ -9,6 +9,7 @@ import com.example.demo.entities.User;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -91,5 +92,11 @@ public class UserController {
         UserResponse user = userService.insertAdmin(objDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.id()).toUri();
         return ResponseEntity.created(uri).body(user);
+    }
+
+    @PutMapping("/update-roles")
+    public ResponseEntity<Void> updateRoles(@RequestBody List<Long> rolesId, @Param(value = "userId") Long userId) {
+        userService.updateRoles(rolesId, userId);
+        return ResponseEntity.ok().build();
     }
 }

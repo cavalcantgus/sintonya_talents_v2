@@ -25,7 +25,7 @@ public class CandidateController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('CANDIDATE_VIEW')")
+    @PreAuthorize("hasAuthority('CANDIDATE_READ')")
     public ResponseEntity<List<CandidateResponse>> findAll() {
         List<CandidateResponse> candidates = candidateService.findAll();
         return ResponseEntity.ok().body(candidates);
@@ -59,7 +59,7 @@ public class CandidateController {
     }
 
     @PutMapping("/upadate/add-skills/candidate/{id}")
-    @PreAuthorize("hasAuthority('SKILL_ADD')")
+    @PreAuthorize("hasAuthority('SKILL_CREATE')")
     public ResponseEntity<CandidateResponse> addSkills(@PathVariable Long id, @RequestBody List<SkillCandidateCreateDto> objDto) {
         CandidateResponse candidate = candidateService.addSkills(id, objDto);
         return ResponseEntity.ok().body(candidate);

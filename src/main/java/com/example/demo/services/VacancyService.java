@@ -5,6 +5,7 @@ import com.example.demo.dto.VacancyCreateDTO;
 import com.example.demo.dto.VacancyResponse;
 import com.example.demo.entities.*;
 import com.example.demo.enums.*;
+import com.example.demo.exception.BusinessException;
 import com.example.demo.exception.EnterpriseException;
 import com.example.demo.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -218,6 +219,10 @@ public class VacancyService {
         Vacancy vacancy = vacancyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
 
+        if (!vacancy.getVacancyStatus().equals(VacancyStatus.APPROVED) && !vacancy.getVacancyStatus().equals(VacancyStatus.PENDING_APPROVAL)) {
+            throw new BusinessException("A vaga só pode ser rejeita se tiver status Aprovado ou Pendente de Aprovação");
+        }
+
         vacancy.setVacancyStatus(VacancyStatus.REJECTED);
         vacancy.setClosedAt(LocalDateTime.now());
 
@@ -228,6 +233,10 @@ public class VacancyService {
     public Vacancy updateIfClosed(Long id) {
         Vacancy vacancy = vacancyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+
+        if (!vacancy.getVacancyStatus().equals(VacancyStatus.OPEN)) {
+            throw new BusinessException("Uma vaga só pode ser fechada se constar como aberta");
+        }
 
         vacancy.setVacancyStatus(VacancyStatus.CLOSED);
         vacancy.setClosedAt(LocalDateTime.now());
@@ -240,6 +249,10 @@ public class VacancyService {
         Vacancy vacancy = vacancyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
 
+        if (!vacancy.getVacancyStatus().equals(VacancyStatus.OPEN)) {
+            throw new BusinessException("Uma vaga só pode ser pausada se constar como aberta");
+        }
+
         vacancy.setVacancyStatus(VacancyStatus.PAUSED);
 
         return vacancyRepository.save(vacancy);
@@ -250,6 +263,9 @@ public class VacancyService {
         Vacancy vacancy = vacancyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
 
+        if (!vacancy.getVacancyStatus().equals(VacancyStatus.OPEN)) {
+            throw new BusinessException("A vaga só pode ser arquivada se estiver aberta.");
+        }
         vacancy.setVacancyStatus(VacancyStatus.ARCHIVED);
 
         return vacancyRepository.save(vacancy);

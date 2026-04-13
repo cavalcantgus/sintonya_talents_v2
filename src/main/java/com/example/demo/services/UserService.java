@@ -29,6 +29,7 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -42,6 +43,7 @@ public class UserService {
     private final CandidatePreferencesRepository candidatePreferencesRepository;
     private final CnpjService cnpjService;
     private final WebClient webClient;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, RoleService roleService, EnterpriseRepository enterpriseRepository,
@@ -51,7 +53,8 @@ public class UserService {
                        CandidatePreferencesRepository candidatePreferencesRepository,
                        CnpjService cnpjService,
                        WebClient webClient,
-                       EnterpriseService enterpriseService) {
+                       EnterpriseService enterpriseService,
+                       RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.enterpriseRepository = enterpriseRepository;
@@ -61,6 +64,7 @@ public class UserService {
         this.candidatePreferencesRepository = candidatePreferencesRepository;
         this.cnpjService = cnpjService;
         this.webClient = webClient;
+        this.roleRepository = roleRepository;
     }
 
     public List<GetAllUsersResponse> getAllUsers() {
@@ -324,6 +328,22 @@ public class UserService {
 
         enterprise.setProfile(profile);
         enterpriseRepository.save(enterprise);
+    }
+
+
+    public void updateRoles(List<Long> rolesId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        List<Role> newRoles = roleRepository.findAllById(rolesId);
+        if (newRoles.size() != rolesId.size()) {
+            throw new EntityNotFoundException("Uma ou mais roles não encontradas");
+        }
+
+        user.getRoles().clear();
+        user.getRoles().addAll(newRoles);
+
+        userRepository.save(user);
     }
 }
 
