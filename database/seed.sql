@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict khfGeQe9gV5nPsHMPsgGeKuVn7hjfw58nwTyjyAdXdHi5AVIRdfJPNcjuMPBxIa
+\restrict kGWHK2nj6pumHsEYunCa2zAuxEb6JwiZkUDlNte1gNR4WL8D0V89BvXgDR2hDzC
 
 -- Dumped from database version 15.17 (Debian 15.17-1.pgdg13+1)
 -- Dumped by pg_dump version 15.17 (Debian 15.17-1.pgdg13+1)
@@ -1047,6 +1047,7 @@ COPY public.certificate_sectors (certificate_id, sector_id) FROM stdin;
 --
 
 COPY public.certificates (expiration_date, issue_date, candidate_id, hours, id, issuing_organization, title, url) FROM stdin;
+2026-12-01	2026-01-01	1	50	1	ANBIMA	CPRO-R	
 \.
 
 
@@ -1186,8 +1187,8 @@ COPY public.post_users (post_id, user_id) FROM stdin;
 --
 
 COPY public.profile (created_at, id, updated_at, personal_summary, banner, head_line, locality, photo, social_links) FROM stdin;
-2026-04-12 14:57:48.34722	1	2026-04-12 14:57:48.347247	\N	\N	\N	\N	\N	\N
 2026-04-12 14:57:55.665386	2	2026-04-12 14:57:55.665406	\N	\N	\N	\N	\N	\N
+2026-04-12 14:57:48.34722	1	2026-04-13 16:26:39.734454	Sou um profissional dedicado à tecnologia, com foco em desenvolvimento de software e soluções eficientes. Busco constantemente aprimorar minhas habilidades e criar sistemas que gerem valor real.	\N	\N	\N	\N	\N
 \.
 
 
@@ -1381,6 +1382,16 @@ COPY public.roles (created_at, id, updated_at, description, name, role_name) FRO
 --
 
 COPY public.sector (created_at, id, updated_at, title) FROM stdin;
+2026-04-13 16:32:13.95329	1	2026-04-13 16:32:13.95329	Renda Variável
+2026-04-13 16:32:13.95329	2	2026-04-13 16:32:13.95329	Renda Fixa
+2026-04-13 16:32:13.95329	3	2026-04-13 16:32:13.95329	Fundos de Investimento
+2026-04-13 16:32:13.95329	4	2026-04-13 16:32:13.95329	Mercado de Capitais
+2026-04-13 16:32:13.95329	5	2026-04-13 16:32:13.95329	Private Equity e Venture Capital
+2026-04-13 16:32:13.95329	6	2026-04-13 16:32:13.95329	Gestão de Ativos (Asset Management)
+2026-04-13 16:32:13.95329	7	2026-04-13 16:32:13.95329	Banco de Investimento (Investment Banking)
+2026-04-13 16:32:13.95329	8	2026-04-13 16:32:13.95329	Tesouraria Corporativa
+2026-04-13 16:32:13.95329	9	2026-04-13 16:32:13.95329	Seguros e Resseguros
+2026-04-13 16:32:13.95329	10	2026-04-13 16:32:13.95329	Fintechs e Serviços Financeiros Digitais
 \.
 
 
@@ -1405,6 +1416,26 @@ COPY public.selection_stage (is_required, max_score, stage_order, visible, weigh
 --
 
 COPY public.skill_base (created_at, id, updated_at, skill_type, title) FROM stdin;
+2026-04-13 16:31:14.674625	1	2026-04-13 16:31:14.674625	TECHNICAL	Análise fundamentalista de ações
+2026-04-13 16:31:14.674625	2	2026-04-13 16:31:14.674625	TECHNICAL	Leitura e interpretação de balanços patrimoniais
+2026-04-13 16:31:14.674625	3	2026-04-13 16:31:14.674625	TECHNICAL	Modelagem financeira e valuation (DCF)
+2026-04-13 16:31:14.674625	4	2026-04-13 16:31:14.674625	TECHNICAL	Análise técnica e leitura de gráficos
+2026-04-13 16:31:14.674625	5	2026-04-13 16:31:14.674625	TECHNICAL	Gestão de risco e sizing de posições
+2026-04-13 16:31:14.674625	6	2026-04-13 16:31:14.674625	TECHNICAL	Conhecimento em produtos de renda fixa (CDB, LCI, LCA, Tesouro)
+2026-04-13 16:31:14.674625	7	2026-04-13 16:31:14.674625	TECHNICAL	Operação com derivativos (opções, futuros, swaps)
+2026-04-13 16:31:14.674625	8	2026-04-13 16:31:14.674625	TECHNICAL	Gestão de carteiras e alocação de ativos
+2026-04-13 16:31:14.674625	9	2026-04-13 16:31:14.674625	TECHNICAL	Regulação do mercado financeiro (CVM, BACEN, ANBIMA)
+2026-04-13 16:31:14.674625	10	2026-04-13 16:31:14.674625	TECHNICAL	Análise macroeconômica e indicadores (IPCA, SELIC, PIB)
+2026-04-13 16:31:14.674625	11	2026-04-13 16:31:14.674625	BEHAVIORAL	Tomada de decisão sob pressão e volatilidade
+2026-04-13 16:31:14.674625	12	2026-04-13 16:31:14.674625	BEHAVIORAL	Disciplina e controle emocional em operações
+2026-04-13 16:31:14.674625	13	2026-04-13 16:31:14.674625	BEHAVIORAL	Pensamento crítico e ceticismo analítico
+2026-04-13 16:31:14.674625	14	2026-04-13 16:31:14.674625	BEHAVIORAL	Orientação a resultados e foco em performance
+2026-04-13 16:31:14.674625	15	2026-04-13 16:31:14.674625	BEHAVIORAL	Ética e integridade em ambientes regulados
+2026-04-13 16:31:14.674625	16	2026-04-13 16:31:14.674625	BEHAVIORAL	Comunicação clara de teses de investimento
+2026-04-13 16:31:14.674625	17	2026-04-13 16:31:14.674625	BEHAVIORAL	Capacidade de aprendizado contínuo e adaptação
+2026-04-13 16:31:14.674625	18	2026-04-13 16:31:14.674625	BEHAVIORAL	Gestão de conflitos de interesse e imparcialidade
+2026-04-13 16:31:14.674625	19	2026-04-13 16:31:14.674625	BEHAVIORAL	Resiliência frente a perdas e drawdowns
+2026-04-13 16:31:14.674625	20	2026-04-13 16:31:14.674625	BEHAVIORAL	Colaboração em comitês de investimento e trabalho em equipe
 \.
 
 
@@ -1518,7 +1549,7 @@ SELECT pg_catalog.setval('public.candidates_id_seq', 1, true);
 -- Name: certificates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.certificates_id_seq', 1, false);
+SELECT pg_catalog.setval('public.certificates_id_seq', 1, true);
 
 
 --
@@ -1616,7 +1647,7 @@ SELECT pg_catalog.setval('public.roles_id_seq', 14, true);
 -- Name: sector_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.sector_id_seq', 1, false);
+SELECT pg_catalog.setval('public.sector_id_seq', 10, true);
 
 
 --
@@ -1637,7 +1668,7 @@ SELECT pg_catalog.setval('public.selection_stage_id_seq', 1, false);
 -- Name: skill_base_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.skill_base_id_seq', 1, false);
+SELECT pg_catalog.setval('public.skill_base_id_seq', 20, true);
 
 
 --
@@ -2422,5 +2453,5 @@ ALTER TABLE ONLY public.enterprises
 -- PostgreSQL database dump complete
 --
 
-\unrestrict khfGeQe9gV5nPsHMPsgGeKuVn7hjfw58nwTyjyAdXdHi5AVIRdfJPNcjuMPBxIa
+\unrestrict kGWHK2nj6pumHsEYunCa2zAuxEb6JwiZkUDlNte1gNR4WL8D0V89BvXgDR2hDzC
 
