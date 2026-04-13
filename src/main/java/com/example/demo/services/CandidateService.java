@@ -28,6 +28,7 @@ public class CandidateService {
     private final SkillBaseRepository skillBaseRepository;
     private final SkillCandidateRepository skillCandidateRepository;
     private final SectorRepository sectorRepository;
+    private final SupabaseStorageService storageService;
 
     @Value("${app.upload.dir:/var/uploads}")
     private String uploadDir;
@@ -36,12 +37,14 @@ public class CandidateService {
                             ProfileRepository profileRepository,
                             SkillBaseRepository skillBaseRepository,
                             SkillCandidateRepository skillCandidateRepository,
-                            SectorRepository sectorRepository) {
+                            SectorRepository sectorRepository,
+                            SupabaseStorageService storageService) {
         this.candidateRepository = candidateRepository;
         this.profileRepository = profileRepository;
         this.skillBaseRepository = skillBaseRepository;
         this.skillCandidateRepository = skillCandidateRepository;
         this.sectorRepository = sectorRepository;
+        this.storageService = storageService;
     }
 
     public List<CandidateResponse> findAll() {
@@ -147,78 +150,59 @@ public class CandidateService {
     }
 
     public void updateProfilePhoto(MultipartFile file, Long id) throws IOException {
-        System.out.println(">>> Iniciando upload para empresa id: " + id);
-        System.out.println(">>> Arquivo recebido: " + file.getOriginalFilename() + " | Tamanho: " + file.getSize());
-
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("Arquivo vazio");
-        }
+        validateFile(file);
 
         Candidate candidate = candidateRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
-        System.out.println(">>> Empresa encontrada: " + candidate.getId());
-
-        Path dirPath = Paths.get(uploadDir, "candidate", String.valueOf(candidate.getId()));
-        System.out.println(">>> Diretório alvo (absoluto): " + dirPath.toAbsolutePath());
-        Files.createDirectories(dirPath);
-        System.out.println(">>> Diretório criado/confirmado");
+                .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
 
         Profile profile = candidate.getProfile();
-        System.out.println(">>> Profile atual: " + profile);
 
-//        if (profile == null) {
-//            profile = new Profile();
-//            profile.setEnterprise(enterprise);
-//            System.out.println(">>> Novo profile criado");
-//        } else if (profile.getPhoto() != null) {
-//            Files.deleteIfExists(Paths.get(profile.getPhoto()));
-//        }
+        // Remove foto antiga se existir
+        if (profile.getPhoto() != null) {
+            String oldPath = extractPath(profile.getPhoto());
+            storageService.delete(oldPath);
+        }
 
-        String fileName = "photo_" + System.currentTimeMillis() + ".jpg";
-        Path photoPath = dirPath.resolve(fileName);
-        Files.write(photoPath, file.getBytes());
-        System.out.println(">>> Arquivo salvo em: " + photoPath.toAbsolutePath());
+        String path = "users/candidate/" + id + "/photo_" + System.currentTimeMillis() + ".jpg";
+        String publicUrl = storageService.upload(file, path);
 
-        profile.setPhoto(photoPath.toString());
+        profile.setPhoto(publicUrl);
         profileRepository.save(profile);
-        System.out.println(">>> Profile salvo no banco com foto: " + profile.getPhoto());
     }
 
     public void updateProfileBanner(MultipartFile file, Long id) throws IOException {
-        System.out.println(">>> Iniciando upload para empresa id: " + id);
-        System.out.println(">>> Arquivo recebido: " + file.getOriginalFilename() + " | Tamanho: " + file.getSize());
+        validateFile(file);
 
+        Candidate candidate = candidateRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
+
+        Profile profile = candidate.getProfile();
+
+        // Remove banner antigo se existir
+        if (profile.getBanner() != null) {
+            String oldPath = extractPath(profile.getBanner());
+            storageService.delete(oldPath);
+        }
+
+        String path = "users/candidate/" + id + "/banner_" + System.currentTimeMillis() + ".jpg";
+        String publicUrl = storageService.upload(file, path);
+
+        profile.setBanner(publicUrl);
+        profileRepository.save(profile);
+    }
+
+    private void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Arquivo vazio");
         }
+    }
 
-        Candidate candidate = candidateRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
-        System.out.println(">>> Empresa encontrada: " + candidate.getId());
-
-        Path dirPath = Paths.get(uploadDir, "candidate", String.valueOf(candidate.getId()));
-        System.out.println(">>> Diretório alvo (absoluto): " + dirPath.toAbsolutePath());
-        Files.createDirectories(dirPath);
-        System.out.println(">>> Diretório criado/confirmado");
-
-        Profile profile = candidate.getProfile();
-        System.out.println(">>> Profile atual: " + profile);
-
-//        if (profile == null) {
-//            profile = new Profile();
-//            profile.setEnterprise(enterprise);
-//            System.out.println(">>> Novo profile criado");
-//        } else if (profile.getPhoto() != null) {
-//            Files.deleteIfExists(Paths.get(profile.getPhoto()));
-//        }
-
-        String fileName = "photo_" + System.currentTimeMillis() + ".jpg";
-        Path photoPath = dirPath.resolve(fileName);
-        Files.write(photoPath, file.getBytes());
-        System.out.println(">>> Arquivo salvo em: " + photoPath.toAbsolutePath());
-
-        profile.setBanner(photoPath.toString());
-        profileRepository.save(profile);
-        System.out.println(">>> Profile salvo no banco com foto: " + profile.getPhoto());
+    /**
+     * Extrai o path relativo a partir da URL pública.
+     * Ex: "https://xxx.supabase.co/storage/v1/object/public/profiles/candidate/1/photo.jpg"
+     *  -> "candidate/1/photo.jpg"
+     */
+    private String extractPath(String publicUrl) {
+        return publicUrl.replaceAll(".*/public/[^/]+/", "");
     }
 }

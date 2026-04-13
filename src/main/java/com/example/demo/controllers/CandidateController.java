@@ -45,7 +45,7 @@ public class CandidateController {
     }
 
     @PutMapping("/update-personal-infos/candidate/{id}")
-    @PreAuthorize("hasAuthority('PROFILE_UPDATE')")
+    @PreAuthorize("hasAuthority('PROFILE_UPDATE') || hasRole('ADMINISTRATOR')")
     public ResponseEntity<CandidateResponse> updatePersonalInfos(@PathVariable Long id, @RequestBody CandidateUpdateDTO objDto) {
         CandidateResponse candidate = candidateService.update(id, objDto);
         return ResponseEntity.ok().body(candidate);
