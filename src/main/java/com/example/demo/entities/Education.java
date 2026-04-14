@@ -27,7 +27,7 @@ public class Education {
 
     private String educationalInstitution;
     private String diploma;
-    private StudyArea studyArea;
+//    private StudyArea studyArea;
     private LocalDate startDate;
     private LocalDate endDate;
     private String note;
