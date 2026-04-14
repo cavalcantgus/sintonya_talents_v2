@@ -2,10 +2,12 @@ package com.example.demo.services;
 
 import com.example.demo.dto.PostResponse;
 import com.example.demo.entities.Post;
+import com.example.demo.entities.Role;
 import com.example.demo.entities.Subscription;
 import com.example.demo.entities.User;
 import com.example.demo.enums.Plan;
 import com.example.demo.enums.PostType;
+import com.example.demo.enums.RoleName;
 import com.example.demo.enums.SubscriptionStatus;
 import com.example.demo.repositories.PostRepository;
 import com.example.demo.repositories.UserRepository;
@@ -37,14 +39,24 @@ public class FeedService {
                 .filter(post -> post.getPostType() != PostType.PUBLICATION)
                 .toList();
 
-        List<Post> publications = postRepository.findAll()
+        List<Post> publications = postRepository.findAllActive()
                 .stream()
                 .filter(post -> post.getPostType() != PostType.VACANCY)
                 .toList();
 
-        Subscription subscription = user.getSubscription();
-        boolean isPremium = subscription.getPlan() == Plan.PREMIUM
-                && subscription.getStatus() == SubscriptionStatus.ACTIVE;
+        Subscription subscription = new Subscription();
+        boolean isPremium = true;
+        boolean isAdminOrEnterprise = user.getRoles().stream()
+                .anyMatch(role ->
+                        role.getRoleName().equals(RoleName.ADMINISTRATOR) ||
+                        role.getRoleName().equals(RoleName.ENTERPRISE));
+
+        if(!isAdminOrEnterprise) {
+            subscription = user.getSubscription();
+            isPremium = subscription.getPlan() == Plan.PREMIUM
+                    && subscription.getStatus() == SubscriptionStatus.ACTIVE;
+        }
+
 
         double lambda = isPremium ? 0.5 : user.getUserFeedConfig().getVacancyLambda();
         int poolSize = isPremium ? Integer.MAX_VALUE : user.getUserFeedConfig().getPoolSize();

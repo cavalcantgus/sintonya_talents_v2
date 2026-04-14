@@ -11,18 +11,21 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("""
     SELECT p FROM Post p
+    LEFT JOIN p.vacancy v
+    LEFT JOIN p.feedItemScore f
+    LEFT JOIN p.publication pub
     WHERE (
-        (p.postType = 'PUBLICATION' AND p.publication IS NOT NULL)
+        (p.postType = 'PUBLICATION' AND pub IS NOT NULL)
         OR (
             p.postType = 'VACANCY'
             AND p.vacancyStatus = 'PENDING_APPROVAL'
-            AND p.vacancy IS NOT NULL
-            AND p.vacancy.vacancyStatus = 'PENDING_APPROVAL'
-            AND p.vacancy.closedAt IS NULL
-            AND (p.vacancy.expirationDate IS NULL OR p.vacancy.expirationDate >= CURRENT_DATE)
+            AND v IS NOT NULL
+            AND v.vacancyStatus = 'PENDING_APPROVAL'
+            AND v.closedAt IS NULL
+            AND (v.expirationDate IS NULL OR v.expirationDate >= CURRENT_DATE)
         )
     )
-    ORDER BY COALESCE(p.feedItemScore.score, 0.0) DESC, p.createdAt DESC
+    ORDER BY COALESCE(f.score, 0.0) DESC, p.createdAt DESC
 """)
     List<Post> findAllActive();
 
