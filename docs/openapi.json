@@ -34,7 +34,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacancy"
+                  "$ref": "#/components/schemas/VacancyResponse"
                 }
               }
             }
@@ -47,7 +47,7 @@
         "tags": [
           "vacancy-controller"
         ],
-        "operationId": "pausedVacancy",
+        "operationId": "pauseVacancy",
         "parameters": [
           {
             "name": "id",
@@ -65,7 +65,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacancy"
+                  "$ref": "#/components/schemas/VacancyResponse"
                 }
               }
             }
@@ -96,7 +96,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacancy"
+                  "$ref": "#/components/schemas/VacancyResponse"
                 }
               }
             }
@@ -127,7 +127,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacancy"
+                  "$ref": "#/components/schemas/VacancyResponse"
                 }
               }
             }
@@ -158,10 +158,48 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/Vacancy"
+                  "$ref": "#/components/schemas/VacancyResponse"
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/users/update-roles": {
+      "put": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "updateRoles",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -210,23 +248,42 @@
         }
       }
     },
-    "/enterprises/update-personal-infos/enterprise/{id}": {
+    "/enterprises/update-personal-summary/enterprise": {
+      "put": {
+        "tags": [
+          "enterprise-controller"
+        ],
+        "operationId": "updatePersonalSummary",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enterprises/update-personal-infos/enterprise": {
       "put": {
         "tags": [
           "enterprise-controller"
         ],
         "operationId": "updatePersonalInfos",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -256,7 +313,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "updatePersonalSummary",
+        "operationId": "updatePersonalSummary_1",
         "parameters": [
           {
             "name": "id",
@@ -497,6 +554,29 @@
         }
       }
     },
+    "/posts/publications-posts/by-author": {
+      "post": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "findByPostTypeAndUsersId",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posts/create-post": {
       "post": {
         "tags": [
@@ -505,13 +585,24 @@
         "operationId": "createPost",
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/PostCreateRequest"
+                "required": [
+                  "data"
+                ],
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/PostCreateRequest"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1064,7 +1155,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/GetAllUsersResponse"
                   }
                 }
               }
@@ -1181,12 +1272,35 @@
         }
       }
     },
+    "/roles": {
+      "get": {
+        "tags": [
+          "role-controller"
+        ],
+        "operationId": "findAll_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoleResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posts": {
       "get": {
         "tags": [
           "post-controller"
         ],
-        "operationId": "findAll_4",
+        "operationId": "findAll_5",
         "responses": {
           "200": {
             "description": "OK",
@@ -1204,12 +1318,43 @@
         }
       }
     },
+    "/posts/{id}": {
+      "get": {
+        "tags": [
+          "post-controller"
+        ],
+        "operationId": "findById_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/job-applications": {
       "get": {
         "tags": [
           "job-application-controller"
         ],
-        "operationId": "findAll_5",
+        "operationId": "findAll_6",
         "responses": {
           "200": {
             "description": "OK",
@@ -1295,12 +1440,35 @@
         }
       }
     },
+    "/feed": {
+      "get": {
+        "tags": [
+          "feed-controller"
+        ],
+        "operationId": "feed",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/experiences": {
       "get": {
         "tags": [
           "experience-controller"
         ],
-        "operationId": "findAll_6",
+        "operationId": "findAll_7",
         "responses": {
           "200": {
             "description": "OK",
@@ -1323,7 +1491,7 @@
         "tags": [
           "experience-controller"
         ],
-        "operationId": "findById_3",
+        "operationId": "findById_4",
         "parameters": [
           {
             "name": "id",
@@ -1354,7 +1522,7 @@
         "tags": [
           "enterprise-controller"
         ],
-        "operationId": "findAll_7",
+        "operationId": "findAll_8",
         "responses": {
           "200": {
             "description": "OK",
@@ -1377,7 +1545,7 @@
         "tags": [
           "enterprise-controller"
         ],
-        "operationId": "findById_4",
+        "operationId": "findById_5",
         "parameters": [
           {
             "name": "id",
@@ -1439,7 +1607,7 @@
         "tags": [
           "certificate-controller"
         ],
-        "operationId": "findAll_8",
+        "operationId": "findAll_9",
         "responses": {
           "200": {
             "description": "OK",
@@ -1462,7 +1630,7 @@
         "tags": [
           "certificate-controller"
         ],
-        "operationId": "findById_5",
+        "operationId": "findById_6",
         "parameters": [
           {
             "name": "id",
@@ -1493,7 +1661,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findAll_9",
+        "operationId": "findAll_10",
         "responses": {
           "200": {
             "description": "OK",
@@ -1516,7 +1684,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findById_6",
+        "operationId": "findById_7",
         "parameters": [
           {
             "name": "id",
@@ -1576,516 +1744,6 @@
   },
   "components": {
     "schemas": {
-      "Enterprise": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "enterpriseName": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "cnpj": {
-            "type": "string"
-          },
-          "contact": {
-            "type": "string"
-          },
-          "profile": {
-            "$ref": "#/components/schemas/Profile"
-          },
-          "socialReason": {
-            "type": "string"
-          },
-          "sizeEnterprise": {
-            "type": "string",
-            "enum": [
-              "SMALL",
-              "MEDIUM",
-              "BIG"
-            ]
-          },
-          "numberOfEmployees": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "sector": {
-            "type": "string"
-          },
-          "siteUrl": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "approved": {
-            "type": "boolean"
-          }
-        }
-      },
-      "Permission": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "permissionName": {
-            "type": "string",
-            "enum": [
-              "PROFILE_UPDATE",
-              "SKILL_ADD",
-              "SKILL_UPDATE",
-              "CERTIFICATE_CREATE",
-              "CERTIFICATE_UPDATE",
-              "CERTIFICATE_DELETE",
-              "EXPERIENCE_CREATE",
-              "EXPERIENCE_UPDATE",
-              "EXPERIENCE_DELETE",
-              "VACANCY_VIEW",
-              "VACANCY_APPLY",
-              "VACANCY_CREATE",
-              "VACANCY_UPDATE",
-              "VACANCY_CLOSE",
-              "CANDIDATE_VIEW",
-              "ENTERPRISE_VIEW",
-              "ADMIN_ACCESS"
-            ]
-          }
-        }
-      },
-      "Post": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "postType": {
-            "type": "string",
-            "enum": [
-              "PUBLICATION",
-              "VACANCY"
-            ]
-          },
-          "users": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/User"
-            }
-          },
-          "vacancy": {
-            "$ref": "#/components/schemas/Vacancy"
-          },
-          "vacancyStatus": {
-            "type": "string",
-            "enum": [
-              "PENDING_APPROVAL",
-              "APPROVED",
-              "OPEN",
-              "CLOSED",
-              "PAUSED",
-              "ARCHIVED",
-              "REJECTED"
-            ]
-          },
-          "publication": {
-            "$ref": "#/components/schemas/Publication"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "Profile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "photo": {
-            "type": "string"
-          },
-          "banner": {
-            "type": "string"
-          },
-          "headLine": {
-            "type": "string"
-          },
-          "personalSummary": {
-            "type": "string"
-          },
-          "socialLinks": {
-            "type": "string"
-          },
-          "locality": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "Publication": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "body": {
-            "type": "string"
-          },
-          "post": {
-            "$ref": "#/components/schemas/Post"
-          }
-        }
-      },
-      "Role": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "permissions": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Permission"
-            }
-          },
-          "roleName": {
-            "type": "string",
-            "enum": [
-              "ADMINISTRATOR",
-              "CANDIDATE",
-              "ENTERPRISE"
-            ]
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "Sector": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "SelectionStage": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "vacancy": {
-            "$ref": "#/components/schemas/Vacancy"
-          },
-          "stageType": {
-            "type": "string",
-            "enum": [
-              "TECHNICAL_TEST",
-              "BEHAVIORAL_TEST",
-              "SKILL_REQUIRED",
-              "SKILL_OPTIONAL",
-              "CERTIFICATE",
-              "EXPERIENCE"
-            ]
-          },
-          "analysisDimension": {
-            "type": "string",
-            "enum": [
-              "REQUIRED_SKILL",
-              "OPTIONAL_SKILL",
-              "TECHNICAL",
-              "BEHAVIORAL",
-              "CERTIFICATES",
-              "EXPERIENCES"
-            ]
-          },
-          "weight": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxScore": {
-            "type": "number",
-            "format": "double"
-          },
-          "url": {
-            "type": "string"
-          },
-          "stageOrder": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "visible": {
-            "type": "boolean"
-          },
-          "required": {
-            "type": "boolean"
-          }
-        }
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "posts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Post"
-            }
-          },
-          "roles": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Role"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "Vacancy": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "enterprise": {
-            "$ref": "#/components/schemas/Enterprise"
-          },
-          "sector": {
-            "$ref": "#/components/schemas/Sector"
-          },
-          "post": {
-            "$ref": "#/components/schemas/Post"
-          },
-          "selectionStages": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SelectionStage"
-            }
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "position": {
-            "type": "string"
-          },
-          "vacancyType": {
-            "type": "string",
-            "enum": [
-              "FULL_TIME",
-              "PART_TIME",
-              "INTERSHIP",
-              "TRAINEE",
-              "TEMPORARY",
-              "CONTRACT",
-              "FREELANCE",
-              "SELF_EMPLOYED",
-              "VOLUNTEER",
-              "APPRENTICESHIP"
-            ]
-          },
-          "locality": {
-            "type": "string"
-          },
-          "modalityType": {
-            "type": "string",
-            "enum": [
-              "ON_SITE",
-              "REMOTE",
-              "HYBRID"
-            ]
-          },
-          "publicationDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "expirationDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "closedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "technicalTest": {
-            "type": "boolean"
-          },
-          "behavioralTest": {
-            "type": "boolean"
-          },
-          "certificateRequired": {
-            "type": "boolean"
-          },
-          "experienceRange": {
-            "type": "string",
-            "enum": [
-              "ZERO_TO_SIX_MONTHS",
-              "ONE_TO_TWO_YEARS",
-              "TWO_TO_FOUR_YEARS",
-              "FOUR_PLUS_YEARS"
-            ]
-          },
-          "minExperienceRange": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "maxExperienceRange": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "vacancyStatus": {
-            "type": "string",
-            "enum": [
-              "PENDING_APPROVAL",
-              "APPROVED",
-              "OPEN",
-              "CLOSED",
-              "PAUSED",
-              "ARCHIVED",
-              "REJECTED"
-            ]
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "SelectionStageCreateDTO": {
-        "type": "object",
-        "properties": {
-          "stageType": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          }
-        }
-      },
-      "EnterpriseUpdateDTO": {
-        "type": "object",
-        "properties": {
-          "enterpriseName": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "contact": {
-            "type": "string"
-          },
-          "socialReason": {
-            "type": "string"
-          },
-          "numberOfEmployees": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "locality": {
-            "type": "string"
-          },
-          "headLine": {
-            "type": "string"
-          },
-          "sector": {
-            "type": "string"
-          },
-          "sizeEnterprise": {
-            "type": "string",
-            "enum": [
-              "SMALL",
-              "MEDIUM",
-              "BIG"
-            ]
-          },
-          "socialLinks": {
-            "type": "string"
-          },
-          "siteUrl": {
-            "type": "string"
-          }
-        }
-      },
       "EnterpriseResponse": {
         "type": "object",
         "properties": {
@@ -2148,6 +1806,135 @@
             "type": "string"
           },
           "banner": {
+            "type": "string"
+          }
+        }
+      },
+      "SelectionStageResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "stageType": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "stageOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "VacancyResponse": {
+        "type": "object",
+        "properties": {
+          "vacancyId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "sectorId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "publicationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "modalityType": {
+            "type": "string"
+          },
+          "vacancyStatus": {
+            "type": "string"
+          },
+          "vacancyType": {
+            "type": "string"
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "closedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "enterpriseResponse": {
+            "$ref": "#/components/schemas/EnterpriseResponse"
+          },
+          "selectionStagesResponse": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SelectionStageResponse"
+            }
+          }
+        }
+      },
+      "SelectionStageCreateDTO": {
+        "type": "object",
+        "properties": {
+          "stageType": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "EnterpriseUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "enterpriseName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "socialReason": {
+            "type": "string"
+          },
+          "numberOfEmployees": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "headLine": {
+            "type": "string"
+          },
+          "sector": {
+            "type": "string"
+          },
+          "sizeEnterprise": {
+            "type": "string",
+            "enum": [
+              "SMALL",
+              "MEDIUM",
+              "BIG"
+            ]
+          },
+          "socialLinks": {
+            "type": "string"
+          },
+          "siteUrl": {
             "type": "string"
           }
         }
@@ -2410,6 +2197,75 @@
           }
         }
       },
+      "PostFileResponse": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "PostResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PUBLICATION",
+              "VACANCY"
+            ]
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          },
+          "vacancyStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING_APPROVAL",
+              "APPROVED",
+              "OPEN",
+              "CLOSED",
+              "PAUSED",
+              "ARCHIVED",
+              "REJECTED"
+            ]
+          },
+          "mediaUrl": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostFileResponse"
+            }
+          },
+          "vacancyResponse": {
+            "$ref": "#/components/schemas/VacancyResponse"
+          },
+          "publicationResponse": {
+            "$ref": "#/components/schemas/PublicationResponse"
+          }
+        }
+      },
+      "PublicationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
       "PostCreateRequest": {
         "required": [
           "postDataDTO",
@@ -2654,99 +2510,246 @@
           }
         }
       },
-      "SelectionStageResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "stageType": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          },
-          "stageOrder": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "VacancyResponse": {
-        "type": "object",
-        "properties": {
-          "vacancyId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "position": {
-            "type": "string"
-          },
-          "locality": {
-            "type": "string"
-          },
-          "sectorId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "publicationDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "modalityType": {
-            "type": "string"
-          },
-          "vacancyStatus": {
-            "type": "string"
-          },
-          "vacancyType": {
-            "type": "string"
-          },
-          "expirationDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "closedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "enterpriseResponse": {
-            "$ref": "#/components/schemas/EnterpriseResponse"
-          },
-          "selectionStagesResponse": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SelectionStageResponse"
-            }
-          }
-        }
-      },
-      "PostResponse": {
+      "GetAllUsersResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64"
           },
-          "type": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "roles": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleResponse"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RoleResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "Enterprise": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "enterpriseName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "socialReason": {
+            "type": "string"
+          },
+          "sizeEnterprise": {
+            "type": "string",
+            "enum": [
+              "SMALL",
+              "MEDIUM",
+              "BIG"
+            ]
+          },
+          "numberOfEmployees": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sector": {
+            "type": "string"
+          },
+          "siteUrl": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "approved": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FeedItemScore": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "post": {
+            "$ref": "#/components/schemas/Post"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "File": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "mediaType": {
+            "type": "string",
+            "enum": [
+              "IMAGE",
+              "VIDEO"
+            ]
+          }
+        }
+      },
+      "Permission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "permissionName": {
+            "type": "string",
+            "enum": [
+              "PROFILE_READ",
+              "PROFILE_READ_BY_ID",
+              "PROFILE_READ_DETAILS",
+              "PROFILE_UPDATE",
+              "CANDIDATE_READ",
+              "CANDIDATE_READ_BY_ID",
+              "CANDIDATE_READ_DETAILS",
+              "ENTERPRISE_READ",
+              "ENTERPRISE_READ_BY_ID",
+              "ENTERPRISE_READ_DETAILS",
+              "USER_READ",
+              "USER_READ_BY_ID",
+              "USER_READ_DETAILS",
+              "VACANCY_READ",
+              "VACANCY_READ_BY_ID",
+              "VACANCY_READ_DETAILS",
+              "VACANCY_CREATE",
+              "VACANCY_UPDATE",
+              "JOB_APPLICATION_READ",
+              "JOB_APPLICATION_READ_BY_ID",
+              "JOB_APPLICATION_READ_DETAILS",
+              "JOB_APPLICATION_APPLY",
+              "SELECTION_PROCESS_READ",
+              "SELECTION_PROCESS_READ_BY_ID",
+              "SELECTION_PROCESS_READ_DETAILS",
+              "SKILL_READ",
+              "SKILL_CREATE",
+              "SKILL_UPDATE",
+              "CERTIFICATE_READ",
+              "CERTIFICATE_CREATE",
+              "CERTIFICATE_UPDATE",
+              "CERTIFICATE_DELETE",
+              "EXPERIENCE_READ",
+              "EXPERIENCE_CREATE",
+              "EXPERIENCE_UPDATE",
+              "EXPERIENCE_DELETE",
+              "POST_READ",
+              "POST_READ_BY_ID",
+              "POST_CREATE",
+              "POST_UPDATE",
+              "POST_DELETE",
+              "ADMIN_ACCESS"
+            ]
+          }
+        }
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "postType": {
             "type": "string",
             "enum": [
               "PUBLICATION",
               "VACANCY"
             ]
           },
-          "authors": {
+          "users": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserResponse"
+              "$ref": "#/components/schemas/User"
             }
+          },
+          "vacancy": {
+            "$ref": "#/components/schemas/Vacancy"
+          },
+          "postFiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostFile"
+            }
+          },
+          "feedItemScore": {
+            "$ref": "#/components/schemas/FeedItemScore"
           },
           "vacancyStatus": {
             "type": "string",
@@ -2760,15 +2763,74 @@
               "REJECTED"
             ]
           },
-          "vacancyResponse": {
-            "$ref": "#/components/schemas/VacancyResponse"
+          "publication": {
+            "$ref": "#/components/schemas/Publication"
           },
-          "publicationResponse": {
-            "$ref": "#/components/schemas/PublicationResponse"
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "PublicationResponse": {
+      "PostFile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "post": {
+            "$ref": "#/components/schemas/Post"
+          },
+          "file": {
+            "$ref": "#/components/schemas/File"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "banner": {
+            "type": "string"
+          },
+          "headLine": {
+            "type": "string"
+          },
+          "personalSummary": {
+            "type": "string"
+          },
+          "socialLinks": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Publication": {
         "type": "object",
         "properties": {
           "id": {
@@ -2780,6 +2842,352 @@
           },
           "body": {
             "type": "string"
+          },
+          "post": {
+            "$ref": "#/components/schemas/Post"
+          }
+        }
+      },
+      "Role": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "permissions": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            }
+          },
+          "roleName": {
+            "type": "string",
+            "enum": [
+              "ADMINISTRATOR",
+              "CANDIDATE",
+              "ENTERPRISE",
+              "MODERATOR",
+              "RECRUITER",
+              "VIEWER",
+              "SUPPORT"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Sector": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SelectionStage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "vacancy": {
+            "$ref": "#/components/schemas/Vacancy"
+          },
+          "stageType": {
+            "type": "string",
+            "enum": [
+              "TECHNICAL_TEST",
+              "BEHAVIORAL_TEST",
+              "SKILL_REQUIRED",
+              "SKILL_OPTIONAL",
+              "CERTIFICATE",
+              "EXPERIENCE"
+            ]
+          },
+          "analysisDimension": {
+            "type": "string",
+            "enum": [
+              "REQUIRED_SKILL",
+              "OPTIONAL_SKILL",
+              "TECHNICAL",
+              "BEHAVIORAL",
+              "CERTIFICATES",
+              "EXPERIENCES"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "url": {
+            "type": "string"
+          },
+          "stageOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "plan": {
+            "type": "string",
+            "enum": [
+              "FREE",
+              "PREMIUM"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "CANCELLED",
+              "EXPIRED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "posts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Post"
+            }
+          },
+          "roles": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            }
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/Subscription"
+          },
+          "userFeedConfig": {
+            "$ref": "#/components/schemas/UserFeedConfig"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UserFeedConfig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "vacancyLambda": {
+            "type": "number",
+            "format": "double"
+          },
+          "poolSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Vacancy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "enterprise": {
+            "$ref": "#/components/schemas/Enterprise"
+          },
+          "sector": {
+            "$ref": "#/components/schemas/Sector"
+          },
+          "post": {
+            "$ref": "#/components/schemas/Post"
+          },
+          "selectionStages": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SelectionStage"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "vacancyType": {
+            "type": "string",
+            "enum": [
+              "FULL_TIME",
+              "PART_TIME",
+              "INTERSHIP",
+              "TRAINEE",
+              "TEMPORARY",
+              "CONTRACT",
+              "FREELANCE",
+              "SELF_EMPLOYED",
+              "VOLUNTEER",
+              "APPRENTICESHIP"
+            ]
+          },
+          "locality": {
+            "type": "string"
+          },
+          "modalityType": {
+            "type": "string",
+            "enum": [
+              "ON_SITE",
+              "REMOTE",
+              "HYBRID"
+            ]
+          },
+          "publicationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "closedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "technicalTest": {
+            "type": "boolean"
+          },
+          "behavioralTest": {
+            "type": "boolean"
+          },
+          "certificateRequired": {
+            "type": "boolean"
+          },
+          "experienceRange": {
+            "type": "string",
+            "enum": [
+              "ZERO_TO_SIX_MONTHS",
+              "ONE_TO_TWO_YEARS",
+              "TWO_TO_FOUR_YEARS",
+              "FOUR_PLUS_YEARS"
+            ]
+          },
+          "minExperienceRange": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "maxExperienceRange": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vacancyStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING_APPROVAL",
+              "APPROVED",
+              "OPEN",
+              "CLOSED",
+              "PAUSED",
+              "ARCHIVED",
+              "REJECTED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
