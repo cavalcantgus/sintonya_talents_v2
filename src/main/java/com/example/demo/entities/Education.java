@@ -22,12 +22,16 @@ public class Education {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "certificate", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "education", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SkillCandidate> certificateSkills = new HashSet<>();
 
     private String educationalInstitution;
     private String diploma;
-//    private StudyArea studyArea;
+
+    @ManyToOne
+    @JoinColumn(name = "study_area_id")
+    private StudyArea studyArea;
+
     private LocalDate startDate;
     private LocalDate endDate;
     private String note;
