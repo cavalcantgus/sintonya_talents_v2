@@ -175,7 +175,7 @@ public class PostService {
     @Transactional
     public PostResponse closePost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Post não encontrada"));
 
         if (!post.getStatus().equals(PostStatus.OPEN)) {
             throw new BusinessException("Uma vaga só pode ser fechada se constar como aberta");
@@ -189,9 +189,9 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse updateIfPaused(Long id) {
+    public PostResponse pausePost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Post não encontrada"));
 
         if (!post.getStatus().equals(PostStatus.OPEN)) {
             throw new BusinessException("Uma vaga só pode ser pausada se constar como aberta");
@@ -205,9 +205,9 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse updateIfArchived(Long id) {
+    public PostResponse archivePost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Post não encontrada"));
 
         if (!post.getStatus().equals(PostStatus.OPEN)) {
             throw new BusinessException("A vaga só pode ser arquivada se estiver aberta.");
@@ -220,11 +220,24 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse updateIfApproved(Long id) {
+    public PostResponse approvePost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Post não encontrada"));
 
         post.setStatus(PostStatus.APPROVED);
+        post.setPublicationDate(LocalDate.now());
+
+        postRepository.save(post);
+
+        return PostResponse.fromEntity(post);
+    }
+
+    @Transactional
+    public PostResponse openPost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Post não encontrada"));
+
+        post.setStatus(PostStatus.OPEN);
         post.setPublicationDate(LocalDate.now());
 
         postRepository.save(post);

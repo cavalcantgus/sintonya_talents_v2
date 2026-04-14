@@ -58,10 +58,40 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/publications-posts/by-author")
+    @GetMapping("/publications-posts/by-author")
     public ResponseEntity<List<PostResponse>> findByPostTypeAndUsersId(@AuthenticationPrincipal UserDetails userDetails) {
         List<PostResponse> posts = postService.findByPostTypeAndUsersId(PostType.PUBLICATION, userDetails);
         return ResponseEntity.ok().body(posts);
+    }
+
+    @PutMapping("/approve-post/{id}")
+    public ResponseEntity<PostResponse> approve(@PathVariable Long id) {
+        PostResponse post = postService.approvePost(id);
+        return ResponseEntity.ok().body(post);
+    }
+
+    @PutMapping("/open-post/{id}")
+    public ResponseEntity<PostResponse> openPost(@PathVariable Long id) {
+        PostResponse post = postService.openPost(id);
+        return ResponseEntity.ok().body(post);
+    }
+
+    @PutMapping("/pause-post/{id}")
+    public ResponseEntity<PostResponse> pausePost(@PathVariable Long id) {
+        PostResponse post = postService.pausePost(id);
+        return ResponseEntity.ok().body(post);
+    }
+
+    @PutMapping("/archive-post/{id}")
+    public ResponseEntity<PostResponse> archivePost(@PathVariable Long id) {
+        PostResponse post = postService.archivePost(id);
+        return ResponseEntity.ok().body(post);
+    }
+
+    @PutMapping("/close-post/{id}")
+    public ResponseEntity<PostResponse> closePost(@PathVariable Long id) {
+        PostResponse post = postService.closePost(id);
+        return ResponseEntity.ok().body(post);
     }
 
 }

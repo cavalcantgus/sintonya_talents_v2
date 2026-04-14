@@ -82,15 +82,25 @@ public class JobApplicationService {
         jobApplication.setVacancy(vacancy);
         jobApplication.setStatus(ApplicationStatus.WAITING_TEST);
 
-        for(SelectionStage selectionStage : selectionStages) {
+        // Encontra o menor stageOrder disponível para desbloquear apenas ele
+        int minOrder = selectionStages.stream()
+                .filter(s -> s.getStageOrder() != null)
+                .mapToInt(SelectionStage::getStageOrder)
+                .min()
+                .orElse(1);
+
+        System.out.println("MENOR ORDEM: " + minOrder);
+
+        for (SelectionStage selectionStage : selectionStages) {
             ApplicationStageResult applicationStageResult = new ApplicationStageResult();
             applicationStageResult.setJobApplication(jobApplication);
             applicationStageResult.setSelectionStage(selectionStage);
             applicationStageResult.setScore(0.0);
             applicationStageResult.setStageStatus(StageStatus.NOT_STARTED);
-            if (selectionStage.getStageOrder() != null && selectionStage.getStageOrder() == 1) {
-                applicationStageResult.setLocked(false);
-            }
+
+            boolean isFirst = selectionStage.getStageOrder() != null
+                    && selectionStage.getStageOrder() == minOrder;
+            applicationStageResult.setLocked(!isFirst);
 
             jobApplication.getApplicationStageResults().add(applicationStageResult);
         }
