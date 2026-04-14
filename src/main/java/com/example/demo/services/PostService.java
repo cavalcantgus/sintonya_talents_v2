@@ -39,12 +39,14 @@ public class PostService {
     private final FeedItemScoreRepository feedItemScoreRepository;
     private final FileRepository fileRepository;
     private final PostFileRepository postFileRepository;
+    private final SupabaseStorageService storageService;
 
     public PostService(PostRepository postRepository, VacancyService vacancyService, UserService userService,
                        PublicationService publicationService,
                        FeedItemScoreRepository feedItemScoreRepository,
                        FileRepository fileRepository,
-                       PostFileRepository postFileRepository) {
+                       PostFileRepository postFileRepository,
+                       SupabaseStorageService storageService) {
         this.postRepository = postRepository;
         this.vacancyService = vacancyService;
         this.userService = userService;
@@ -52,6 +54,7 @@ public class PostService {
         this.feedItemScoreRepository = feedItemScoreRepository;
         this.fileRepository = fileRepository;
         this.postFileRepository = postFileRepository;
+        this.storageService = storageService;
     }
 
     public List<PostResponse> findAll() {
@@ -87,7 +90,7 @@ public class PostService {
         postRepository.save(post);
 
         if (objFile != null && !objFile.isEmpty()) {
-            attachFileToPost(objFile, post);
+            attachFileToPost(objFile, post, author.getId());
         }
 
         handlePostData(request, post);
@@ -105,22 +108,20 @@ public class PostService {
         return post;
     }
 
-    private void attachFileToPost(MultipartFile objFile, Post post) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + objFile.getOriginalFilename();
+    private void attachFileToPost(MultipartFile objFile, Post post, Long userId) throws IOException {
+        String originalFilename = objFile.getOriginalFilename();
+        String extension = originalFilename != null && originalFilename.contains(".")
+                ? originalFilename.substring(originalFilename.lastIndexOf("."))
+                : "";
 
-        Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        Path filePath = uploadPath.resolve(fileName);
-        objFile.transferTo(filePath.toFile());
+        String path = "users/" + userId + "/posts/" + post.getId() + "/" + UUID.randomUUID() + extension;
+        String publicUrl = storageService.upload(objFile, path);
 
         com.example.demo.entities.File file = new com.example.demo.entities.File();
-        file.setFileName(objFile.getOriginalFilename());
+        file.setFileName(originalFilename);
         file.setContentType(objFile.getContentType());
         file.setSize(objFile.getSize());
-        file.setPath(filePath.toString());
+        file.setPath(publicUrl);
 
         fileRepository.save(file);
 
