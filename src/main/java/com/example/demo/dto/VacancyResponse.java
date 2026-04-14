@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public record VacancyResponse(
         Long vacancyId,
+      Long postId,
       String title,
       String description,
       String position,
@@ -24,6 +25,7 @@ public record VacancyResponse(
    public static VacancyResponse fromEntity(Vacancy vacancy) {
        return new VacancyResponse(
                vacancy.getId(),
+               vacancy.getPost().getId(),
                vacancy.getTitle(),
                vacancy.getDescription(),
                vacancy.getPosition(),

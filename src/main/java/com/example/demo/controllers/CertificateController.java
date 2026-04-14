@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.security.cert.Certificate;
 import java.util.List;
@@ -45,7 +46,7 @@ public class CertificateController {
     @PreAuthorize("hasAuthority('CERTIFICATE_CREATE') || hasRole('ADMINISTRATOR')")
     public ResponseEntity<CertificateResponse> insert(@PathVariable Long candidateId,
                                                       @RequestPart("data") CertificateCreateDTO objDto,
-                                                      @RequestPart(value = "file", required = false) MultipartFile file) {
+                                                      @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         objDto.setFile(file);
         CertificateResponse certificate = certificatesService.insert(candidateId, objDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(certificate.id()).toUri();

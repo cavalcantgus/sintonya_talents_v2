@@ -15,10 +15,12 @@ import org.hibernate.engine.spi.EntityUniqueKey;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +33,7 @@ public class CertificatesService {
     private final AttachmentService attachmentService;
     private final FileRepository fileRepository;
     private final SectorRepository sectorRepository;
+    private final SupabaseStorageService storageService;
 
     public CertificatesService(CertificatesRepository certificatesRepository,
                                CandidateRepository candidateRepository,
@@ -38,7 +41,8 @@ public class CertificatesService {
                                SkillCandidateRepository skillCandidateRepository,
                                AttachmentService attachmentService,
                                FileRepository fileRepository,
-                               SectorRepository sectorRepository) {
+                               SectorRepository sectorRepository,
+                               SupabaseStorageService storageService) {
         this.certificatesRepository = certificatesRepository;
         this.candidateRepository = candidateRepository;
         this.skillBaseRepository = skillBaseRepository;
@@ -46,6 +50,7 @@ public class CertificatesService {
         this.attachmentService = attachmentService;
         this.fileRepository = fileRepository;
         this.sectorRepository = sectorRepository;
+        this.storageService = storageService;
     }
 
     public List<CertificateResponse> findAll() {
@@ -63,7 +68,7 @@ public class CertificatesService {
     }
 
     @Transactional
-    public CertificateResponse insert(Long candidateId, CertificateCreateDTO objDto) {
+    public CertificateResponse insert(Long candidateId, CertificateCreateDTO objDto) throws IOException {
 
         Candidate candidate = candidateRepository.findById(candidateId)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
@@ -76,24 +81,20 @@ public class CertificatesService {
         certificate.setCandidate(candidate);
         certificate.setIssueDate(buildDate(objDto.getIssueMonth(), objDto.getIssueYear()));
         certificate.setExpirationDate(buildDate(objDto.getExpirationMonth(), objDto.getExpirationYear()));
-        Set<Sector> sectors = new HashSet<>();
 
+        Set<Sector> sectors = new HashSet<>();
         if (objDto.getSectorIds() != null && !objDto.getSectorIds().isEmpty()) {
             sectors.addAll(sectorRepository.findAllById(objDto.getSectorIds()));
         }
-
         certificate.setSectors(sectors);
-
         candidate.getCertificates().add(certificate);
 
         Set<SkillBase> skills = new HashSet<>();
-
         if (objDto.getSkillsId() != null && !objDto.getSkillsId().isEmpty()) {
             skills.addAll(skillBaseRepository.findAllById(objDto.getSkillsId()));
         }
 
         for (SkillBase skill : skills) {
-
             SkillCandidate skillCandidate = new SkillCandidate();
             skillCandidate.setCandidate(candidate);
             skillCandidate.setSkillBase(skill);
@@ -102,29 +103,37 @@ public class CertificatesService {
             skillCandidate.setSkillLevel(SkillLevel.NON_SPECIFIED);
 
             candidate.getCandidateSkills().add(skillCandidate);
-
             certificate.getCertificateSkills().add(skillCandidate);
         }
 
         if (objDto.getFile() != null && !objDto.getFile().isEmpty()) {
-
-            MultipartFile multipartFile = objDto.getFile();
-
-            File file = new File();
-            file.setFileName(multipartFile.getOriginalFilename());
-            file.setContentType(multipartFile.getContentType());
-            file.setSize(multipartFile.getSize());
-
-            fileRepository.save(file);
-
-            Attachment attachment = attachmentService.insert(candidate, file, AttachmentType.CERTIFICATE);
-
-            candidate.getAttachments().add(attachment);
+            attachCertificateFile(objDto.getFile(), candidate, certificate);
         }
 
         candidateRepository.save(candidate);
 
         return CertificateResponse.fromEntity(certificate);
+    }
+
+    private void attachCertificateFile(MultipartFile multipartFile, Candidate candidate, Certificates certificate) throws IOException {
+        String originalFilename = multipartFile.getOriginalFilename();
+        String extension = (originalFilename != null && originalFilename.contains("."))
+                ? originalFilename.substring(originalFilename.lastIndexOf("."))
+                : "";
+
+        String path = "users/candidate/" + candidate.getId() + "/documentos/" + UUID.randomUUID() + extension;
+        String publicUrl = storageService.upload(multipartFile, path);
+
+        File file = new File();
+        file.setFileName(originalFilename);
+        file.setContentType(multipartFile.getContentType());
+        file.setSize(multipartFile.getSize());
+        file.setPath(publicUrl);
+
+        fileRepository.save(file);
+
+        Attachment attachment = attachmentService.insert(candidate, file, AttachmentType.CERTIFICATE);
+        candidate.getAttachments().add(attachment);
     }
 
     private LocalDate buildDate(String month, String year) {
