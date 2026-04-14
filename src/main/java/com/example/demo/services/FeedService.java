@@ -5,10 +5,8 @@ import com.example.demo.entities.Post;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.Subscription;
 import com.example.demo.entities.User;
-import com.example.demo.enums.Plan;
-import com.example.demo.enums.PostType;
-import com.example.demo.enums.RoleName;
-import com.example.demo.enums.SubscriptionStatus;
+import com.example.demo.enums.*;
+import com.example.demo.interfaces.Auditable;
 import com.example.demo.repositories.PostRepository;
 import com.example.demo.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +27,7 @@ public class FeedService {
         this.userRepository = userRepository;
     }
 
+    @Auditable(action = AuditAction.READ, entity = "Post", captureArgs = false)
     public List<PostResponse> buildFeed(UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));

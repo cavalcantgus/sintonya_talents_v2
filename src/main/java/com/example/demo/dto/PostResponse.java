@@ -1,10 +1,8 @@
 package com.example.demo.dto;
 
-import com.example.demo.entities.Enterprise;
 import com.example.demo.entities.Post;
-import com.example.demo.entities.PostFile;
 import com.example.demo.enums.PostType;
-import com.example.demo.enums.VacancyStatus;
+import com.example.demo.enums.PostStatus;
 
 import java.util.List;
 
@@ -12,7 +10,7 @@ public record PostResponse (
         Long id,
         PostType type,
         List<UserResponse> authors,
-        VacancyStatus vacancyStatus,
+        PostStatus postStatus,
         List<PostFileResponse> mediaUrl,
         VacancyResponse vacancyResponse,
         PublicationResponse publicationResponse
@@ -25,7 +23,7 @@ public record PostResponse (
                 post.getUsers().stream()
                         .map(UserResponse::fromEntity)
                         .toList(),
-                post.getVacancyStatus(),
+                post.getStatus(),
                 post.getPostFiles().stream()
                         .map(PostFileResponse::fromEntity)
                         .toList(),

@@ -7,8 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum StageType {
 
-    TECHNICAL_TEST(true, 1),
-    BEHAVIORAL_TEST(true, 2),
+    TECHNICAL_TEST(true, 2),
+    BEHAVIORAL_TEST(true, 1),
 
     SKILL_REQUIRED(false, null),
     SKILL_OPTIONAL(false, null),

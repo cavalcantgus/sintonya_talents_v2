@@ -69,38 +69,4 @@ public class VacancyController {
 //        return ResponseEntity.created(uri).build();
 //    }
 
-    @PutMapping("/{id}/rejected")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<VacancyResponse> rejectVacancy(@PathVariable Long id) {
-        VacancyResponse vacancy = vacancyService.updateIfRejected(id);
-        return ResponseEntity.ok().body(vacancy);
-    }
-
-    @PutMapping("/{id}/approved")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<VacancyResponse> approveVacancy(@PathVariable Long id) {
-        VacancyResponse vacancy = vacancyService.updateIfApproved(id);
-        return ResponseEntity.ok().body(vacancy);
-    }
-
-    @PutMapping("/{id}/closed")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<VacancyResponse> closeVacancy(@PathVariable Long id) {
-        VacancyResponse vacancy = vacancyService.updateIfClosed(id);
-        return ResponseEntity.ok().body(vacancy);
-    }
-
-    @PutMapping("/{id}/paused")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<VacancyResponse> pauseVacancy(@PathVariable Long id) {
-        VacancyResponse vacancy = vacancyService.updateIfPaused(id);
-        return ResponseEntity.ok().body(vacancy);
-    }
-
-    @PutMapping("/{id}/archived")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<VacancyResponse> archivedVacancy(@PathVariable Long id) {
-        VacancyResponse vacancy = vacancyService.updateIfArchived(id);
-        return ResponseEntity.ok().body(vacancy);
-    }
 }

@@ -1,6 +1,6 @@
 package com.example.demo.enums;
 
-public enum VacancyStatus {
+public enum PostStatus {
     PENDING_APPROVAL,
     APPROVED,
     OPEN,

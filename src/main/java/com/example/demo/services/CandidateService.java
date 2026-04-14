@@ -4,8 +4,10 @@ import com.example.demo.dto.CandidateResponse;
 import com.example.demo.dto.CandidateUpdateDTO;
 import com.example.demo.dto.SkillCandidateCreateDto;
 import com.example.demo.entities.*;
+import com.example.demo.enums.AuditAction;
 import com.example.demo.enums.SkillLevel;
 import com.example.demo.enums.SkillSource;
+import com.example.demo.interfaces.Auditable;
 import com.example.demo.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -54,10 +56,13 @@ public class CandidateService {
                 .toList();
     }
 
+    @Auditable(action = AuditAction.READ, entity = "Candidate", captureArgs = false)
     public Candidate findByUserEmail(String email) {
         return candidateRepository.findByUserEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
     }
+
+    @Auditable(action = AuditAction.READ, entity = "Candidate", captureArgs = false)
     public CandidateResponse findById(Long id) {
        Candidate candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
@@ -65,6 +70,7 @@ public class CandidateService {
        return CandidateResponse.fromEntity(candidate);
     }
 
+    @Auditable(action = AuditAction.READ, entity = "Candidate", captureArgs = false)
     public CandidateResponse findByUserId(Long id) {
        Candidate candidate = candidateRepository.findByUserId(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
@@ -72,6 +78,7 @@ public class CandidateService {
         return CandidateResponse.fromEntity(candidate);
     }
 
+    @Auditable(action = AuditAction.UPDATE, entity = "Candidate", captureArgs = false)
     public CandidateResponse update(Long id, CandidateUpdateDTO objDto) {
         Candidate candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
@@ -96,6 +103,7 @@ public class CandidateService {
     }
 
     @Transactional
+    @Auditable(action = AuditAction.UPDATE, entity = "Candidate", captureArgs = false)
     public CandidateResponse update(Long id, String personalSummary) {
         Candidate candidate = candidateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
@@ -111,6 +119,7 @@ public class CandidateService {
     }
 
     @Transactional
+    @Auditable(action = AuditAction.UPDATE, entity = "Candidate", captureArgs = false)
     public CandidateResponse addSkills(Long id, List<SkillCandidateCreateDto> objDto) {
 
         Candidate candidate = candidateRepository.findById(id)
@@ -149,6 +158,7 @@ public class CandidateService {
         return CandidateResponse.fromEntity(candidate);
     }
 
+    @Auditable(action = AuditAction.UPDATE, entity = "Candidate", captureArgs = false)
     public void updateProfilePhoto(MultipartFile file, Long id) throws IOException {
         validateFile(file);
 
@@ -170,6 +180,7 @@ public class CandidateService {
         profileRepository.save(profile);
     }
 
+    @Auditable(action = AuditAction.UPDATE, entity = "Candidate", captureArgs = false)
     public void updateProfileBanner(MultipartFile file, Long id) throws IOException {
         validateFile(file);
 

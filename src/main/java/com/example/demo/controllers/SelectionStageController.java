@@ -31,8 +31,8 @@ public class SelectionStageController {
 //    }
 
     @PutMapping("/{vacancyId}/create-selection-process")
-    public ResponseEntity<?> addSelectionStage(@PathVariable Long vacancyId, @RequestBody List<SelectionStageCreateDTO> objDto) {
-        selectionStageService.insert(vacancyId, objDto);
+    public ResponseEntity<?> addSelectionStage(@PathVariable Long vacancyId, @RequestBody SelectionStageCreateDTO objDto) {
+        selectionStageService.update(vacancyId, objDto);
         return ResponseEntity.ok().build();
     }
 }

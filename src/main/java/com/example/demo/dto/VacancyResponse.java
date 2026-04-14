@@ -1,6 +1,5 @@
 package com.example.demo.dto;
 
-import com.example.demo.entities.Enterprise;
 import com.example.demo.entities.Vacancy;
 
 import java.time.LocalDate;
@@ -15,12 +14,10 @@ public record VacancyResponse(
       String position,
       String locality,
       Long sectorId,
-      LocalDate publicationDate,
       String modalityType,
       String vacancyStatus,
       String vacancyType,
       LocalDate expirationDate,
-      LocalDateTime closedAt,
       EnterpriseResponse enterpriseResponse,
       Set<SelectionStageResponse> selectionStagesResponse
 ) {
@@ -32,12 +29,10 @@ public record VacancyResponse(
                vacancy.getPosition(),
                vacancy.getLocality(),
                vacancy.getSector().getId(),
-               vacancy.getPublicationDate(),
                vacancy.getModalityType().toString(),
-               vacancy.getVacancyStatus().toString(),
+               vacancy.getPost().getStatus().toString(),
                vacancy.getVacancyType().toString(),
                vacancy.getExpirationDate(),
-               vacancy.getClosedAt(),
                EnterpriseResponse.fromEntity(vacancy.getEnterprise()),
                vacancy.getSelectionStages()
                        .stream()

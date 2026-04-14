@@ -26,29 +26,25 @@ public class SelectionStageService {
     }
 
     @Transactional
-    public void insert(Long vacancyId, List<SelectionStageCreateDTO> objDto) {
+    public void update(Long vacancyId, SelectionStageCreateDTO objDto) {
         Vacancy vacancy = vacancyRepository.findById(vacancyId)
                 .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
 
-        for (int i = 0; i < objDto.size(); i++) {
-            SelectionStage selectionStage = new SelectionStage();
-            selectionStage.setVacancy(vacancy);
-            selectionStage.setStageType(StageType.valueOf(objDto.get(i).getStageType()));
-            selectionStage.setUrl(objDto.get(i).getUrl());
-            selectionStage.setStageOrder(i);
-            selectionStage.setVisible(true);
+        SelectionStage selectionStage = vacancy.getSelectionStages()
+                .stream()
+                .filter(s -> s.getStageType().toString().equals(objDto.getStageType()))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Etapa não encontrada"));
 
-            if(objDto.get(i).getStageType().toString().equals("BEHAVIORAL_TEST")) {
-                selectionStage.setName("Teste Comportamental");
-            } else {
-                selectionStage.setName("Teste Técnico");
-            }
-            vacancy.getSelectionStages().add(selectionStage);
+
+        selectionStage.setUrl(objDto.getUrl());
+        selectionStage.setMaxScore(objDto.getMaxScore());
+        if(objDto.getStageType().equals("BEHAVIORAL_TESTE")) {
+            selectionStage.setName("Teste Comportamental");
+        } else {
+            selectionStage.setName("Teste Técnico");
         }
 
-        addSkillSelectionStage(vacancy);
-        addCertificateSelectionStage(vacancy);
-        addExperienceSelectionStage(vacancy);
     }
 
     private void addSkillSelectionStage(Vacancy vacancy) {

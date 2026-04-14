@@ -1,7 +1,7 @@
 package com.example.demo.entities;
 
 import com.example.demo.enums.ExperienceRange;
-import com.example.demo.enums.VacancyStatus;
+import com.example.demo.enums.PostStatus;
 import com.example.demo.enums.VacancyType;
 import com.example.demo.enums.WorkModality;
 import jakarta.persistence.*;
@@ -57,9 +57,8 @@ public class Vacancy {
     @Enumerated(EnumType.STRING)
     private WorkModality modalityType;
 
-    private LocalDate publicationDate;
     private LocalDate expirationDate;
-    private LocalDateTime closedAt;
+
     @Column(name = "has_a_technical_test")
     private boolean technicalTest;
 
@@ -74,9 +73,6 @@ public class Vacancy {
 
     private Long minExperienceRange;
     private Long maxExperienceRange;
-
-    @Enumerated(EnumType.STRING)
-    private VacancyStatus vacancyStatus;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

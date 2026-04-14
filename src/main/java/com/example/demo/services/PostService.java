@@ -2,11 +2,10 @@ package com.example.demo.services;
 
 import com.example.demo.dto.*;
 import com.example.demo.entities.*;
-import com.example.demo.enums.AttachmentType;
 import com.example.demo.enums.PostType;
-import java.io.File;
 import com.example.demo.enums.RoleName;
-import com.example.demo.enums.VacancyStatus;
+import com.example.demo.enums.PostStatus;
+import com.example.demo.exception.BusinessException;
 import com.example.demo.repositories.FeedItemScoreRepository;
 import com.example.demo.repositories.FileRepository;
 import com.example.demo.repositories.PostFileRepository;
@@ -22,6 +21,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -98,7 +99,7 @@ public class PostService {
     private Post buildPost(PostCreateRequest request, User author) {
         Post post = new Post();
         post.setPostType(request.getType());
-        post.setVacancyStatus(VacancyStatus.PENDING_APPROVAL);
+        post.setStatus(PostStatus.PENDING_APPROVAL);
         post.getUsers().add(author);
         author.getPosts().add(post);
         return post;
@@ -152,6 +153,83 @@ public class PostService {
         return author.getRoles().stream()
                 .anyMatch(role -> role.getRoleName().equals(RoleName.ADMINISTRATOR)
                         || role.getRoleName().equals(RoleName.ENTERPRISE));
+    }
+
+    @Transactional
+    public PostResponse rejectPost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Post não encontrado"));
+
+        if (!post.getStatus().equals(PostStatus.APPROVED) && !post.getStatus().equals(PostStatus.PENDING_APPROVAL)) {
+            throw new BusinessException("O post só pode ser rejeitado se tiver status Aprovado ou Pendente de Aprovação");
+        }
+
+        post.setStatus(PostStatus.REJECTED);
+        post.setClosedAt(LocalDateTime.now());
+
+        postRepository.save(post);
+
+        return PostResponse.fromEntity(post);
+    }
+
+    @Transactional
+    public PostResponse closePost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+
+        if (!post.getStatus().equals(PostStatus.OPEN)) {
+            throw new BusinessException("Uma vaga só pode ser fechada se constar como aberta");
+        }
+
+        post.setStatus(PostStatus.CLOSED);
+        post.setClosedAt(LocalDateTime.now());
+
+        postRepository.save(post);
+        return PostResponse.fromEntity(post);
+    }
+
+    @Transactional
+    public PostResponse updateIfPaused(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+
+        if (!post.getStatus().equals(PostStatus.OPEN)) {
+            throw new BusinessException("Uma vaga só pode ser pausada se constar como aberta");
+        }
+
+        post.setStatus(PostStatus.PAUSED);
+
+        postRepository.save(post);
+
+        return PostResponse.fromEntity(post);
+    }
+
+    @Transactional
+    public PostResponse updateIfArchived(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+
+        if (!post.getStatus().equals(PostStatus.OPEN)) {
+            throw new BusinessException("A vaga só pode ser arquivada se estiver aberta.");
+        }
+        post.setStatus(PostStatus.ARCHIVED);
+
+        postRepository.save(post);
+
+        return PostResponse.fromEntity(post);
+    }
+
+    @Transactional
+    public PostResponse updateIfApproved(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
+
+        post.setStatus(PostStatus.APPROVED);
+        post.setPublicationDate(LocalDate.now());
+
+        postRepository.save(post);
+
+        return PostResponse.fromEntity(post);
     }
 
 }

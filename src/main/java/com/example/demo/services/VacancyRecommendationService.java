@@ -70,11 +70,6 @@ public class VacancyRecommendationService {
             score += SCORE_LOCALITY;
         }
 
-        if(vacancy.getPublicationDate() != null
-                 && vacancy.getPublicationDate().isAfter(LocalDate.now().minusDays(7))) {
-            score += SCORE_RECENT;
-        }
-
         return score;
     }
 

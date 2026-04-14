@@ -16,27 +16,25 @@ public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
 
     @Query("""
     SELECT v FROM Vacancy v
-    WHERE v.vacancyStatus = 'OPEN'
-    AND (v.expirationDate IS NULL or v.expirationDate >= CURRENT_DATE)
-    ORDER BY v.publicationDate DESC
+    WHERE v.expirationDate IS NULL or v.expirationDate >= CURRENT_DATE
 """)
     List<Vacancy> findAllActive();
 
-    @Query(
-            """
-    SELECT v FROM Vacancy v
-    WHERE v.vacancyStatus = 'OPEN'
-    AND (v.expirationDate IS NULL OR v.expirationDate >= CURRENT_DATE)
-    AND v.closedAt IS NULL
-    AND (v.sector = :sector
-    OR v.modalityType = :modality
-    OR v.locality = :locality)
-    ORDER BY v.publicationDate DESC
-"""
-    )
-    List<Vacancy> findCandidatesForScoring(
-            @Param("sector") Sector sector,
-            @Param("modality")WorkModality modality,
-            @Param("locality") String locality
-    );
+//    @Query(
+//            """
+//    SELECT v FROM Vacancy v
+//    WHERE v.vacancyStatus = 'OPEN'
+//    AND (v.expirationDate IS NULL OR v.expirationDate >= CURRENT_DATE)
+//    AND v.closedAt IS NULL
+//    AND (v.sector = :sector
+//    OR v.modalityType = :modality
+//    OR v.locality = :locality)
+//    ORDER BY v.publicationDate DESC
+//"""
+//    )
+//    List<Vacancy> findCandidatesForScoring(
+//            @Param("sector") Sector sector,
+//            @Param("modality")WorkModality modality,
+//            @Param("locality") String locality
+//    );
 }

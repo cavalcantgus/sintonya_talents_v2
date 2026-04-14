@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -109,7 +108,6 @@ public class VacancyService {
         vacancy.setVacancyType(VacancyType.valueOf(dto.getVacancyType()));
         vacancy.setLocality(dto.getLocality());
         vacancy.setModalityType(WorkModality.valueOf(dto.getModalityType()));
-        vacancy.setVacancyStatus(VacancyStatus.PENDING_APPROVAL);
 
         return vacancy;
     }
@@ -212,83 +210,6 @@ public class VacancyService {
             case TECHNICAL_TEST, BEHAVIORAL_TEST -> true;
             default -> false;
         };
-    }
-
-    @Transactional
-    public VacancyResponse updateIfRejected(Long id) {
-        Vacancy vacancy = vacancyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
-
-        if (!vacancy.getVacancyStatus().equals(VacancyStatus.APPROVED) && !vacancy.getVacancyStatus().equals(VacancyStatus.PENDING_APPROVAL)) {
-            throw new BusinessException("A vaga só pode ser rejeita se tiver status Aprovado ou Pendente de Aprovação");
-        }
-
-        vacancy.setVacancyStatus(VacancyStatus.REJECTED);
-        vacancy.setClosedAt(LocalDateTime.now());
-
-        vacancyRepository.save(vacancy);
-
-        return VacancyResponse.fromEntity(vacancy);
-    }
-
-    @Transactional
-    public VacancyResponse updateIfClosed(Long id) {
-        Vacancy vacancy = vacancyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
-
-        if (!vacancy.getVacancyStatus().equals(VacancyStatus.OPEN)) {
-            throw new BusinessException("Uma vaga só pode ser fechada se constar como aberta");
-        }
-
-        vacancy.setVacancyStatus(VacancyStatus.CLOSED);
-        vacancy.setClosedAt(LocalDateTime.now());
-
-        vacancyRepository.save(vacancy);
-        return VacancyResponse.fromEntity(vacancy);
-    }
-
-    @Transactional
-    public VacancyResponse updateIfPaused(Long id) {
-        Vacancy vacancy = vacancyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
-
-        if (!vacancy.getVacancyStatus().equals(VacancyStatus.OPEN)) {
-            throw new BusinessException("Uma vaga só pode ser pausada se constar como aberta");
-        }
-
-        vacancy.setVacancyStatus(VacancyStatus.PAUSED);
-
-        vacancyRepository.save(vacancy);
-
-        return VacancyResponse.fromEntity(vacancy);
-    }
-
-    @Transactional
-    public VacancyResponse updateIfArchived(Long id) {
-        Vacancy vacancy = vacancyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
-
-        if (!vacancy.getVacancyStatus().equals(VacancyStatus.OPEN)) {
-            throw new BusinessException("A vaga só pode ser arquivada se estiver aberta.");
-        }
-        vacancy.setVacancyStatus(VacancyStatus.ARCHIVED);
-
-        vacancyRepository.save(vacancy);
-
-        return VacancyResponse.fromEntity(vacancy);
-    }
-
-    @Transactional
-    public VacancyResponse updateIfApproved(Long id) {
-        Vacancy vacancy = vacancyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vaga não encontrada"));
-
-        vacancy.setVacancyStatus(VacancyStatus.APPROVED);
-        vacancy.setPublicationDate(LocalDate.now());
-
-        vacancyRepository.save(vacancy);
-
-        return VacancyResponse.fromEntity(vacancy);
     }
 
     public int calculateMonths(Experience exp) {
