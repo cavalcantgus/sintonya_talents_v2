@@ -36,6 +36,10 @@ public class SkillCandidate {
     @JoinColumn(name = "experience_id")
     private Experience experience;
 
+    @ManyToOne
+    @JoinColumn(name = "education_id")
+    private Certificates education;
+
     @Enumerated(EnumType.STRING)
     private SkillLevel skillLevel;
 

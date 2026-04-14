@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         (p.postType = 'PUBLICATION' AND pub IS NOT NULL)
         OR (
             p.postType = 'VACANCY'
-            AND p.status = 'PENDING_APPROVAL'
+            AND p.status = 'OPEN'
             AND v IS NOT NULL
             AND p.closedAt IS NULL
             AND (v.expirationDate IS NULL OR v.expirationDate >= CURRENT_DATE)

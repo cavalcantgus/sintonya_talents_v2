@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "education")
@@ -20,9 +22,12 @@ public class Education {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToMany(mappedBy = "certificate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SkillCandidate> certificateSkills = new HashSet<>();
+
     private String educationalInstitution;
     private String diploma;
-//    private StudyArea studyArea;
+    private StudyArea studyArea;
     private LocalDate startDate;
     private LocalDate endDate;
     private String note;
