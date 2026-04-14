@@ -23,7 +23,7 @@ public class Education {
     private Long id;
 
     @OneToMany(mappedBy = "education", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<SkillCandidate> certificateSkills = new HashSet<>();
+    private Set<SkillCandidate> educationSkills = new HashSet<>();
 
     private String educationalInstitution;
     private String diploma;
