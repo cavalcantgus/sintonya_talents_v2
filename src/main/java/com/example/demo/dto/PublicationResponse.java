@@ -4,12 +4,14 @@ import com.example.demo.entities.Publication;
 
 public record PublicationResponse(
         Long id,
+        Long postId,
         String title,
         String body
 ) {
     public static PublicationResponse fromEntity(Publication publication) {
         return new PublicationResponse(
                 publication.getId(),
+                publication.getPost().getId(),
                 publication.getTitle(),
                 publication.getBody()
         );
