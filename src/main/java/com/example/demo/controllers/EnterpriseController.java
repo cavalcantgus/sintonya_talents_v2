@@ -66,4 +66,14 @@ public class EnterpriseController {
         enterpriseService.updateProfilePhoto(photo, id);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/{id}/profile/upload-banner")
+    public ResponseEntity<?> uploadProfileBanner(
+            @RequestParam("photo") MultipartFile photo,
+            @PathVariable Long id
+    ) throws IOException {
+
+        enterpriseService.updateProfileBanner(photo, id);
+        return ResponseEntity.ok().build();
+    }
 }
