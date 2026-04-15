@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Popups {
+public class Popup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
