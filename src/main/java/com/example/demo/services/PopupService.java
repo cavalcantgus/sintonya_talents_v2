@@ -73,7 +73,6 @@ public class PopupService {
         String publicUrl = storageService.upload(file, path);
 
         popup.setUrl(publicUrl);
-        popupRepository.save(popup);
     }
 
     private void validateFile(MultipartFile file) {
@@ -88,6 +87,7 @@ public class PopupService {
 
         popup.setTitle(objDto.getTitle());
         popup.setCallToActionUrl(objDto.getCallToActionUrl());
+        popupRepository.save(popup);
 
         if (file != null && !file.isEmpty()) {
             savePopupFileInStorage(file, popup);

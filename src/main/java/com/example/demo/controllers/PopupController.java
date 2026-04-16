@@ -54,6 +54,7 @@ public class PopupController {
     public ResponseEntity<PopupResponse> update(@RequestPart("data") PopupUpdateDTO objDto,
                                                 @RequestPart(value = "file", required = false) MultipartFile file,
                                                 @PathVariable Long id) throws IOException {
+        System.out.println("POPUP VINDO DO FRONT: " + objDto.getTitle());
         PopupResponse popupResponse = popupService.update(objDto, file, id);
         return ResponseEntity.ok().body(popupResponse);
     }
