@@ -63,4 +63,10 @@ public class PopupController {
         PopupResponse popupResponse = popupService.enablePopup(id);
         return ResponseEntity.ok().body(popupResponse);
     }
+
+    @DeleteMapping("/popup/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        popupService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

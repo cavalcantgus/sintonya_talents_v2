@@ -90,7 +90,7 @@ public class PopupService {
 
     public PopupResponse disablePopup(Long id) {
         Popup popup = popupRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Popup não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Pop-up não encontrado"));
 
         popup.setActive(false);
 
@@ -100,11 +100,19 @@ public class PopupService {
 
     public PopupResponse enablePopup(Long id) {
         Popup popup = popupRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Popup não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Pop-up não encontrado"));
 
         popup.setActive(true);
 
         popupRepository.save(popup);
         return PopupResponse.fromEntity(popup);
+    }
+
+    public void delete(Long id) {
+        Popup popup = popupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pop-up não encontrado"));
+
+        storageService.delete(extractPath(popup.getUrl()));
+        popupRepository.delete(popup);
     }
 }
