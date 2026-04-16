@@ -24,7 +24,7 @@ public class Popup {
 
     private String title;
     private String url;
-    private String fileName;
+    private String callToActionUrl;
     private boolean active;
 
     @CreationTimestamp

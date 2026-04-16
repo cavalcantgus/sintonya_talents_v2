@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.PopupCreateDTO;
 import com.example.demo.dto.PopupResponse;
+import com.example.demo.dto.PopupUpdateDTO;
 import com.example.demo.entities.Popup;
 import com.example.demo.services.PopupService;
 import org.apache.coyote.Response;
@@ -37,11 +38,29 @@ public class PopupController {
     }
 
     @PostMapping
-    public ResponseEntity<PopupResponse> insert(@RequestPart("data") PopupCreateDTO objDto,
-                                                @RequestPart(value = "file", required = true) MultipartFile file) throws IOException {
+    public ResponseEntity<PopupResponse> insert(@RequestPart("data") PopupCreateDTO objDto, @RequestPart(value = "file", required = true) MultipartFile file) throws IOException {
         PopupResponse popupResponse = popupService.insert(objDto, file);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(popupResponse.id()).toUri();
         return ResponseEntity.created(uri).body(popupResponse);
     }
 
+    @PutMapping("/popup/{id}")
+    public ResponseEntity<PopupResponse> update(@RequestPart("data") PopupUpdateDTO objDto,
+                                                @RequestPart(value = "file", required = false) MultipartFile file,
+                                                @PathVariable Long id) throws IOException {
+        PopupResponse popupResponse = popupService.update(objDto, file, id);
+        return ResponseEntity.ok().body(popupResponse);
+    }
+
+    @PutMapping("/popup/disable/{id}")
+    public ResponseEntity<PopupResponse> disablePopup(@PathVariable Long id) {
+        PopupResponse popupResponse = popupService.disablePopup(id);
+        return ResponseEntity.ok().body(popupResponse);
+    }
+
+    @PutMapping("/popup/enable/{id}")
+    public ResponseEntity<PopupResponse> enablePopup(@PathVariable Long id) {
+        PopupResponse popupResponse = popupService.enablePopup(id);
+        return ResponseEntity.ok().body(popupResponse);
+    }
 }

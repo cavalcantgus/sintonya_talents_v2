@@ -6,12 +6,14 @@ import lombok.Getter;
 public record PopupResponse(
         Long id,
         String title,
+        String callToActionUrl,
         String url
 ) {
     public static PopupResponse fromEntity(Popup popup) {
         return new PopupResponse(
                 popup.getId(),
                 popup.getTitle(),
+                popup.getCallToActionUrl(),
                 popup.getUrl()
         );
     }

@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.dto.PopupCreateDTO;
 import com.example.demo.dto.PopupResponse;
+import com.example.demo.dto.PopupUpdateDTO;
 import com.example.demo.entities.Enterprise;
 import com.example.demo.entities.Popup;
 import com.example.demo.entities.Profile;
@@ -42,6 +43,7 @@ public class PopupService {
 
         Popup popup = new Popup();
         popup.setTitle(objDto.getTitle());
+        popup.setCallToActionUrl(objDto.getCallToActionUrl());
         popup.setActive(false);
         popupRepository.save(popup);
 
@@ -70,5 +72,39 @@ public class PopupService {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Arquivo vazio");
         }
+    }
+
+    public PopupResponse update(PopupUpdateDTO objDto, MultipartFile file, Long id) throws IOException {
+        Popup popup = popupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pop-up não encontrado"));
+
+        popup.setTitle(objDto.getTitle());
+        popup.setCallToActionUrl(objDto.getCallToActionUrl());
+
+        if (file != null && !file.isEmpty()) {
+            savePopupFileInStorage(file, popup);
+        }
+
+        return PopupResponse.fromEntity(popup);
+    }
+
+    public PopupResponse disablePopup(Long id) {
+        Popup popup = popupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Popup não encontrado"));
+
+        popup.setActive(false);
+
+        popupRepository.save(popup);
+        return PopupResponse.fromEntity(popup);
+    }
+
+    public PopupResponse enablePopup(Long id) {
+        Popup popup = popupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Popup não encontrado"));
+
+        popup.setActive(true);
+
+        popupRepository.save(popup);
+        return PopupResponse.fromEntity(popup);
     }
 }

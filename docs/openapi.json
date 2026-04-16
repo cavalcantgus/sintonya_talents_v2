@@ -245,6 +245,120 @@
         }
       }
     },
+    "/popups/popup/{id}": {
+      "put": {
+        "tags": [
+          "popup-controller"
+        ],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "data"
+                ],
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/PopupUpdateDTO"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PopupResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/popups/popup/enable/{id}": {
+      "put": {
+        "tags": [
+          "popup-controller"
+        ],
+        "operationId": "enablePopup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PopupResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/popups/popup/disable/{id}": {
+      "put": {
+        "tags": [
+          "popup-controller"
+        ],
+        "operationId": "disablePopup",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PopupResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/enterprises/update-personal-summary/enterprise": {
       "put": {
         "tags": [
@@ -2120,6 +2234,35 @@
           }
         }
       },
+      "PopupUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "callToActionUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "PopupResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "callToActionUrl": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
       "EnterpriseUpdateDTO": {
         "type": "object",
         "properties": {
@@ -2543,20 +2686,8 @@
         "properties": {
           "title": {
             "type": "string"
-          }
-        }
-      },
-      "PopupResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
           },
-          "title": {
-            "type": "string"
-          },
-          "url": {
+          "callToActionUrl": {
             "type": "string"
           }
         }

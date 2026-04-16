@@ -6,4 +6,5 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 public class PopupCreateDTO {
     private String title;
+    private String callToActionUrl;
 }
