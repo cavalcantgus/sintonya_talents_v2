@@ -37,6 +37,12 @@ public class PopupController {
         return ResponseEntity.ok().body(popupResponse);
     }
 
+    @GetMapping("/find-random-popups")
+    public ResponseEntity<List<PopupResponse>> findRandomPopups() {
+        List<PopupResponse> popups = popupService.findRandomPopups();
+        return ResponseEntity.ok().body(popups);
+    }
+
     @PostMapping
     public ResponseEntity<PopupResponse> insert(@RequestPart("data") PopupCreateDTO objDto, @RequestPart(value = "file", required = true) MultipartFile file) throws IOException {
         PopupResponse popupResponse = popupService.insert(objDto, file);

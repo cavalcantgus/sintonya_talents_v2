@@ -1625,6 +1625,29 @@
         }
       }
     },
+    "/popups/find-random-popups": {
+      "get": {
+        "tags": [
+          "popup-controller"
+        ],
+        "operationId": "findRandomPopups",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PopupResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/job-applications": {
       "get": {
         "tags": [
@@ -2282,6 +2305,9 @@
           },
           "url": {
             "type": "string"
+          },
+          "active": {
+            "type": "boolean"
           }
         }
       },

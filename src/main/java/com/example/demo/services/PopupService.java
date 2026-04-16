@@ -8,6 +8,7 @@ import com.example.demo.entities.Popup;
 import com.example.demo.entities.Profile;
 import com.example.demo.repositories.PopupRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,13 @@ public class PopupService {
 
     public List<PopupResponse> findAll() {
         return popupRepository.findAll()
+                .stream()
+                .map(PopupResponse::fromEntity)
+                .toList();
+    }
+
+    public List<PopupResponse> findRandomPopups() {
+        return popupRepository.findRandomPopups(PageRequest.of(0, 10))
                 .stream()
                 .map(PopupResponse::fromEntity)
                 .toList();
