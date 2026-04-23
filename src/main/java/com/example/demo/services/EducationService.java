@@ -150,4 +150,11 @@ public class EducationService {
             }
         }
     }
+
+    public void delete(Long id) {
+        Education education = educationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Formação não encontrada"));
+
+        educationRepository.delete(education);
+    }
 }

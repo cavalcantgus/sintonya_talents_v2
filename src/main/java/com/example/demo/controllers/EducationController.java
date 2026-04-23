@@ -48,5 +48,11 @@ public class EducationController {
         EducationResponse education = educationService.update(objDto, id);
         return ResponseEntity.ok().body(education);
     }
+
+    @DeleteMapping("/education/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        educationService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 

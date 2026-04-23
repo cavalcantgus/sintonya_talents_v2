@@ -22,7 +22,8 @@ public record CandidateResponse(
         ProfileResponse profileResponse,
         List<SkillCandidateResponse> skills,
         List<CertificateResponse> certificates,
-        List<ExperienceResponse> experiences
+        List<ExperienceResponse> experiences,
+        List<EducationResponse> educations
 ) {
     public static CandidateResponse fromEntity(Candidate candidate) {
         return new CandidateResponse(
@@ -48,6 +49,10 @@ public record CandidateResponse(
                 candidate.getExperiences()
                         .stream()
                         .map(ExperienceResponse::fromEntity)
+                        .toList(),
+                candidate.getEducations()
+                        .stream()
+                        .map(EducationResponse::fromEntity)
                         .toList()
         );
     }

@@ -41,6 +41,9 @@ public class Candidate {
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Experience> experiences = new HashSet<>();
 
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Education> educations = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "sector_id")
     private Sector sector;
