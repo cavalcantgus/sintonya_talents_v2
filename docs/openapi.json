@@ -441,6 +441,47 @@
         }
       }
     },
+    "/educations/education/update/{id}": {
+      "put": {
+        "tags": [
+          "education-controller"
+        ],
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationUpdateDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EducationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/candidates/update-personal-summary/candidate/{id}": {
       "put": {
         "tags": [
@@ -1060,12 +1101,53 @@
         }
       }
     },
+    "/educations/education/candidate/{candidateId}": {
+      "post": {
+        "tags": [
+          "education-controller"
+        ],
+        "operationId": "insert_3",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EducationCreateDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EducationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/certificates/{candidateId}/add-certificate": {
       "post": {
         "tags": [
           "certificate-controller"
         ],
-        "operationId": "insert_3",
+        "operationId": "insert_4",
         "parameters": [
           {
             "name": "candidateId",
@@ -1901,6 +1983,50 @@
         }
       }
     },
+    "/educations": {
+      "get": {
+        "tags": [
+          "education-controller"
+        ],
+        "operationId": "findALl",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EducationResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/educations/id": {
+      "get": {
+        "tags": [
+          "education-controller"
+        ],
+        "operationId": "findById_7",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EducationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/certificates": {
       "get": {
         "tags": [
@@ -1929,7 +2055,7 @@
         "tags": [
           "certificate-controller"
         ],
-        "operationId": "findById_7",
+        "operationId": "findById_8",
         "parameters": [
           {
             "name": "id",
@@ -1983,7 +2109,7 @@
         "tags": [
           "candidate-controller"
         ],
-        "operationId": "findById_8",
+        "operationId": "findById_9",
         "parameters": [
           {
             "name": "id",
@@ -2036,6 +2162,30 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/educations/education/delete/{id}": {
+      "delete": {
+        "tags": [
+          "education-controller"
+        ],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2355,6 +2505,88 @@
           }
         }
       },
+      "EducationUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "educationalInstitutionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "diploma": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "studyArea": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "educationSkills": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "startMonth": {
+            "type": "string"
+          },
+          "startYear": {
+            "type": "string"
+          },
+          "endMonth": {
+            "type": "string"
+          },
+          "endYear": {
+            "type": "string"
+          }
+        }
+      },
+      "EducationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "educationalInstitution": {
+            "$ref": "#/components/schemas/Institution"
+          },
+          "diploma": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "Institution": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          }
+        }
+      },
       "CandidateResponse": {
         "type": "object",
         "properties": {
@@ -2381,6 +2613,9 @@
           "contact": {
             "type": "string"
           },
+          "sector": {
+            "type": "string"
+          },
           "profileResponse": {
             "$ref": "#/components/schemas/ProfileResponse"
           },
@@ -2401,6 +2636,12 @@
             "items": {
               "$ref": "#/components/schemas/ExperienceResponse"
             }
+          },
+          "educations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationResponse"
+            }
           }
         }
       },
@@ -2414,8 +2655,8 @@
           "title": {
             "type": "string"
           },
-          "issuingOrganization": {
-            "type": "string"
+          "institutionResponse": {
+            "$ref": "#/components/schemas/InstitutionResponse"
           },
           "url": {
             "type": "string"
@@ -2423,6 +2664,10 @@
           "hours": {
             "type": "integer",
             "format": "int64"
+          },
+          "issueDate": {
+            "type": "string",
+            "format": "date"
           }
         }
       },
@@ -2460,6 +2705,20 @@
             "type": "string"
           },
           "description": {
+            "type": "string"
+          }
+        }
+      },
+      "InstitutionResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "domain": {
             "type": "string"
           }
         }
@@ -2797,14 +3056,53 @@
           }
         }
       },
+      "EducationCreateDTO": {
+        "type": "object",
+        "properties": {
+          "educationalInstitutionId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "diploma": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "studyArea": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "educationSkills": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "startMonth": {
+            "type": "string"
+          },
+          "startYear": {
+            "type": "string"
+          },
+          "endMonth": {
+            "type": "string"
+          },
+          "endYear": {
+            "type": "string"
+          }
+        }
+      },
       "CertificateCreateDTO": {
         "type": "object",
         "properties": {
           "title": {
             "type": "string"
           },
-          "issuingOrganization": {
-            "type": "string"
+          "institution": {
+            "type": "integer",
+            "format": "int64"
           },
           "url": {
             "type": "string"
