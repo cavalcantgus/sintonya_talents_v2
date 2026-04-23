@@ -29,7 +29,9 @@ public class Education {
     @OneToMany(mappedBy = "education", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SkillCandidate> educationSkills = new HashSet<>();
 
-    private String educationalInstitution;
+    @ManyToOne
+    @JoinColumn(name = "educational_institution_id")
+    private Institution educationalInstitution;
     private String diploma;
 
     @ManyToOne

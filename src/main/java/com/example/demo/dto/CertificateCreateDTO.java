@@ -11,7 +11,7 @@ import java.util.Set;
 @Setter
 public class CertificateCreateDTO {
     private String title;
-    private String issuingOrganization;
+    private Long institution;
     private String url;
     private Long hours;
     private String issueMonth;

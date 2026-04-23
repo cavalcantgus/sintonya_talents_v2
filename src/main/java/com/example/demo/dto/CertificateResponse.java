@@ -2,24 +2,27 @@ package com.example.demo.dto;
 
 import com.example.demo.entities.Candidate;
 import com.example.demo.entities.Certificates;
+import com.example.demo.entities.Institution;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public record CertificateResponse(
         Long id,
         String title,
-        String issuingOrganization,
+        InstitutionResponse institutionResponse,
         String url,
-        Long hours
+        Long hours,
+        LocalDate issueDate
 ) {
     public static CertificateResponse fromEntity(Certificates certificate) {
         return new CertificateResponse(
                 certificate.getId(),
                 certificate.getTitle(),
-                certificate.getIssuingOrganization(),
+                InstitutionResponse.fromEntity(certificate.getInstitution()),
                 certificate.getUrl(),
-                certificate.getHours()
-
+                certificate.getHours(),
+                certificate.getIssueDate()
         );
     }
 }

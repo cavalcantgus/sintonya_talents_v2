@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class EducationCreateDTO {
+public class EducationUpdateDTO {
     private Long educationalInstitutionId;
     private String diploma;
     private String description;

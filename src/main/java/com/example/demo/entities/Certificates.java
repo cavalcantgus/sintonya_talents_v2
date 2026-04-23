@@ -38,7 +38,11 @@ public class Certificates {
     private Set<Sector> sectors = new HashSet<>();
 
     private String title;
-    private String issuingOrganization;
+
+    @ManyToOne
+    @JoinColumn(name = "institution_id")
+    private Institution institution;
+
     private LocalDate issueDate;
     private LocalDate expirationDate;
     private String url;

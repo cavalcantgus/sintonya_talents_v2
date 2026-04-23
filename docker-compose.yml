@@ -7,8 +7,6 @@ services:
     container_name: sintonya-backend
     ports:
       - "8080:8080"
-    networks:
-      - monitoring
     volumes:
       - ./uploads:/var/uploads
 #    volumes:
@@ -34,7 +32,3 @@ services:
 #  pgadmin-data:
 #  rabbitmq-data:
 #  n8n-data:
-
-networks:
-  monitoring:
-    external: true

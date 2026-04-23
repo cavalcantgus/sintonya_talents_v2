@@ -11,8 +11,9 @@ import java.util.List;
 public interface PopupRepository extends JpaRepository<Popup, Long> {
 
     @Query("""
-    SELECT p 
-    FROM Popup p 
+    SELECT p
+    FROM Popup p
+    WHERE p.active = true
     ORDER BY function('RANDOM')
 """)
     List<Popup> findRandomPopups(Pageable pageable);

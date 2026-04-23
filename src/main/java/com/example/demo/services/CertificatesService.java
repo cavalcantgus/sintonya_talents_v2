@@ -34,6 +34,7 @@ public class CertificatesService {
     private final FileRepository fileRepository;
     private final SectorRepository sectorRepository;
     private final SupabaseStorageService storageService;
+    private final InstitutionRepository institutionRepository;
 
     public CertificatesService(CertificatesRepository certificatesRepository,
                                CandidateRepository candidateRepository,
@@ -42,7 +43,8 @@ public class CertificatesService {
                                AttachmentService attachmentService,
                                FileRepository fileRepository,
                                SectorRepository sectorRepository,
-                               SupabaseStorageService storageService) {
+                               SupabaseStorageService storageService,
+                               InstitutionRepository institutionRepository) {
         this.certificatesRepository = certificatesRepository;
         this.candidateRepository = candidateRepository;
         this.skillBaseRepository = skillBaseRepository;
@@ -51,6 +53,7 @@ public class CertificatesService {
         this.fileRepository = fileRepository;
         this.sectorRepository = sectorRepository;
         this.storageService = storageService;
+        this.institutionRepository = institutionRepository;
     }
 
     public List<CertificateResponse> findAll() {
@@ -73,9 +76,12 @@ public class CertificatesService {
         Candidate candidate = candidateRepository.findById(candidateId)
                 .orElseThrow(() -> new EntityNotFoundException("Candidato não encontrado"));
 
+        Institution institution = institutionRepository.findById(objDto.getInstitution())
+                .orElseThrow(() -> new EntityNotFoundException("Instituição não encontrada"));
+
         Certificates certificate = new Certificates();
         certificate.setTitle(objDto.getTitle());
-        certificate.setIssuingOrganization(objDto.getIssuingOrganization());
+        certificate.setInstitution(institution);
         certificate.setUrl(objDto.getUrl());
         certificate.setHours(objDto.getHours());
         certificate.setCandidate(candidate);

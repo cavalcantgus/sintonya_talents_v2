@@ -25,19 +25,17 @@ public class VacancyService {
 
     private final VacancyRepository vacancyRepository;
     private final EnterpriseRepository enterpriseRepository;
-    private final VacancyEventPublisher publisher;
+//    private final VacancyEventPublisher publisher;
     private final SkillBaseRepository skillBaseRepository;
     private final SkillVacancyRepository skillVacancyRepository;
     private final SectorRepository sectorRepository;
 
     public VacancyService(VacancyRepository vacancyRepository, EnterpriseRepository enterpriseRepository,
-                          VacancyEventPublisher publisher,
                           SkillBaseRepository skillBaseRepository,
                           SkillVacancyRepository skillVacancyRepository,
                           SectorRepository sectorRepository) {
         this.vacancyRepository = vacancyRepository;
         this.enterpriseRepository = enterpriseRepository;
-        this.publisher = publisher;
         this.skillBaseRepository = skillBaseRepository;
         this.skillVacancyRepository = skillVacancyRepository;
         this.sectorRepository = sectorRepository;

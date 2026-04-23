@@ -18,6 +18,7 @@ public record CandidateResponse(
         LocalDate dateOfBirth,
         String cpf,
         String contact,
+        String sector,
         ProfileResponse profileResponse,
         List<SkillCandidateResponse> skills,
         List<CertificateResponse> certificates,
@@ -32,6 +33,7 @@ public record CandidateResponse(
                 candidate.getDateOfBirth(),
                 candidate.getCpf(),
                 candidate.getContact(),
+                SectorResponse.fromEntity(candidate.getSector()).title(),
                 ProfileResponse.fromEntity(candidate.getProfile()),
 
                 candidate.getCandidateSkills()
